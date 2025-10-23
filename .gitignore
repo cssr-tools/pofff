@@ -170,7 +170,6 @@ dune-*
 opm-*
 
 # Examples outputs
-cssr
 debugging
 developing
 playground
