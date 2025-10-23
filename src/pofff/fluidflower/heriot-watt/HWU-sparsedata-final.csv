@@ -1,0 +1,14 @@
+# idx, p10_mean, p50_mean, p90_mean, p10_dev, p50_dev, p90_dev
+1a, 109800, 109840, 109900, 20, 20, 20 # pressure at sensor 1 [N/m2]
+1b, 103900, 103965, 104000, 20, 20, 20 # pressure at sensor 2 [N/m2]
+2, 18e3, 18.6e3, 19e3, 6e2, 6e2, 6e2 # time of max mobile free phase in Box A [s]
+3a, 0, 1e-3, 1.8e-3, 5e-4, 5e-4, 5e-4 # mobile free phase in Box A at 72h [kg]
+3b, 0, 1e-4, 3e-4, 1e-4, 1e-4, 1e-4 # immobile free phase in Box A at 72h [kg]
+3c, 1e-3, 2e-3, 4e-3, 1e-3, 1e-3, 1e-3 # dissolved in water in Box A at 72h [kg]
+3d, 0, 5e-4,9e-4, 3e-4, 3e-4, 3e-4 # seal in Box A at 72h [kg]
+4a, 0, 1e-5, 1e-4, 5e-7, 5e-6, 5e-5
+4b, 0, 1e-6, 1e-5, 5e-8, 5e-7, 5e-6
+4c, 0, 1e-4, 1e-3, 5e-5, 5e-5, 5e-4
+4d, 0, 2e-5, 1e-4, 5e-6, 5e-6, 5e-6
+5, 6e3, 10e3, 15e3, 1e3, 1e3, 1e3 # time when M exceeds 110% of Box Câ€™s width [s]
+6, 0, 5e-5, 1e-4, 0, 1e-5, 1e-4 # total mass of CO2 in the top seal facies [kg]

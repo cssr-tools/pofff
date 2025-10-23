@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pofff"
+description = "An open-source image-based history-matching framework for the FluidFlower Benchmark study using OPM Flow"
+authors = [{ name = "David Landa-Marbán", email = "dmar@norceresearch.no" }]
+maintainers = [{ name = "David Landa-Marbán", email = "dmar@norceresearch.no" }]
+version = "2025.04"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {text = "GPL-3.0"}
+keywords = ["co2", "data assimilation", "emd", "ert", "everest", "flow", "fluidflower", "history matching", "opm", "wasserstein distance"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "Topic :: Scientific/Engineering",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent"
+]
+dependencies = [
+    "alive-progress",
+    "ert==11.0.8",
+    "mako",
+    "matplotlib",
+    "opencv-python",
+    "pandas",
+    "Pyarrow",
+    "pot",
+    "resdata",
+    "rtree",
+    "scipy",
+    "shapely"
+]
+requires-python = ">=3.11"
+
+[project.scripts]
+pofff = "pofff.core.pofff:main"
+
+[project.urls]
+Homepage = "https://cssr-tools.github.io/pofff"
+Repository = "https://github.com/cssr-tools/pofff"
+
+[tool.setuptools]
+packages.find.where = ["src"]
+platforms = ["all"]
+
+[project.optional-dependencies]
+opm = ["opm"]

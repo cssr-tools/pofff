@@ -1,0 +1,159 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration file &mdash; pofff  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Examples" href="examples.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #aaaaaa" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output_folder.html">Output folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="related.html">Related</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About pofff</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #aaaaaa" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pofff</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration file</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/configuration_file.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration-file">
+<h1>Configuration file<a class="headerlink" href="#configuration-file" title="Link to this heading"></a></h1>
+<p>Here we use as an example one of the configuration files used in the tests
+(see <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/examples/input.toml">input.toml</a>).
+The first input parameter is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Set mpirun, the full path to the flow executable, and simulator flags (except --output-dir)</span>
+<span class="linenos">2</span><span class="n">flow</span> <span class="o">=</span> <span class="s2">&quot;flow --newton-min-iterations=1 --enable-tuning=true --enable-opm-rst-file=true&quot;</span>
+</pre></div>
+</div>
+<p>If <strong>flow</strong> is not in your path, then write the full path to the executable, as well as adding mpirun
+if this is supported in your machine (e.g., flow = “mpirun -np 8 /Users/dmar/Github/opm/build/opm-simulators/bin/flow –newton-min-iterations=1”).</p>
+<p>The next entries define the following parameters:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 4</span><span class="c1"># Set the model parameters</span>
+<span class="linenos"> 5</span><span class="n">grid</span><span class="o">=</span><span class="s2">&quot;corner-point&quot;</span> <span class="c1"># Type of grid (cartesian, tensor, or corner-point)</span>
+<span class="linenos"> 6</span><span class="n">thickness</span><span class="o">=</span><span class="s2">&quot;final&quot;</span> <span class="c1"># Thickness maps</span>
+<span class="linenos"> 7</span><span class="n">mult_thickness</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># Thickness multiplier</span>
+<span class="linenos"> 8</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">140</span><span class="p">]</span> <span class="c1"># If cartesian, number of x cells [-]; otherwise, variable array of x-refinement</span>
+<span class="linenos"> 9</span><span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)</span>
+<span class="linenos">10</span><span class="n">temperature</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span> <span class="c1"># Temperature bottom and top rig [C]</span>
+<span class="linenos">11</span><span class="n">pressure</span><span class="o">=</span><span class="mi">104900</span> <span class="c1"># Pressure at the datum [Pa]</span>
+<span class="linenos">12</span><span class="n">diffusion</span><span class="o">=</span><span class="p">[</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">2e-8</span><span class="p">]</span> <span class="c1"># Diffusion (in liquid and gas) [m^2/s]</span>
+<span class="linenos">13</span><span class="n">sources</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">]]</span> <span class="c1"># Source positions: x, y, and z coordinates [m], source 1 to 2</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span><span class="c1"># Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)</span>
+<span class="linenos">16</span><span class="n">inj</span><span class="o">=</span><span class="p">[[</span><span class="mi">900</span><span class="p">,</span> <span class="mi">900</span><span class="p">,</span> <span class="mf">3E-7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1&#39;</span><span class="p">]]</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span><span class="c1"># Facie Properties</span>
+<span class="linenos">19</span><span class="n">facie1</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX1&quot;</span><span class="o">=</span><span class="mf">50E3</span><span class="p">,</span><span class="s2">&quot;PERMZ1&quot;</span><span class="o">=</span><span class="mf">50E3</span><span class="p">,</span><span class="s2">&quot;PORO1&quot;</span><span class="o">=</span><span class="mf">0.37</span><span class="p">,</span><span class="s2">&quot;DISPERC1&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI1&quot;</span><span class="o">=</span><span class="mf">0.32</span><span class="p">,</span><span class="s2">&quot;SNI1&quot;</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="s2">&quot;PEN1&quot;</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span><span class="s2">&quot;NKRW1&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN1&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE1&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE1&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT1&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">20</span><span class="n">facie2</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX2&quot;</span><span class="o">=</span><span class="mf">100E3</span><span class="p">,</span><span class="s2">&quot;PERMZ2&quot;</span><span class="o">=</span><span class="mf">100E3</span><span class="p">,</span><span class="s2">&quot;PORO2&quot;</span><span class="o">=</span><span class="mf">0.38</span><span class="p">,</span><span class="s2">&quot;DISPERC2&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI2&quot;</span><span class="o">=</span><span class="mf">0.14</span><span class="p">,</span><span class="s2">&quot;SNI2&quot;</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span><span class="s2">&quot;PEN2&quot;</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span><span class="s2">&quot;NKRW2&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN2&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE2&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE2&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT2&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">21</span><span class="n">facie3</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX3&quot;</span><span class="o">=</span><span class="mf">300E3</span><span class="p">,</span><span class="s2">&quot;PERMZ3&quot;</span><span class="o">=</span><span class="mf">300E3</span><span class="p">,</span><span class="s2">&quot;PORO3&quot;</span><span class="o">=</span><span class="mf">0.40</span><span class="p">,</span><span class="s2">&quot;DISPERC3&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI3&quot;</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span><span class="s2">&quot;SNI3&quot;</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;PEN3&quot;</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span><span class="s2">&quot;NKRW3&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN3&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE3&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE3&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT3&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">22</span><span class="n">facie4</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX4&quot;</span><span class="o">=</span><span class="mf">800E3</span><span class="p">,</span><span class="s2">&quot;PERMZ4&quot;</span><span class="o">=</span><span class="mf">800E3</span><span class="p">,</span><span class="s2">&quot;PORO4&quot;</span><span class="o">=</span><span class="mf">0.39</span><span class="p">,</span><span class="s2">&quot;DISPERC4&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI4&quot;</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span><span class="s2">&quot;SNI4&quot;</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;PEN4&quot;</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span><span class="s2">&quot;NKRW4&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN4&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE4&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE4&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT4&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">23</span><span class="n">facie5</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX5&quot;</span><span class="o">=</span><span class="mf">1500E3</span><span class="p">,</span><span class="s2">&quot;PERMZ5&quot;</span><span class="o">=</span><span class="mf">1500E3</span><span class="p">,</span><span class="s2">&quot;PORO5&quot;</span><span class="o">=</span><span class="mf">0.39</span><span class="p">,</span><span class="s2">&quot;DISPERC5&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI5&quot;</span><span class="o">=</span><span class="mf">0.12</span><span class="p">,</span><span class="s2">&quot;SNI5&quot;</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="s2">&quot;PEN5&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span><span class="s2">&quot;NKRW5&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN5&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE5&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE5&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT5&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">24</span><span class="n">facie6</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PERMX6&quot;</span><span class="o">=</span><span class="mf">3000E3</span><span class="p">,</span><span class="s2">&quot;PERMZ6&quot;</span><span class="o">=</span><span class="mf">3000E3</span><span class="p">,</span><span class="s2">&quot;PORO6&quot;</span><span class="o">=</span><span class="mf">0.42</span><span class="p">,</span><span class="s2">&quot;DISPERC6&quot;</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span><span class="s2">&quot;SWI6&quot;</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;SNI6&quot;</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="s2">&quot;PEN6&quot;</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;NKRW6&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NKRN6&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;NPE6&quot;</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;THRE6&quot;</span><span class="o">=</span><span class="mf">5e-2</span><span class="p">,</span><span class="s2">&quot;NPNT6&quot;</span><span class="o">=</span><span class="mi">100</span><span class="p">}</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span><span class="c1"># Set the saturation functions</span>
+<span class="linenos">27</span><span class="n">krw</span><span class="o">=</span><span class="s2">&quot;(max(0, (sw - swi) / (1 - swi))) ** nkrw&quot;</span>             <span class="c1">#Wetting rel perm saturation function [-]</span>
+<span class="linenos">28</span><span class="n">krn</span><span class="o">=</span><span class="s2">&quot;(max(0, (1 - sw - sni) / (1 - sni))) ** nkrn&quot;</span>         <span class="c1">#Non-wetting rel perm saturation function [-]</span>
+<span class="linenos">29</span><span class="n">cap</span><span class="o">=</span><span class="s2">&quot;pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))&quot;</span>        <span class="c1">#Capillary pressure saturation function [Pa]</span>
+</pre></div>
+</div>
+<p>Each line adds a description of the variables. For the facie properties, “THREN” is the threshold to evaluate the capillary pressure function to avoid dividing by 0,
+and “NPNTN” is the number of points to generate the saturation tables.</p>
+<p>See the input files in the <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/examples">examples folder</a> to set the history matchings.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, NORCE Research AS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

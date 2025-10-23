@@ -1,0 +1,5 @@
+GENERAL_OBSERVATION MET_OBS {
+   DATA       = SIMULATION_METRICS;
+   RESTART    = 0;
+   OBS_FILE   = ../deck/obs.txt;
+};

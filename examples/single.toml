@@ -1,0 +1,32 @@
+# Set the full path to the flow executable and flags
+flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --enable-tuning=true --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
+
+# Set the model parameters
+grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
+thickness="final" # Thickness maps
+mult_thickness=1 # Thickness multiplier
+x=[70] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
+z=[3,2,2,2,2,2,2,3,3,3,1] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
+temperature=[20, 20] # Temperature bottom and top rig [C]
+pressure=104900 # Pressure at the datum [Pa]           
+diffusion=[1e-9, 2e-8] # Diffusion (in liquid and gas) [m^2/s]
+sources=[[0.9, 0.005, 0.3], [1.7, 0.005, 0.7]] # Source positions: x, y, and z coordinates [m], source 1 to 2
+
+# Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)
+inj=[[8100, 8100, 3E-7, 0, '1e-2 1e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
+[10200, 10200, 0, 3E-7, '1e-2 1e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
+[68100, 68100, 0, 0, '1e-2 5e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
+[172800, 86400, 0, 0, '1e-2 1e-2 1e-20 1e-20 1.6 0.2 0.65 1.1']]
+
+# Facie Properties
+facie1={"PERMX1"=50E3,"PERMZ1"=50E3,"PORO1"=0.37,"DISPERC1"=1E-1,"SWI1"=0.32,"SNI1"=0.3,"PEN1"=1500,"NKRW1"=2,"NKRN1"=2,"NPE1"=2,"THRE1"=5e-2,"NPNT1"=100}
+facie2={"PERMX2"=100E3,"PERMZ2"=100E3,"PORO2"=0.38,"DISPERC2"=1E-1,"SWI2"=0.14,"SNI2"=0.3,"PEN2"=800,"NKRW2"=2,"NKRN2"=2,"NPE2"=2,"THRE2"=5e-2,"NPNT2"=100}
+facie3={"PERMX3"=300E3,"PERMZ3"=300E3,"PORO3"=0.40,"DISPERC3"=1E-1,"SWI3"=0.12,"SNI3"=0.1,"PEN3"=200,"NKRW3"=2,"NKRN3"=2,"NPE3"=2,"THRE3"=5e-2,"NPNT3"=100}
+facie4={"PERMX4"=800E3,"PERMZ4"=800E3,"PORO4"=0.39,"DISPERC4"=1E-1,"SWI4"=0.12,"SNI4"=0.1,"PEN4"=150,"NKRW4"=2,"NKRN4"=2,"NPE4"=2,"THRE4"=5e-2,"NPNT4"=100}
+facie5={"PERMX5"=1500E3,"PERMZ5"=1500E3,"PORO5"=0.39,"DISPERC5"=1E-1,"SWI5"=0.12,"SNI5"=0.1,"PEN5"=100,"NKRW5"=2,"NKRN5"=2,"NPE5"=2,"THRE5"=5e-2,"NPNT5"=100}
+facie6={"PERMX6"=3000E3,"PERMZ6"=3000E3,"PORO6"=0.42,"DISPERC6"=1E-1,"SWI6"=0,"SNI6"=0,"PEN6"=1,"NKRW6"=2,"NKRN6"=2,"NPE6"=2,"THRE6"=5e-2,"NPNT6"=100}
+
+# Set the saturation functions
+krw="(max(0, (sw - swi) / (1 - swi))) ** nkrw"             #Wetting rel perm saturation function [-]
+krn="(max(0, (1 - sw - sni) / (1 - sni))) ** nkrn"         #Non-wetting rel perm saturation function [-]
+cap="pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))"        #Capillary pressure saturation function [Pa]

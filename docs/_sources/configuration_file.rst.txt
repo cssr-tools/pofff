@@ -1,0 +1,54 @@
+==================
+Configuration file
+==================
+
+Here we use as an example one of the configuration files used in the tests
+(see `input.toml <https://github.com/cssr-tools/pofff/blob/main/examples/input.toml>`_).
+The first input parameter is:
+
+.. code-block:: python
+    :linenos:
+
+    # Set mpirun, the full path to the flow executable, and simulator flags (except --output-dir)
+    flow = "flow --newton-min-iterations=1 --enable-tuning=true --enable-opm-rst-file=true"
+    
+If **flow** is not in your path, then write the full path to the executable, as well as adding mpirun
+if this is supported in your machine (e.g., flow = "mpirun -np 8 /Users/dmar/Github/opm/build/opm-simulators/bin/flow --newton-min-iterations=1").
+
+The next entries define the following parameters:
+
+.. code-block:: python
+    :linenos:
+    :lineno-start: 4
+
+    # Set the model parameters
+    grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
+    thickness="final" # Thickness maps
+    mult_thickness=1 # Thickness multiplier
+    x=[140] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
+    z=[7,5,5,5,5,5,5,8,10,9,5] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
+    temperature=[20, 20] # Temperature bottom and top rig [C]
+    pressure=104900 # Pressure at the datum [Pa]           
+    diffusion=[1e-9, 2e-8] # Diffusion (in liquid and gas) [m^2/s]
+    sources=[[0.9, 0.005, 0.3], [1.7, 0.005, 0.7]] # Source positions: x, y, and z coordinates [m], source 1 to 2
+
+    # Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)
+    inj=[[900, 900, 3E-7, 0, '1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1']]
+
+    # Facie Properties
+    facie1={"PERMX1"=50E3,"PERMZ1"=50E3,"PORO1"=0.37,"DISPERC1"=1E-1,"SWI1"=0.32,"SNI1"=0.3,"PEN1"=1500,"NKRW1"=2,"NKRN1"=2,"NPE1"=2,"THRE1"=5e-2,"NPNT1"=100}
+    facie2={"PERMX2"=100E3,"PERMZ2"=100E3,"PORO2"=0.38,"DISPERC2"=1E-1,"SWI2"=0.14,"SNI2"=0.3,"PEN2"=800,"NKRW2"=2,"NKRN2"=2,"NPE2"=2,"THRE2"=5e-2,"NPNT2"=100}
+    facie3={"PERMX3"=300E3,"PERMZ3"=300E3,"PORO3"=0.40,"DISPERC3"=1E-1,"SWI3"=0.12,"SNI3"=0.1,"PEN3"=200,"NKRW3"=2,"NKRN3"=2,"NPE3"=2,"THRE3"=5e-2,"NPNT3"=100}
+    facie4={"PERMX4"=800E3,"PERMZ4"=800E3,"PORO4"=0.39,"DISPERC4"=1E-1,"SWI4"=0.12,"SNI4"=0.1,"PEN4"=150,"NKRW4"=2,"NKRN4"=2,"NPE4"=2,"THRE4"=5e-2,"NPNT4"=100}
+    facie5={"PERMX5"=1500E3,"PERMZ5"=1500E3,"PORO5"=0.39,"DISPERC5"=1E-1,"SWI5"=0.12,"SNI5"=0.1,"PEN5"=100,"NKRW5"=2,"NKRN5"=2,"NPE5"=2,"THRE5"=5e-2,"NPNT5"=100}
+    facie6={"PERMX6"=3000E3,"PERMZ6"=3000E3,"PORO6"=0.42,"DISPERC6"=1E-1,"SWI6"=0,"SNI6"=0,"PEN6"=1,"NKRW6"=2,"NKRN6"=2,"NPE6"=2,"THRE6"=5e-2,"NPNT6"=100}
+
+    # Set the saturation functions
+    krw="(max(0, (sw - swi) / (1 - swi))) ** nkrw"             #Wetting rel perm saturation function [-]
+    krn="(max(0, (1 - sw - sni) / (1 - sni))) ** nkrn"         #Non-wetting rel perm saturation function [-]
+    cap="pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))"        #Capillary pressure saturation function [Pa]
+
+Each line adds a description of the variables. For the facie properties, "THREN" is the threshold to evaluate the capillary pressure function to avoid dividing by 0,
+and "NPNTN" is the number of points to generate the saturation tables.
+
+See the input files in the `examples folder <https://github.com/cssr-tools/pofff/blob/main/examples>`_ to set the history matchings.

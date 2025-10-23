@@ -1,0 +1,8 @@
+include LICENSE
+include src/pofff/core/*
+include src/pofff/fluidflower/*
+include src/pofff/geology/*
+include src/pofff/jobs/*
+include src/pofff/templates/*
+include src/pofff/utils/*
+include src/pofff/visualization/*

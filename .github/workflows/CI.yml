@@ -1,0 +1,63 @@
+name: Run pofff
+
+on:
+ push:
+   branches:
+     - main
+ pull_request:
+   
+jobs:
+  run-pofff-local:
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11']
+        os: [ubuntu-latest]
+        
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install Flow Simulator
+      run: |
+        sudo apt-get update
+        sudo apt-get install software-properties-common
+        sudo apt-add-repository ppa:opm/ppa
+        sudo apt-get update
+        sudo apt-get install mpi-default-bin
+        sudo apt-get install libopm-simulators-bin
+        sudo apt-get install texlive-fonts-recommended texlive-fonts-extra dvipng cm-super
+        
+    - name: Install dependecies
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install -r dev-requirements.txt
+        
+    - name: Install pofff
+      run: |
+        pip install .[opm]
+        pip install git+https://github.com/equinor/everest.git
+        
+    - name: Check code style and linting
+      run: |
+        black --check src/ tests/
+        pylint src/ tests/
+        mypy --ignore-missing-imports src/ tests/
+      
+    - name: Run the tests
+      run: |
+        pytest --cov=pofff --cov-report term-missing tests/
+        
+    - name: Build documentation
+      run: |
+        pushd docs
+        make html
