@@ -63,7 +63,7 @@ See the [_examples_](https://cssr-tools.github.io/pofff/examples.html) in the [_
 ## Citing
 If you use _pofff_ in your research, please cite the following publication:
 
-Landa-Marbán, D., Sandve, T.H., Both, J.W., Nordbotten, J.M., Gasda, S.E. Performance of an open-source image-based history matching framework for CO2 storage. Submitted.
+Landa-Marbán, D., Sandve, T.H., Both, J.W., Nordbotten, J.M., and Gasda, S.E., 2025. Performance of an open-source image-based history matching framework for CO2 storage. https://arxiv.org/abs/2510.20614.
 
 ## About pofff
 The pofff package is funded by the [_HPC Simulation Software for the Gigatonne Storage Challenge project_](https://www.norceresearch.no/en/projects/hpc-simulation-software-for-the-gigatonne-storage-challenge) [project number 622059] and [_Center for Sustainable Subsurface Resources (CSSR)_](https://cssr.no) [project no. 331841].
