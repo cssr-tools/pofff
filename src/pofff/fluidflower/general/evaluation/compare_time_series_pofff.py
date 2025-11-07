@@ -60,6 +60,12 @@ def compareTimeSeries():
         help="Location for the csv simulation data ('.' by default).",
     )
     parser.add_argument(
+        "-latex",
+        "--latex",
+        default="1",
+        help="Set to 0 to not use LaTeX formatting ('1' by default).",
+    )
+    parser.add_argument(
         "-a",
         "--add",
         default=True,
@@ -102,7 +108,7 @@ def compareTimeSeries():
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": True,
+            "text.usetex": int(cmdargs["latex"]),
             "font.family": "monospace",
             "legend.columnspacing": 1.5,
             "legend.fontsize": 14,
@@ -211,7 +217,6 @@ def compareTimeSeries():
     for i, (fileName, group, color) in enumerate(zip(fileNames, groups, colors)):
         if i != 1:
             continue
-        print(f"Processing {fileName}.")
 
         skip_header = 0
         with open(fileName, "r", encoding="utf8") as file:

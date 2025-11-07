@@ -24,14 +24,7 @@ for suff in [
     "csv",
     "DATA",
 ]:
-    os.system(f"rm -rf *.{suff}")
-for pref in [
-    "flow",
-    "data",
-    "bcprop",
-    "equalreg",
-    "metric",
-    "satufunc",
-    "copyd",
-]:
-    os.system(f"rm -rf {pref}.*")
+    for filename in os.listdir("."):
+        if filename.endswith(suff):
+            os.system(f"rm -rf *.{suff}")
+            break

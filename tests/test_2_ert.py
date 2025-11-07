@@ -18,7 +18,9 @@ def test_ert():
         os.system(f"mkdir {testpth}/output")
     os.chdir(f"{testpth}/output")
     confi = f"{mainpth}/examples/ert.toml"
-    subprocess.run(["pofff", "-i", confi, "-o", "ert", "-m", "ert"], check=True)
+    subprocess.run(
+        ["pofff", "-i", confi, "-o", "ert", "-m", "ert", "-t", "0.25,0.5"], check=True
+    )
     assert os.path.exists(
         f"{testpth}/output/ert/figures/hm_missmatch.png"
     ), "Issue with the test_2_ert.py"

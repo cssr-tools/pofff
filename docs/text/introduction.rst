@@ -2,7 +2,7 @@
 Introduction
 ============
 
-.. image:: ./figs/readme.png
+.. image:: ./figs/pofff.png
 
 This documentation describes the **pofff** tool hosted in `https://github.com/cssr-tools/pofff <https://github.com/cssr-tools/pofff>`_.
 

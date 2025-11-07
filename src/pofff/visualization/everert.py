@@ -13,23 +13,9 @@ import math
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
 
-font = {"family": "normal", "weight": "normal", "size": 14}
 tab20s = matplotlib.colormaps["tab20"]
-matplotlib.rc("font", **font)
-plt.rcParams.update(
-    {
-        "text.usetex": True,
-        "font.family": "monospace",
-        "legend.columnspacing": 0.9,
-        "legend.handlelength": 3.5,
-        "legend.fontsize": 14,
-        "lines.linewidth": 4,
-        "axes.titlesize": 14,
-        "axes.grid": True,
-        "figure.figsize": (16, 8),
-    }
-)
 
 
 def figures():
@@ -39,14 +25,39 @@ def figures():
     dic["j"] = (cmdargs["jobs"].strip()).split(",")
     dic["p"] = os.path.abspath(cmdargs["path"].strip())
     dic["e"] = cmdargs["external"].strip()
+    dic["r"] = cmdargs["run"].strip()
     dic["m"] = cmdargs["maps"].strip()
+    dic["s"] = float(cmdargs["minimumsaturation"])
+    dic["c"] = float(cmdargs["minimumconcentration"])
+    dic["latex"] = int(cmdargs["latex"])
+
+    font = {"family": "normal", "weight": "normal", "size": 14}
+    matplotlib.rc("font", **font)
+    plt.rcParams.update(
+        {
+            "text.usetex": dic["latex"],
+            "font.family": "monospace",
+            "legend.columnspacing": 0.9,
+            "legend.handlelength": 3.5,
+            "legend.fontsize": 14,
+            "lines.linewidth": 4,
+            "axes.titlesize": 14,
+            "axes.grid": True,
+            "figure.figsize": (16, 8),
+        }
+    )
 
     # Make the figures folder
     if not os.path.exists("figures"):
         os.system("mkdir figures")
 
     if os.path.exists("everest_output"):
-        plot_optimization_results()
+        dic["ind_batch"], dic["ind_sim"] = [0, 0], [0, 0]
+        for i in range(3):
+            dic[f"s{i}"] = []
+            dic[f"x{i}"] = 0
+        process_optimization_results(dic)
+        plot_optimization_results(dic)
         plt.rcParams.update({"axes.grid": False})
         plot_optimization_details(dic)
         find_optimal(dic)
@@ -87,14 +98,17 @@ def find_best(dic):
     for job in dic["j"]:
         os.system(f"python3 {dic['p']}/jobs/{str(job)}.py")
     os.system(f"python3 {dic['p']}/jobs/data.py -t {dic['t']} -m {dic['m']}")
-    os.system(f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['e']}")
+    os.system(
+        f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['r']} "
+        f"-p {dic['e']} -s {dic['s']} -c {dic['c']}"
+    )
     print(
         f"Best: {dic['p']}/output/simulations/realisation-{bestid}/iter-{dic['n_i']-1}"
     )
-    if dic["n_i"] > 1:
-        print(f"Values: {list(dic['simulations'][-1][eobs[0][0]])}")
-    else:
+    if dic["n_i"] == 1 or dic["simulations"][-1][eobs[0][0]].size == 1:
         print(f"Values: {dic['simulations'][0][eobs[0][0]]}")
+    else:
+        print(f"Values: {list(dic['simulations'][-1][eobs[0][0]])}")
 
 
 def plot_cumulative_misfit(dic):
@@ -425,83 +439,31 @@ def initialize_ert(dic):
 
 def find_optimal(dic):
     """Find the well locations and folder for the 'optimal' obtained solution"""
-    dic["ind_batch"] = [0, 0]
-    dic["ind_sim"] = [0, 0]
-    optimal = []
-    file = "everest_output/optimization_output/results.txt"
-    with open(file, "r", encoding="utf8") as file:
-        for row in csv.reader(file):
-            if len(row) > 0:
-                if ((row[0].strip()).split()[0]).isdigit():
-                    optimal.append(float((row[0].strip()).split()[2]))
-    optimal = np.float16(optimal[int(np.nanargmax(np.array(optimal)))])
-    batch_size = 0
-    file = "everest_output/optimization_output/results.txt"
-    with open(file, "r", encoding="utf8") as file:
-        for row in csv.reader(file):
-            if len(row) > 0:
-                if ((row[0].strip()).split()[0]).isdigit():
-                    if int((row[0].strip()).split()[1]) == 0:
-                        batch_size += 1
-                    if np.float16((row[0].strip()).split()[2]) == optimal:
-                        dic["ind_batch"][1] = int(
-                            int((row[0].strip()).split()[0]) / batch_size
-                        )
-                        dic["ind_sim"][1] = (
-                            int((row[0].strip()).split()[0])
-                            - dic["ind_batch"][1] * batch_size
-                        )
-                        break
     if not os.path.exists(f"{dic['p']}/figures/best_simulation"):
         os.system(f"mkdir {dic['p']}/figures/best_simulation")
     os.chdir(f"{dic['p']}/figures/best_simulation")
     os.system(
         f"cp {dic['p']}/everest_output/sim_output/"
-        + f"batch_{dic['ind_batch'][1]}/geo_realization_0/simulation_"
+        + f"batch_{dic['ind_batch'][1]}/realization_0/evaluation_"
         + f"{dic['ind_sim'][1]}/para.json ."
     )
     os.system(f"python3 {dic['p']}/jobs/copyd.py")
     for job in dic["j"]:
         os.system(f"python3 {dic['p']}/jobs/{str(job)}.py")
     os.system(f"python3 {dic['p']}/jobs/data.py -t {dic['t']} -m {dic['m']}")
-    os.system(f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['e']}")
+    os.system(
+        f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['r']} "
+        f"-p {dic['e']} -s {dic['s']} -c {dic['c']}"
+    )
     os.system(f"python3 {dic['p']}/jobs/scale.py")
     print(
         f"Best: {dic['p']}/everest_output/sim_output/batch_{dic['ind_batch'][1]}"
-        f"/geo_realization_0/simulation_{dic['ind_sim'][1]}"
+        f"/realization_0/evaluation_{dic['ind_sim'][1]}"
     )
-
-
-def read_results(dic):
-    """Get the values over the optimization steps"""
-    file = "everest_output/optimization_output/results.txt"
-    n, dic["tot_eval"] = 0, 0
-    with open(file, "r", encoding="utf8") as file:
-        for row in csv.reader(file):
-            if len(row) > 0:
-                if ((row[0].strip()).split()[0]).isdigit():
-                    dic["tot_eval"] += 1
-                    if n != int((row[0].strip()).split()[1]):
-                        for i in range(3):
-                            dic[f"s{i}"].append(dic[f"x{i}"])
-                            dic[f"x{i}"] = 0
-                        n += 1
-                    if (row[0].strip()).split()[2] == "nan":
-                        dic["x0"] += 1
-                    elif (row[0].strip()).split()[2] == "-1":
-                        dic["x1"] += 1
-                    else:
-                        dic["x2"] += 1
-    for i in range(3):
-        dic[f"s{i}"].append(dic[f"x{i}"])
 
 
 def plot_optimization_details(dic):
     """Plot the number of failed and succeed simulations over steps"""
-    for i in range(3):
-        dic[f"s{i}"] = []
-        dic[f"x{i}"] = 0
-    read_results(dic)
     colors = ["r", "k", "g"]
     names = [
         f"Failed (no={sum(dic['s0'])})",
@@ -525,39 +487,65 @@ def plot_optimization_details(dic):
     ax.set_ylabel(r"Occurence [\#]")
     ax.set_xlabel(r"Step [\#]")
     # ax.set_xlim([-1,1001])
-    ax.set_xticks(
-        np.linspace(
-            0,
-            len(allw),
-            11,
+    if len(allw) + 1 < 20:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    else:
+        ax.set_xticks(
+            np.linspace(
+                0,
+                len(allw),
+                11,
+            )
         )
-    )
     ax.legend()
     # ax.set_xticks(range(len(allw)))
     fig.savefig("figures/details.png", bbox_inches="tight", dpi=900)
 
 
-def plot_optimization_results():
+def process_optimization_results(dic):
+    """Process the optimization results over steps (batches)"""
+    dic["tot_eval"], dic["optimal"], dic["optimization"], where = 0, [], [], []
+    improved = -np.inf
+    root = "everest_output/sim_output"
+    for n in range(len(os.listdir(root))):
+        for m in range(len(os.listdir(f"{root}/batch_{n}/realization_0"))):
+            file = root + f"/batch_{n}/realization_0/evaluation_{m}/func"
+            value = np.genfromtxt(file)
+            dic["tot_eval"] += 1
+            if str(value) == "nan":
+                dic["x0"] += 1
+            elif value == -1:
+                dic["x1"] += 1
+            else:
+                dic["x2"] += 1
+            if str(value) != "nan":
+                improved = max(improved, value)
+                dic["optimal"].append(value)
+                where.append([n, m])
+        for i in range(3):
+            dic[f"s{i}"].append(dic[f"x{i}"])
+            dic[f"x{i}"] = 0
+        dic["optimization"].append(improved)
+    ind = int(np.nanargmax(np.array(dic["optimal"])))
+    dic["optimal"] = dic["optimal"][ind]
+    dic["ind_batch"][1] = where[ind][0]
+    dic["ind_sim"][1] = where[ind][1]
+
+
+def plot_optimization_results(dic):
     """Plot the optimization values over steps"""
-    optimization = []
-    file = "everest_output/optimization_output/optimizer_output.txt"
-    with open(file, "r", encoding="utf8") as file:
-        for j, row in enumerate(csv.reader(file)):
-            optimization.append([j + 1, -float((row[0].strip()).split()[4])])
-    if not optimization:
-        return
     fig, axis = plt.subplots()
-    if len(optimization) > 1:
+    if len(dic["optimization"]) > 1:
         axis.step(
-            [step[0] for step in optimization],
-            [-value[1] * 8.5 * 100 for value in optimization],
+            range(1, len(dic["optimization"]) + 1),
+            [-value * 8.5 * 100 for value in dic["optimization"]],
             lw=5,
             color="b",
         )
     else:
         axis.plot(
-            optimization[0][0],
-            -optimization[0][1] * 8.5 * 100,
+            1,
+            dic["optimization"][0] * 8.5 * 100,
             marker="*",
             ms=20,
             color="k",
@@ -565,13 +553,16 @@ def plot_optimization_results():
     axis.set_title("Optimization results")
     axis.set_ylabel("Objective value")
     axis.set_xlabel(r"Step [\#]")
-    axis.set_xticks(
-        np.linspace(
-            0,
-            optimization[-1][0] + 1,
-            11,
+    if len(dic["optimization"]) < 20:
+        axis.xaxis.set_major_locator(MaxNLocator(integer=True))
+    else:
+        axis.set_xticks(
+            np.linspace(
+                0,
+                len(dic["optimization"]) + 1,
+                11,
+            )
         )
-    )
     fig.savefig("figures/optimization_results.png", bbox_inches="tight")
 
 
@@ -605,6 +596,31 @@ def load_parser():
         "--external",
         default="/home/AD.NORCERESEARCH.NO/dmar/ThirdParty",
         help="Path to the fluidflower data",
+    )
+    parser.add_argument(
+        "-r",
+        "--run",
+        default="run2",
+        help="Experimental data to history match, valid options are run1 to run5 "
+        "('run2' by default).",
+    )
+    parser.add_argument(
+        "-s",
+        "--minimumsaturation",
+        default="1e-2",
+        help="The minimum saturation above which gaseous CO2 is considered for the segmentation.",
+    )
+    parser.add_argument(
+        "-latex",
+        "--latex",
+        default="1",
+        help="Set to 0 to not use LaTeX formatting ('1' by default).",
+    )
+    parser.add_argument(
+        "-c",
+        "--minimumconcentration",
+        default="1e-1",
+        help="The min conc above which CO2 is considered to be dissolved for the segmentation.",
     )
     parser.add_argument(
         "-m",

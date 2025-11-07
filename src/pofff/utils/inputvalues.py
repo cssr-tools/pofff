@@ -27,6 +27,8 @@ def process_input(dic, in_file):
     dic["experiment"] = "run" + dic["experiment"][-1]
     with open(in_file, "rb") as file:
         dic.update(tomllib.load(file))
+    if "random_seed" in dic.keys():
+        dic["rng"] = dic["random_seed"]
     dic["PARA"] = {}
     for i in range(1, 7):
         dic["PARA"].update(dic[f"facie{i}"])

@@ -154,6 +154,36 @@ def opm_files(dic):
         names += ["flow", "copyd"]
         if dic["mode"] == "everest":
             names += ["scale"]
+            with open(
+                f"{dic['jobs']}/METRIC",
+                "w",
+                encoding="utf8",
+            ) as file:
+                file.write("EXECUTABLE metric.py")
+            with open(
+                f"{dic['jobs']}/DATA",
+                "w",
+                encoding="utf8",
+            ) as file:
+                file.write("EXECUTABLE data.py")
+        else:
+            with open(
+                f"{dic['jobs']}/METRIC",
+                "w",
+                encoding="utf8",
+            ) as file:
+                file.write("EXECUTABLE metric.py\n")
+                file.write(
+                    f"ARGLIST -t {dic['times']} -e {dic['experiment']} "
+                    f"-s {dic['msat']} -c {dic['mcon']} -p {dic['path']}"
+                )
+            with open(
+                f"{dic['jobs']}/DATA",
+                "w",
+                encoding="utf8",
+            ) as file:
+                file.write("EXECUTABLE data.py\n")
+                file.write(f"ARGLIST -t {dic['times']} -m {dic['deck']}/cellmap.npy")
         if dic["monotonic"]:
             names += ["monotonic"]
         mytemplate = Template(filename=f"{dic['path']}/templates/{dic['mode']}.mako")

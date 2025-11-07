@@ -3,6 +3,7 @@ controls:
     type: generic_control
     min: 0
     control_type: integer
+    perturbation_magnitude: 0.01 # Not used for scipy/differential_evolution, but requiered by everest
     variables:
 % for para in dic["hm"]:
       - name: ${para}
@@ -14,34 +15,39 @@ objective_functions:
   - name: func
 
 optimization:
-  backend: scipy
-  algorithm: differential_evolution
+  algorithm: scipy/differential_evolution
   max_function_evaluations: ${dic["max_function_evaluations"]}
   min_realizations_success: ${dic["min_realizations_success"]}
-% if dic["random_seed"] != 0:
-  backend_options:
-    seed: ${dic["random_seed"]}
-    popsize: ${dic["popsize"]}
+% if max_batch_num in dic.keys():
+  max_batch_num: ${dic["max_batch_num"]}
 % endif
+  options:
+% for name in ["strategy", "maxiter", "popsize", "tol", "mutation", "recombination", "rng", "callback", "disp", "polish", "init", "atol", "updating", "workers", "constraints", "x0", "integratility", "vectorized"]:
+% if name in dic.keys():     
+    ${name}: ${dic[name]}
+% endif
+% endfor
   parallel: True
 
 install_jobs:
 % if dic["monotonic"]:
   - name: scale
-    source: jobs/SCALE
+    executable: jobs/scale.py
   - name: monotonic
-    source: jobs/MONOTONIC
+    executable: jobs/monotonic.py
 % endif
 % for name in ["copyd", "equalreg", "satufunc", "bcprop", "flow", "data", "metric", "delete"]:
   - name: ${name}
-    source: jobs/${name.upper()}
+    executable: jobs/${name}.py
 % endfor
 
 model:
   realizations: [0]
 
 simulator:
-  cores: ${dic["cores"]}
+  queue_system:
+    max_running: ${dic["cores"]}
+    name: local
 
 forward_model:
 % if dic["monotonic"]:

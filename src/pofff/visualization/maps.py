@@ -15,22 +15,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
-font = {"family": "normal", "weight": "normal", "size": 12}
-matplotlib.rc("font", **font)
-plt.rcParams.update(
-    {
-        "text.usetex": 1,
-        "font.family": "monospace",
-        "legend.columnspacing": 0.9,
-        "legend.handlelength": 3.5,
-        "legend.fontsize": 12,
-        "lines.linewidth": 4,
-        "axes.titlesize": 12,
-        "axes.grid": False,
-        "figure.figsize": (10, 5),
-    }
-)
-
 
 def pngs(simulations, experiment, x, z, points, lines, t):
     """
@@ -176,9 +160,31 @@ def maps():
         default=".",
         help="Location for the csv simulation data ('.' by default).",
     )
+    parser.add_argument(
+        "-latex",
+        "--latex",
+        default="1",
+        help="Set to 0 to not use LaTeX formatting ('1' by default).",
+    )
     parser.add_argument("-p", "--path", default=".", help="Path to the geometry data.")
-
     cmdargs = vars(parser.parse_args())
+
+    font = {"family": "normal", "weight": "normal", "size": 12}
+    matplotlib.rc("font", **font)
+    plt.rcParams.update(
+        {
+            "text.usetex": int(cmdargs["latex"]),
+            "font.family": "monospace",
+            "legend.columnspacing": 0.9,
+            "legend.handlelength": 3.5,
+            "legend.fontsize": 12,
+            "lines.linewidth": 4,
+            "axes.titlesize": 12,
+            "axes.grid": False,
+            "figure.figsize": (10, 5),
+        }
+    )
+
     for i in cmdargs["times"].split(","):
         simulations, x, z = segment(
             f"{cmdargs['location'].strip()}/spatial_map_{i}h.csv",

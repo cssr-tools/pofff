@@ -50,6 +50,7 @@
 <li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration file</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#hello-world">Hello world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#publication">Publication</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
@@ -85,6 +86,7 @@
              
   <section id="examples">
 <h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<p>For additional examples, see the scripts in the <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/tests">tests</a> folder.</p>
 <section id="hello-world">
 <h2>Hello world<a class="headerlink" href="#hello-world" title="Link to this heading"></a></h2>
 <p>The <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/examples">examples</a> folder contains a few configuration files
@@ -96,6 +98,29 @@ with low grid resolution and shorter injection times (for initial testing of the
 <figure class="align-default">
 <img alt="_images/map_24h.png" src="_images/map_24h.png" />
 </figure>
+</section>
+<section id="publication">
+<h2>Publication<a class="headerlink" href="#publication" title="Link to this heading"></a></h2>
+<p>The <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication">publication</a> folder contains the configuration files used for the results in the
+<a class="reference external" href="https://arxiv.org/abs/2510.20614">pofff paper</a>. For example, running inside that folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>results.toml<span class="w"> </span>-o<span class="w"> </span>results<span class="w"> </span>-m<span class="w"> </span>single<span class="w"> </span>-t<span class="w"> </span><span class="m">24</span>,48,72,96,120<span class="w"> </span>-f<span class="w"> </span>all
+</pre></div>
+</div>
+<p>generates the figures in the paper in addition to the new simulation labeled as “YOURS”, e.g., for the compare_all_time_series.png:</p>
+<figure class="align-default">
+<img alt="_images/compare_all_time_series.png" src="_images/compare_all_time_series.png" />
+</figure>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>One can always modify the plotting scripts to change the labels, colors, etc.</p>
+</div>
+<p>We welcome pull request with your configuration files to the examples folder for cases with better results (less error in the error_table_satmin-0.01_conmin-0.1.csv).</p>
+<p>To generate the figures in the paper (including the appendix) without adding a new simulation, this can be achieved by:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-m<span class="w"> </span>fair
+pofff<span class="w"> </span>-m<span class="w"> </span>fair<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span>.05
+</pre></div>
+</div>
+<p>where fair attempts to align with <a class="reference external" href="https://www.nature.com/articles/sdata201618">these principles</a>.</p>
 </section>
 </section>
 

@@ -93,6 +93,8 @@ def benchmark(dic):
             dic["path"],
             "-s",
             dic["msat"],
+            "-latex",
+            dic["latex"],
             "-c",
             dic["mcon"],
             "-l",
@@ -128,6 +130,8 @@ def benchmark(dic):
             dic["location"],
             "-a",
             dic["add"],
+            "-latex",
+            dic["latex"],
             "-u",
             dic["use"],
         ],
@@ -170,7 +174,7 @@ def everest(dic):
     """
     for name in ["data", "delete", "metric"]:
         os.system(f"chmod u+x {dic['jobs']}/{name}.py")
-    os.system("everest run everest.yml")
+    os.system("everest run everest.yml --skip-prompt")
     postprocess(dic)
 
 
@@ -207,9 +211,17 @@ def postprocess(dic):
             "python",
             f"{dic['path']}/visualization/everert.py",
             "-e",
-            f"{dic['path']}/fluidflower",
+            f"{dic['path']}",
+            "-s",
+            dic["msat"],
+            "-c",
+            dic["mcon"],
+            "-r",
+            dic["experiment"],
             "-t",
             dic["times"],
+            "-latex",
+            dic["latex"],
             "-m",
             f"{dic['deck']}/cellmap.npy",
         ],
