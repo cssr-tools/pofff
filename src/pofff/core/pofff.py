@@ -5,6 +5,7 @@
 """Main script for pofff"""
 
 import os
+import sys
 import argparse
 from pofff.utils.inputvalues import process_input
 from pofff.utils.runs import flow, data, benchmark, everest, ert
@@ -22,10 +23,14 @@ def pofff():
     dic["mode"] = cmdargs["mode"].strip()  # Parts of the workflow to run
     dic["path"] = os.path.dirname(__file__)[:-5]  # Path to the pofff folder
     dic["times"] = cmdargs["times"]  # Temporal resolution to write the dense data
-    dic["latex"] = int(cmdargs["latex"])  # LaTeX formatting
+    dic["latex"] = cmdargs["latex"].strip()  # LaTeX formatting
     dic["mcon"] = cmdargs["minimumconcentration"]  # Con threshold for segmentation
     dic["msat"] = cmdargs["minimumsaturation"]  # Sat threshold for segmentation
     dic["use"] = cmdargs["use"]  # Use precopmpued WD matrix?
+
+    if dic["figures"] == "none" and dic["mode"] == "none":
+        print("Nothing to do since -m none -f none")
+        sys.exit()
 
     if not os.path.exists(f"{dic['fol']}"):  # Make the output folders
         os.system(f"mkdir {dic['fol']}")
@@ -60,21 +65,22 @@ def pofff():
         flow(dic)
         print("\nGenerating the data, please wait.")
         data(dic)
-        print(f"\nThe results have been written to {dic['fol']}")
     elif dic["mode"] == "data":
         print("\nGenerating the data, please wait.")
         data(dic)
-        print(f"\nThe results have been written to {dic['fol']}")
     elif dic["mode"] == "everest":
         os.system(f"cp -a {dic['path']}/jobs/. {dic['fol']}/jobs/.")
         print("\nRunning everest, please wait.")
         everest(dic)
-        print(f"\nThe results have been written to {dic['fol']}")
     elif dic["mode"] == "ert":
         os.system(f"cp -a {dic['path']}/jobs/. {dic['fol']}/jobs/.")
         print("\nRunning ert, please wait.")
         ert(dic)
-        print(f"\nThe results have been written to {dic['fol']}")
+    elif dic["mode"] in ["none", "fair"]:
+        pass
+    else:
+        print(f"Unknow -m {dic['mode']}")
+        sys.exit()
 
     if dic["figures"] in ["all", "basic"]:
         if os.path.exists(f"{dic['fol']}/figures/best_simulation"):
@@ -83,7 +89,7 @@ def pofff():
             os.chdir(f"{dic['fol']}")
         print("\nGenerating the benchmark files, please wait.")
         benchmark(dic)
-        print(f"\nThe results have been written to {dic['fol']}")
+    print(f"\nThe results have been written to {dic['fol']}")
 
 
 def load_parser():
@@ -137,7 +143,7 @@ def load_parser():
     parser.add_argument(
         "-l",
         "--latex",
-        default=1,
+        default="1",
         help="Set to 0 to not use LaTeX formatting ('1' by default).",
     )
     parser.add_argument(

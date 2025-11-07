@@ -1,3 +1,4 @@
+# pofff -i ert.toml -o ert -m ert -t 0.25,0.5 -f all
 # Set the full path to the flow executable and flags
 flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --enable-tuning=true --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
 
@@ -13,7 +14,7 @@ diffusion=[1e-9, 2e-8] # Diffusion (in liquid and gas) [m^2/s]
 sources=[[0.9, 0.005, 0.3], [1.7, 0.005, 0.7]] # Source positions: x, y, and z coordinates [m], source 1 to 2
 
 # Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)
-inj=[[900, 900, 3E-7, 0, '1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1']]
+inj=[[900, 900, 3E-7, 0, '1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1'], [900, 900, 3E-7, 0, '1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1']]
 
 # Facie Properties
 facie1={"PERMX1"=50E3,"PERMZ1"=50E3,"PORO1"=0.37,"DISPERC1"=1E-1,"SWI1"=0.32,"SNI1"=0.3,"PEN1"=1500,"NKRW1"=2,"NKRN1"=2,"NPE1"=2,"THRE1"=5e-2,"NPNT1"=100}
@@ -36,7 +37,8 @@ random_seed = 7 # Set a specific seed for reproducibility; a value of 0 means no
 cores = 8 # Maximum number of simulations running in parallel
 maxtime = 3600 # Maximum runtime in seconds of a realization; a value of 0 means unlimited runtime
 delete = true # Delete large files?
-errors = [20] # Error w.r.t the Wasserstein distance at the given time, i.e., as many entries as the -t flag.
+enkf_alpha = 3E5 # Scaling factor used when detecting outliers
+errors = [20, 20] # Error w.r.t the Wasserstein distance at the given time, i.e., as many entries as the -t flag.
 PEN1 = ["UNIFORM", 1000, 3000] # Distribution, value 1, and value 2
-THICKNESSMULT = ["UNIFORM", 1.2, 0.8]
+THICKNESSMULT = ["UNIFORM", 0.8, 1.2]
 PERM5 = ["UNIFORM", 1000E3, 3000E3]

@@ -51,4 +51,5 @@ The next entries define the following parameters:
 Each line adds a description of the variables. For the facie properties, "THREN" is the threshold to evaluate the capillary pressure function to avoid dividing by 0,
 and "NPNTN" is the number of points to generate the saturation tables.
 
-See the input files in the `examples folder <https://github.com/cssr-tools/pofff/blob/main/examples>`_ to set the history matchings.
+See the input files in the `examples <https://github.com/cssr-tools/pofff/blob/main/examples>`_ and `publication <https://github.com/cssr-tools/pofff/blob/main/publication>`_ 
+to set the history matchings.

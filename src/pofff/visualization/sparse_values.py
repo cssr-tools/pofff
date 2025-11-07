@@ -20,7 +20,7 @@ def postprocessing():
     )
     if values[-1][0] < dic["t"]:
         print(
-            "The box quantities in the benchmark figures required at least to simulate "
+            "The box quantities in the benchmark figures require at least to simulate "
             f"for 72 hours (the simulation is only {values[-1][0]/3600:.2f} h)"
         )
         sys.exit()

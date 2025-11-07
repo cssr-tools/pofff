@@ -1,3 +1,4 @@
+# pofff -i everest.toml -o everest -m everest -f all
 # Set the full path to the flow executable and flags
 flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --enable-tuning=true --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
 

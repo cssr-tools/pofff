@@ -64,6 +64,12 @@ def compareSparseData():
         "as required by the benchmark description."
     )
     parser.add_argument(
+        "-latex",
+        "--latex",
+        default="1",
+        help="Set to 0 to not use LaTeX formatting ('1' by default).",
+    )
+    parser.add_argument(
         "-l",
         "--location",
         default=".",
@@ -118,7 +124,7 @@ def compareSparseData():
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": True,
+            "text.usetex": int(cmdargs["latex"]),
             "font.family": "monospace",
             "legend.columnspacing": 0.9,
             "legend.handlelength": 1.2,

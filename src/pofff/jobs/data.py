@@ -93,9 +93,9 @@ def sparse_data(dig):
             0, dig["times"][-1], round(dig["times"][-1] / dig["sparse_t"]) + 1
         )
     }
-    dil["fipnum"] = list(dig["init"]["FIPNUM"])
+    dil["fipnum"] = list(dig["ini"]["FIPNUM"])
     for name in ["dx", "dy", "dz"]:
-        dil[f"{name}"] = np.array(dig["init"][name.upper()])
+        dil[f"{name}"] = np.array(dig["ini"][name.upper()])
     dil["names"] = [
         "pop1",
         "pop2",
@@ -286,11 +286,11 @@ def read_opm(dig):
                 dig["times"].append(time[-1] - dig["time_initial"])
         else:
             dig["times"].append(time[-1] - dig["time_initial"])
-    dig["init"] = OpmFile(f"{dig['sim']}.INIT")
+    dig["ini"] = OpmFile(f"{dig['sim']}.INIT")
     dig["egrid"] = OpmGrid(f"{dig['sim']}.EGRID")
     dig["smspec"] = OpmSummary(f"{dig['sim']}.SMSPEC")
     dig["norst"] = len(dig["unrst"].report_steps)
-    dig["porv"] = np.array(dig["init"]["PORV"])
+    dig["porv"] = np.array(dig["ini"]["PORV"])
     dig["actind"] = list(i for i, porv in enumerate(dig["porv"]) if porv > 0)
     dig["porva"] = np.array([porv for porv in dig["porv"] if porv > 0])
     dig["nocellst"], dig["nocellsa"] = (

@@ -4,7 +4,7 @@ Installation
 
 The following steps work installing the dependencies in Linux via apt-get or in macOS using brew or macports.
 While using package managers such as Anaconda, Miniforge, or Mamba might work, these are not tested. We will
-update the documentation when Python3.14 is supported (e.g., the resdata Python package is not yet available
+update the documentation when Python 3.14 is supported (e.g., the ert Python package is not yet available
 via pip install in Python 3.14).
 
 .. _vpofff:
@@ -35,16 +35,8 @@ install the Python requirements in a virtual environment with the following comm
     pip install --upgrade pip setuptools wheel
     # Install the pofff package
     pip install -e .
-    # Third party companions
-    pip install git+https://github.com/equinor/everest.git
-    # For macOS users, this will not work, then skip this and follow the steps below
-    pip install opm
     # For contributions/testing/linting, install the dev-requirements
     pip install -r dev-requirements.txt
-
-.. tip::
-
-    Typing **git tag -l** writes all available specific versions.
 
 .. _opmflow:
 
@@ -52,22 +44,12 @@ OPM Flow
 --------
 You also need to install:
 
-* OPM Flow (https://opm-project.org, Release 2025.04 or current master branches)
+* OPM Flow (https://opm-project.org, Release 2025.10 or current master branches)
 
 .. tip::
 
     See the `CI.yml <https://github.com/cssr-tools/pofff/blob/main/.github/workflows/CI.yml>`_ script 
-    for installation of OPM Flow (binary packages) and the pofff package in Ubuntu.
-
-.. note::
-
-    For not macOS users, to install the Python opm package execute in the terminal
-
-    **pip install opm**
-
-    This is equivalent to execute **pip install -e .[opm]** in the installation process.
-
-    For macOS users, see :ref:`macOS`. 
+    for installation of OPM Flow (binary packages) and the pofff package in Ubuntu 24.04 and Python 3.12.
 
 Source build in Linux/Windows
 +++++++++++++++++++++++++++++
@@ -111,8 +93,8 @@ with brew the prerequisites can be installed by:
 
     brew install boost cmake openblas suite-sparse python@3.13
 
-In addition, it is recommended to uprade and update your macOS to the latest available versions (the following steps have 
-worked for macOS Tahoe 26.0.1 with Apple clang version 17.0.0).
+In addition, it is recommended to upgrade and update your macOS to the latest available versions (the following steps have 
+worked for macOS Tahoe 26.1 with Apple clang version 17.0.0).
 After the prerequisites are installed and the vpofff Python environment is created (see :ref:`vpofff`), 
 then building OPM Flow and the opm Python package can be achieved with the following lines:
 
@@ -135,11 +117,8 @@ then building OPM Flow and the opm Python package can be achieved with the follo
     do  git clone https://github.com/OPM/opm-$repo.git
         mkdir build/opm-$repo
         cd build/opm-$repo
-        cmake -DPYTHON_EXECUTABLE=$(which python) -DOPM_ENABLE_PYTHON=ON -DWITH_NDEBUG=1 -DUSE_MPI=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="/opt/homebrew/opt/boost@1.85/include;$CURRENT_DIRECTORY/dune-common/build-cmake;$CURRENT_DIRECTORY/dune-grid/build-cmake;$CURRENT_DIRECTORY/dune-geometry/build-cmake;$CURRENT_DIRECTORY/dune-istl/build-cmake;$CURRENT_DIRECTORY/build/opm-common;$CURRENT_DIRECTORY/build/opm-grid" $CURRENT_DIRECTORY/opm-$repo
-        if [[ $repo == common ]]; then
-            make -j5 opm$repo
-            make -j5 opmcommon_python
-        elif [[ $repo == simulators ]]; then
+        cmake -DWITH_NDEBUG=1 -DUSE_MPI=0 -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$CURRENT_DIRECTORY/dune-common/build-cmake;$CURRENT_DIRECTORY/dune-grid/build-cmake;$CURRENT_DIRECTORY/dune-geometry/build-cmake;$CURRENT_DIRECTORY/dune-istl/build-cmake;$CURRENT_DIRECTORY/build/opm-common;$CURRENT_DIRECTORY/build/opm-grid" $CURRENT_DIRECTORY/opm-$repo
+        if [[ $repo == simulators ]]; then
             make -j5 flow
         else
             make -j5 opm$repo
@@ -147,14 +126,16 @@ then building OPM Flow and the opm Python package can be achieved with the follo
         cd ../..
     done
 
-    echo "export PYTHONPATH=\$PYTHONPATH:$CURRENT_DIRECTORY/build/opm-common/python" >> $CURRENT_DIRECTORY/vpofff/bin/activate
     echo "export PATH=\$PATH:$CURRENT_DIRECTORY/build/opm-simulators/bin" >> $CURRENT_DIRECTORY/vpofff/bin/activate
 
     deactivate
     source vpofff/bin/activate
 
-This builds OPM Flow as well as the OPM Python library, and it exports the required PYTHONPATH to the opm Python package and the path to the flow executable.
+This builds OPM Flow, and it exports the path to the flow executable (i.e., executing in the terminal **which flow** should print the path).
 
 .. tip::
-    See `this repository <https://github.com/daavid00/OPM-Flow_macOS>`_ dedicated to build OPM Flow from source in the latest macOS (GitHub actions), and tested with **pycopm** (another cssr tool).
+    See `this repository <https://github.com/daavid00/OPM-Flow_macOS>`_ dedicated to build OPM Flow from source in the latest macOS (GitHub actions).
     If you still face problems, raise an issue in the GitHub repository, or you could also send an email to the maintainers.
+
+For macOS, the LaTeX dependency can be installed from https://www.tug.org/mactex/. If after installation you still face an error due to LaTeX 
+when executing expreccs, then add the flag **-l 0** to **pofff**.

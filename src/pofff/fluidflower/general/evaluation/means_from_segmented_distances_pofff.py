@@ -12,17 +12,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
 
-font = {"family": "normal", "weight": "normal", "size": 12}
-matplotlib.rc("font", **font)
-plt.rcParams.update(
-    {
-        "text.usetex": True,
-        "font.family": "monospace",
-        "legend.columnspacing": 1.5,
-        "legend.handlelength": 1.0,
-    }
-)
-
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "-satmin",
@@ -45,7 +34,25 @@ parser.add_argument(
     default="1",
     help="Add the result to the plots ('1' by default).",
 )
+parser.add_argument(
+    "-latex",
+    "--latex",
+    default="1",
+    help="Set to 0 to not use LaTeX formatting ('1' by default).",
+)
 cmdargs = vars(parser.parse_args())
+
+font = {"family": "normal", "weight": "normal", "size": 12}
+matplotlib.rc("font", **font)
+plt.rcParams.update(
+    {
+        "text.usetex": int(cmdargs["latex"]),
+        "font.family": "monospace",
+        "legend.columnspacing": 1.5,
+        "legend.handlelength": 1.0,
+    }
+)
+
 add = cmdargs["add"] == "1"
 groups = [
     "Austin",
