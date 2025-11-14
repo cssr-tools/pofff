@@ -7,6 +7,7 @@ Script to postprocess everest and ert studies.
 """
 
 import argparse
+import shutil
 import csv
 import os
 import math
@@ -29,13 +30,12 @@ def figures():
     dic["m"] = cmdargs["maps"].strip()
     dic["s"] = float(cmdargs["minimumsaturation"])
     dic["c"] = float(cmdargs["minimumconcentration"])
-    dic["latex"] = int(cmdargs["latex"])
 
     font = {"family": "normal", "weight": "normal", "size": 14}
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": dic["latex"],
+            "text.usetex": shutil.which("latex") != "None",
             "font.family": "monospace",
             "legend.columnspacing": 0.9,
             "legend.handlelength": 3.5,
@@ -85,7 +85,7 @@ def find_best(dic):
             - np.array([row[0] for row in dic["observations"]]),
             axis=1,
         )
-    eobs = np.where(abs(diffo) == min(abs(diffo)))
+    eobs = np.where(np.abs(diffo) == np.min(np.abs(diffo)))
     bestid = dic["idrealisation"][-1][eobs[0][0]]
     if not os.path.exists(f"{dic['p']}/figures/best_simulation"):
         os.system(f"mkdir {dic['p']}/figures/best_simulation")
@@ -247,7 +247,7 @@ def make_figures(dic):
     for i in range(dic["n_i"]):
         axis.plot(
             i,
-            sum(dic["miss_ens"][i]) / len(dic["miss_ens"][i]),
+            np.sum(dic["miss_ens"][i]) / len(dic["miss_ens"][i]),
             markersize="10",
             marker="o",
             label=r"$N_{ens}=$" + f"{dic['num_ens'][i]}",
@@ -464,11 +464,11 @@ def find_optimal(dic):
 
 def plot_optimization_details(dic):
     """Plot the number of failed and succeed simulations over steps"""
-    colors = ["r", "k", "g"]
+    colors = ["g", "r", "k"]
     names = [
-        f"Failed (no={sum(dic['s0'])})",
-        f"Nomonotonic (no={sum(dic['s1'])})",
-        f"Succeeded (no={sum(dic['s2'])})",
+        f"Succeeded (no={np.sum(dic['s0'])})",
+        f"Failed (no={np.sum(dic['s1'])})",
+        f"Nomonotonic (no={np.sum(dic['s2'])})",
     ]
     fig, ax = plt.subplots()
     allw = 0
@@ -513,11 +513,11 @@ def process_optimization_results(dic):
             value = np.genfromtxt(file)
             dic["tot_eval"] += 1
             if str(value) == "nan":
-                dic["x0"] += 1
-            elif value == -1:
                 dic["x1"] += 1
-            else:
+            elif value == -1:
                 dic["x2"] += 1
+            else:
+                dic["x0"] += 1
             if str(value) != "nan":
                 improved = max(improved, value)
                 dic["optimal"].append(value)
@@ -609,12 +609,6 @@ def load_parser():
         "--minimumsaturation",
         default="1e-2",
         help="The minimum saturation above which gaseous CO2 is considered for the segmentation.",
-    )
-    parser.add_argument(
-        "-latex",
-        "--latex",
-        default="1",
-        help="Set to 0 to not use LaTeX formatting ('1' by default).",
     )
     parser.add_argument(
         "-c",

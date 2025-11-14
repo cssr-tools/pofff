@@ -148,9 +148,8 @@ def create_from_summary(dig, dil):
     sort = sorted(range(len(i_jk)), key=i_jk.__getitem__)
     pop1 = dig["unrst"]["PRESSURE", 0][dil["fipnum"].index(8)]
     pop2 = dig["unrst"]["PRESSURE", 0][dil["fipnum"].index(9)]
-    if dig["unrst"].count("PCGW", 0):
-        pop1 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(8)]
-        pop2 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(9)]
+    pop1 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(8)]
+    pop2 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(9)]
     dil["pop1"] = [pop1 * 1.0e5] + list(dig["smspec"][names[sort[0]]] * 1.0e5)  # Pa
     dil["pop2"] = [pop2 * 1.0e5] + list(dig["smspec"][names[sort[1]]] * 1.0e5)  # Pa
     for i in dil["fip_diss_a"]:
@@ -280,7 +279,7 @@ def read_opm(dig):
     for i in range(len(dig["unrst"].report_steps)):
         time.append(float(f"{86400 * dig['unrst']['DOUBHEAD', i][0]:.0f}"))
         if len(dig["times"]) == 0:
-            if max(dig["unrst"]["RSW", i]) > 0:
+            if np.max(np.array(dig["unrst"]["RSW", i])) > 0:
                 dig["time_initial"] = 86400 * dig["unrst"]["DOUBHEAD", i - 1][0]
                 dig["times"].append(0)
                 dig["times"].append(time[-1] - dig["time_initial"])
@@ -357,7 +356,7 @@ def generate_arrays(dig, dil, names, t_n):
     for name in names:
         dil[f"{name}_array"] = np.zeros(dig["nocellst"], dtype=float)
         dil[f"{name}_refg"] = np.zeros(dig["nocellsr"], dtype=float)
-    sgas = abs(np.array(dig["unrst"]["SGAS", t_n]))
+    sgas = np.abs(np.array(dig["unrst"]["SGAS", t_n]))
     rhow = np.array(dig["unrst"]["WAT_DEN", t_n])
     rsw = np.array(dig["unrst"]["RSW", t_n])
     xlco2 = np.divide(rsw, rsw + WAT_DEN_REF / GAS_DEN_REF)

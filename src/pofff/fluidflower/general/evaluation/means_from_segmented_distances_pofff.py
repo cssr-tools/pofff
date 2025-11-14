@@ -7,6 +7,8 @@
 Generate the Wasserstein distance plots.
 """
 
+import os
+import shutil
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -34,19 +36,14 @@ parser.add_argument(
     default="1",
     help="Add the result to the plots ('1' by default).",
 )
-parser.add_argument(
-    "-latex",
-    "--latex",
-    default="1",
-    help="Set to 0 to not use LaTeX formatting ('1' by default).",
-)
+
 cmdargs = vars(parser.parse_args())
 
 font = {"family": "normal", "weight": "normal", "size": 12}
 matplotlib.rc("font", **font)
 plt.rcParams.update(
     {
-        "text.usetex": int(cmdargs["latex"]),
+        "text.usetex": shutil.which("latex") != "None",
         "font.family": "monospace",
         "legend.columnspacing": 1.5,
         "legend.handlelength": 1.0,
@@ -82,7 +79,11 @@ colors = [
 ]
 
 if add:
-    groups += ["YOURS"]
+    where = os.path.abspath(".").split("/")
+    if where[-1] == "best_simulation" and where[-2] == "figures":
+        groups += [where[-3]]
+    else:
+        groups += [where[-1]]
     colors += ["#FF1493"]
     marker = "X"
 
@@ -313,13 +314,13 @@ axs[1][1].tick_params(
     axis="y", which="both", left=False, right=True, labelleft=False, labelright=True
 )
 axs[1][2].set_axis_off()
-axs[1][0].set_xlabel(r"\textrm{dist. to experiments [gr.cm]}")
-axs[1][1].set_xlabel(r"\textrm{dist. to experiments [gr.cm]}")
-axs[0][2].set_xlabel(r"\textrm{dist. to experiments [gr.cm]}")
-axs[0][0].set_ylabel(r"\textrm{dist. to forecasts [gr.cm]}")
-axs[1][0].set_ylabel(r"\textrm{dist. to forecasts [gr.cm]}")
+axs[1][0].set_xlabel(r"\textrm{dist. to experiments [g$\cdot$cm]}")
+axs[1][1].set_xlabel(r"\textrm{dist. to experiments [g$\cdot$cm]}")
+axs[0][2].set_xlabel(r"\textrm{dist. to experiments [g$\cdot$cm]}")
+axs[0][0].set_ylabel(r"\textrm{dist. to forecasts [g$\cdot$cm]}")
+axs[1][0].set_ylabel(r"\textrm{dist. to forecasts [g$\cdot$cm]}")
 
-fig.legend(loc="lower right", bbox_to_anchor=(1.0, 0.05), ncol=2)
+fig.legend(loc="lower right", bbox_to_anchor=(0.95, 0.12), ncol=2)
 
 fig.savefig(
     f"means_segmented_snapshots_satmin-{cmdargs['minimumsaturation']}_conmin-"

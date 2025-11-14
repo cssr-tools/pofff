@@ -49,6 +49,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publication.html">Publication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="output_folder.html">Output folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -94,8 +95,8 @@ if this is supported in your machine (e.g., flow = “mpirun -np 8 /Users/dmar/G
 <p>The next entries define the following parameters:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 4</span><span class="c1"># Set the model parameters</span>
 <span class="linenos"> 5</span><span class="n">grid</span><span class="o">=</span><span class="s2">&quot;corner-point&quot;</span> <span class="c1"># Type of grid (cartesian, tensor, or corner-point)</span>
-<span class="linenos"> 6</span><span class="n">thickness</span><span class="o">=</span><span class="s2">&quot;final&quot;</span> <span class="c1"># Thickness maps</span>
-<span class="linenos"> 7</span><span class="n">mult_thickness</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># Thickness multiplier</span>
+<span class="linenos"> 6</span><span class="n">thickness</span><span class="o">=</span><span class="s2">&quot;final&quot;</span> <span class="c1"># Thickness maps (measured &#39;initial&#39;, &#39;final&#39;, or a real positive value)</span>
+<span class="linenos"> 7</span><span class="n">mult_thickness</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># Thickness multiplier (a real positive value)</span>
 <span class="linenos"> 8</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">140</span><span class="p">]</span> <span class="c1"># If cartesian, number of x cells [-]; otherwise, variable array of x-refinement</span>
 <span class="linenos"> 9</span><span class="n">z</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span> <span class="c1"># If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)</span>
 <span class="linenos">10</span><span class="n">temperature</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span> <span class="c1"># Temperature bottom and top rig [C]</span>

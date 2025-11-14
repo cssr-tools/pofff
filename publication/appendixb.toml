@@ -1,12 +1,11 @@
-# pofff -i appendix.toml -o appendix -m single -t 24,48,72,96,120 -f all
+# pofff -i appendixb.toml -o appendixb -m single -t 24,48,72,96,120 -f all -c '5e-2'
 # Set the full path to the flow executable and flags
-flow="mpirun -np 8 flow --newton-min-iterations=1 --solver-max-restarts=20 --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
-thirdparty="/Users/dmar/Github/pofff/ThirdParty"
+flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
 
 # Set the model parameters
 grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
-thickness="final" # Thickness maps
-mult_thickness=1 # Thickness multiplier
+thickness="final" # Thickness maps (measured 'initial', 'final', or a real positive value)
+mult_thickness=1 # Thickness multiplier (a real positive value)
 x=[140] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
 z=[7,5,5,5,5,5,5,8,10,9,5] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
 temperature=[20, 20] # Temperature bottom and top rig [C]

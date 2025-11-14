@@ -4,8 +4,8 @@ flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --time-step-contro
 
 # Set the model parameters
 grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
-thickness="final" # Thickness maps
-mult_thickness=1 # Thickness multiplier
+thickness="final" # Thickness maps (measured 'initial', 'final', or a real positive value)
+mult_thickness=1 # Thickness multiplier (a real positive value)
 x=[140] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
 z=[7,5,5,5,5,5,5,8,10,9,5] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
 temperature=[20, 20] # Temperature bottom and top rig [C]
@@ -24,7 +24,7 @@ facie1={"PERMX1"=62000,"PERMZ1"=62000,"PORO1"=0.37,"DISPERC1"=0,"SWI1"=0.3425,"S
 facie2={"PERMX2"=152000,"PERMZ2"=152000,"PORO2"=0.38,"DISPERC2"=0,"SWI2"=0.32,"SNI2"=0.2,"PEN2"=950,"NKRW2"=2,"NKRN2"=2,"NPE2"=2,"THRE2"=5e-2,"NPNT2"=100}
 facie3={"PERMX3"=428000,"PERMZ3"=428000,"PORO3"=0.40,"DISPERC3"=0,"SWI3"=0.293,"SNI3"=0.077,"PEN3"=185,"NKRW3"=2,"NKRN3"=2,"NPE3"=2,"THRE3"=5e-2,"NPNT3"=100}
 facie4={"PERMX4"=1120000,"PERMZ4"=1120000,"PORO4"=0.39,"DISPERC4"=0,"SWI4"=0.275,"SNI4"=0.06,"PEN4"=175,"NKRW4"=2,"NKRN4"=2,"NPE4"=2,"THRE4"=5e-2,"NPNT4"=100}
-facie5={"PERMX5"=2120000,"PERMZ5"=2120000,"PORO5"=0.39,"DISPERC5"=0,"SWI5"=0.23,"SNI5"=0.01,"PEN5"=140,"NKRW5"=2,"NKRN5"=2,"NPE5"=2,"THRE5"=5e-2,"NPNT5"=100}
+facie5={"PERMX5"=2120000,"PERMZ5"=2120000,"PORO5"=0.39,"DISPERC5"=0,"SWI5"=0.23,"SNI5"=0.01,"PEN5"=170,"NKRW5"=2,"NKRN5"=2,"NPE5"=2,"THRE5"=5e-2,"NPNT5"=100}
 facie6={"PERMX6"=2500000,"PERMZ6"=2500000,"PORO6"=0.42,"DISPERC6"=0,"SWI6"=0.1742,"SNI6"=0,"PEN6"=163.2,"NKRW6"=2,"NKRN6"=2,"NPE6"=2,"THRE6"=5e-2,"NPNT6"=100}
 
 # Set the saturation functions

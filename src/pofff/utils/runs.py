@@ -93,8 +93,6 @@ def benchmark(dic):
             dic["path"],
             "-s",
             dic["msat"],
-            "-latex",
-            dic["latex"],
             "-c",
             dic["mcon"],
             "-l",
@@ -130,8 +128,6 @@ def benchmark(dic):
             dic["location"],
             "-a",
             dic["add"],
-            "-latex",
-            dic["latex"],
             "-u",
             dic["use"],
         ],
@@ -161,7 +157,7 @@ def benchmark(dic):
             raise ValueError(f"Invalid result: { prosc.returncode }")
 
 
-def everest(dic):
+def everest():
     """
     Run everest and postprocess
 
@@ -172,10 +168,7 @@ def everest(dic):
         None
 
     """
-    for name in ["data", "delete", "metric"]:
-        os.system(f"chmod u+x {dic['jobs']}/{name}.py")
     os.system("everest run everest.yml --skip-prompt")
-    postprocess(dic)
 
 
 def ert(dic):
@@ -189,10 +182,7 @@ def ert(dic):
         None
 
     """
-    for name in ["data", "delete", "metric"]:
-        os.system(f"chmod u+x {dic['jobs']}/{name}.py")
     os.system(f"ert {dic['ertargs']} ert.txt")
-    postprocess(dic)
 
 
 def postprocess(dic):
@@ -220,8 +210,6 @@ def postprocess(dic):
             dic["experiment"],
             "-t",
             dic["times"],
-            "-latex",
-            dic["latex"],
             "-m",
             f"{dic['deck']}/cellmap.npy",
         ],

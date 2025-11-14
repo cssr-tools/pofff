@@ -35,10 +35,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install mpi-default-bin
         sudo apt-get install libopm-simulators-bin
-        sudo apt-get install freeglut3-dev
+
+    - name: Install plotting (LaTeX) and ert dependencies
+      run: |
         sudo apt-get install texlive-fonts-recommended texlive-fonts-extra dvipng cm-super
+        sudo apt-get install freeglut3-dev
         
-    - name: Install dependecies
+    - name: Install Python dependecies
       run: |
         pip install --upgrade pip setuptools wheel
         pip install -r dev-requirements.txt
@@ -49,9 +52,9 @@ jobs:
         
     - name: Check code style and linting
       run: |
-        black --check src/ tests/
-        pylint src/ tests/
-        mypy --ignore-missing-imports src/ tests/
+        black --check src/ tests/ publication/
+        pylint src/ tests/ publication/
+        mypy --ignore-missing-imports src/ tests/ publication/
       
     - name: Run the tests
       run: |

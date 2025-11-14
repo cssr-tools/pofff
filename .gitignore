@@ -177,3 +177,14 @@ project
 
 # Tests
 **/tests/output/*/
+
+# Paper figures
+figure3
+figure4
+figures5-8
+figuresb2-3
+figures5d-f
+figuresb2d-f
+**/publication/*/
+publication/random_seed.toml
+publication/base.toml

@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publication.html">Publication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="output_folder.html">Output folder</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -90,7 +91,7 @@
 <p>This documentation describes the <strong>pofff</strong> tool hosted in <a class="reference external" href="https://github.com/cssr-tools/pofff">https://github.com/cssr-tools/pofff</a>.</p>
 <section id="concept">
 <h2>Concept<a class="headerlink" href="#concept" title="Link to this heading"></a></h2>
-<p>User-friendly open-source image-based history-matching framework for the FluidFlower Benchmark study using OPM Flow.</p>
+<p>User-friendly open-source image-based history-matching framework for the FluidFlower benchmark study using OPM Flow.</p>
 </section>
 <section id="overview">
 <span id="id1"></span><h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
@@ -106,20 +107,17 @@
 <dt><kbd><span class="option">-o</span></kbd></dt>
 <dd><p>The base name of the <a class="reference internal" href="output_folder.html"><span class="doc">output folder</span></a> (‘output’ by default).</p>
 </dd>
+<dt><kbd><span class="option">-f</span></kbd></dt>
+<dd><p>Use ‘all’ to generate all benchmark figures, ‘basic’ to not generate the Wasserstain distance plot (it is slow), and ‘none’ for no figures (‘basic’ by default).</p>
+</dd>
 <dt><kbd><span class="option">-m</span></kbd></dt>
-<dd><p>Run a ‘single’ simulation, ‘data’, ‘everest’, ‘ert’, ‘fair’, or ‘none’ (i.e., useful to generate the benchmark figures) (‘single’ by default).</p>
+<dd><p>Run a ‘single’ simulation, generate only the input ‘files’, generate only the csv ‘data’, ‘everest’, ‘ert’, ‘fair’, or ‘none’ (‘none’ is useful to generate only figures in combination to ‘-f’) (‘single’ by default).</p>
 </dd>
 <dt><kbd><span class="option">-t</span></kbd></dt>
 <dd><p>Times in hours separated by commas to evaluate the metrics (‘0.25’ by default).</p>
 </dd>
-<dt><kbd><span class="option">-f</span></kbd></dt>
-<dd><p>‘all’ to generate all benchmark figures, ‘basic’ to not generate the Wasserstain distance plot (it is slow), and ‘none’ for no figures (‘basic’ by default).</p>
-</dd>
 <dt><kbd><span class="option">-e</span></kbd></dt>
 <dd><p>Experimental data to history match, valid options are C1 to C5 (‘C2’ by default).</p>
-</dd>
-<dt><kbd><span class="option">-l</span></kbd></dt>
-<dd><p>Set to 0 to not use LaTeX formatting (‘1’ by default).</p>
 </dd>
 <dt><kbd><span class="option">-s</span></kbd></dt>
 <dd><p>The minimum saturation above which gaseous CO2 is considered for the segmentation (‘1e-2’ by default).</p>
@@ -128,7 +126,7 @@
 <dd><p>The minimum concentration above which CO2 is considered to be dissolved for the segmentation (‘1e-1’ by default).</p>
 </dd>
 <dt><kbd><span class="option">-u</span></kbd></dt>
-<dd><p>Use the precomputed wasserstein distance matrix values for minimum concentration of 1e-1 and 5e-2 (min sat of 1e-2) to speed up the computations (‘1’ by default; set to ‘0’ to compute all).</p>
+<dd><p>Use the precomputed Wasserstein distance matrix values for minimum concentration of 1e-1 and 5e-2 (minimum saturation of 1e-2) to speed up the computations (‘1’ by default; set to ‘0’ to compute all).</p>
 </dd>
 </dl>
 </section>

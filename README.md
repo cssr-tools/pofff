@@ -11,26 +11,28 @@ This repository contains runscripts to simulate CO2 injection in the
 [_fluidflower benchmark system_](https://fluidflower.w.uib.no) using the 
 [_OPM Flow_](https://opm-project.org/?page_id=19) simulator and perform history 
 matching studies using the ensemble reservoir simulation tool 
-[_ERT_](https://github.com/equinor/ert) or [_everest_](https://github.com/equinor/everest-tutorials).
+[_ERT_](https://github.com/equinor/ert) or the decision-making tool [_everest_](https://github.com/equinor/everest-tutorials).
 
 ## Installation
 You will first need to install
 * OPM Flow (https://opm-project.org, Release 2025.10 or current master branches)
 
-To install the _pofff_ executable from the development version, and companion libraries:
+To install the _pofff_ executable from the development version:
 
 ```bash
 pip install git+https://github.com/cssr-tools/pofff.git
 ```
 
-If you are interested in modifying the source code, then you can clone the repository and install the Python requirements in a virtual environment with the following commands:
+If you are interested in a specific version (e.g., v2025.10) or in modifying the source code, then you can clone the repository and install the Python requirements in a virtual environment with the following commands:
 
 ```bash
 # Clone the repo
 git clone https://github.com/cssr-tools/pofff.git
 # Get inside the folder
 cd pofff
-# Create virtual environment
+# For a specific version (e.g., v2025.10), or skip this step (i.e., edge version)
+git checkout v2025.10
+# Create virtual environment (to specific Python, python3.13 -m venv vpofff)
 python3 -m venv vpofff
 # Activate virtual environment
 source vpofff/bin/activate
@@ -59,6 +61,6 @@ See the [_examples_](https://cssr-tools.github.io/pofff/examples.html) in the [_
 * Landa-Marbán, D., Sandve, T.H., Both, J.W., Nordbotten, J.M., and Gasda, S.E., 2025. Performance of an open-source image-based history matching framework for CO2 storage. https://arxiv.org/abs/2510.20614.
 
 ## About pofff
-The pofff package is funded by the [_HPC Simulation Software for the Gigatonne Storage Challenge project_](https://www.norceresearch.no/en/projects/hpc-simulation-software-for-the-gigatonne-storage-challenge) [project number 622059] and [_Center for Sustainable Subsurface Resources (CSSR)_](https://cssr.no) [project no. 331841].
+The pofff package is funded by the [_Center for Sustainable Subsurface Resources (CSSR)_](https://cssr.no) [project no. 331841].
 Contributions are more than welcome using the fork and pull request approach.
 For a new feature, please request this by raising an issue.

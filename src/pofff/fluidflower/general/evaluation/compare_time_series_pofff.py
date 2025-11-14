@@ -7,6 +7,8 @@
 Generate the time series figures.
 """
 
+import os
+import shutil
 import argparse
 from operator import methodcaller
 import numpy as np
@@ -60,12 +62,6 @@ def compareTimeSeries():
         help="Location for the csv simulation data ('.' by default).",
     )
     parser.add_argument(
-        "-latex",
-        "--latex",
-        default="1",
-        help="Set to 0 to not use LaTeX formatting ('1' by default).",
-    )
-    parser.add_argument(
         "-a",
         "--add",
         default=True,
@@ -103,12 +99,17 @@ def compareTimeSeries():
     mitm1 = np.genfromtxt(f"{path}mit/time_series.csv", delimiter=",", skip_header=1)
     if cmdargs["add"] == "1":
         newData = np.genfromtxt("time_series.csv", delimiter=",", skip_header=1)
+        where = os.path.abspath(".").split("/")
+        if where[-1] == "best_simulation" and where[-2] == "figures":
+            newLabel = where[-3]
+        else:
+            newLabel = where[-1]
 
     font = {"family": "normal", "weight": "normal", "size": 12}
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": int(cmdargs["latex"]),
+            "text.usetex": shutil.which("latex") != "None",
             "font.family": "monospace",
             "legend.columnspacing": 1.5,
             "legend.fontsize": 14,
@@ -310,11 +311,11 @@ def compareTimeSeries():
     )
     if cmdargs["add"] == "1":
         t = newData[:, 0] / 3600
-        axsA[0, 0].plot(t, 1e3 * newData[:, 3], label="YOURS", color="#ff05a8", lw=2)
-        axsA[0][1].plot(t, 1e3 * newData[:, 5], label="YOURS", color="#ff05a8", lw=2)
-        axsA[0][2].plot(t, 1e3 * newData[:, 6], label="YOURS", color="#ff05a8", lw=2)
-        axsA[1][0].plot(t, 1e3 * newData[:, 9], label="YOURS", color="#ff05a8", lw=2)
-        axsA[1][1].plot(t, newData[:, 11], label="YOURS", color="#ff05a8", lw=2)
+        axsA[0, 0].plot(t, 1e3 * newData[:, 3], label=newLabel, color="#ff05a8", lw=2)
+        axsA[0][1].plot(t, 1e3 * newData[:, 5], label=newLabel, color="#ff05a8", lw=2)
+        axsA[0][2].plot(t, 1e3 * newData[:, 6], label=newLabel, color="#ff05a8", lw=2)
+        axsA[1][0].plot(t, 1e3 * newData[:, 9], label=newLabel, color="#ff05a8", lw=2)
+        axsA[1][1].plot(t, newData[:, 11], label=newLabel, color="#ff05a8", lw=2)
     (p1,) = axsA[0][0].plot(
         ls, medianMobileA, color="xkcd:brown", linewidth=3, label="forecast"
     )

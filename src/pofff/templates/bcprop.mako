@@ -14,7 +14,7 @@ def bcprop():
     if os.path.exists("NOMONOTONIC"):
         sys.exit()
 % endif
-% if dic["mode"] in ["ert", "everest"]:
+% if dic["everert"]:
     with open("para.json", "r", encoding="utf8") as file:
         coef = json.load(file)
     with open("BCPROP.INC", "w", encoding="utf8") as file:
@@ -22,8 +22,8 @@ def bcprop():
     with open("${dic['fol']}/BCPROP.INC", "w", encoding="utf8") as file:
 % endif
         file.write("BCPROP\n")
-% if "PEN1" in dic.keys():
-% if dic["mode"] == "everest":
+% if "PEN1" in dic and dic["everert"]:
+% if "popsize" in dic:
         file.write(f"1 DIRICHLET WATER 1* {(${dic['pressure']}+${dic["PEN1"][1]}+coef['PEN1']*(${dic["PEN1"][2]}-${dic["PEN1"][1]})/(1.0*${dic["PEN1"][3]}))/1.E5} /\n")
 % else:
         file.write(f"1 DIRICHLET WATER 1* {(${dic['pressure']}+coef['PEN1'])/1.E5} /\n")
@@ -32,11 +32,11 @@ def bcprop():
         file.write(f"1 DIRICHLET WATER 1* ${(dic['pressure']+dic["PARA"]["PEN1"])/1.E5} /\n")
 % endif
         file.write("/\n")
-% if "THICKNESSMULT" in dic.keys() and dic["mode"] in ["ert", "everest"]:
+% if "THICKNESSMULT" in dic and dic["everert"]:
     with open("THICKNESSMULT.INC", "w", encoding="utf8") as file:
 % for name in ["PV", "X", "X-", "Z", "Z-"]:
         file.write("MULT${name}\n")
-% if dic["mode"] == "everest":
+% if "popsize" in dic:
         file.write(f"${dic['noCells'][0]*dic['noCells'][1]*dic['noCells'][2]}*{${dic["THICKNESSMULT"][1]}+coef['THICKNESSMULT']*(${dic["THICKNESSMULT"][2]}-${dic["THICKNESSMULT"][1]})/(1.0*${dic["THICKNESSMULT"][3]})} /\n")
 % else:
         file.write(f"${dic['noCells'][0]*dic['noCells'][1]*dic['noCells'][2]}*{coef['THICKNESSMULT']} /\n")

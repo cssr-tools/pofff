@@ -18,7 +18,7 @@ To install the **pofff** executable from the development version:
 
     pip install git+https://github.com/cssr-tools/pofff.git
 
-If you are interested in modifying the source code, then you can clone the repository and 
+If you are interested in a specific version (e.g., v2025.10) or in modifying the source code, then you can clone the repository and 
 install the Python requirements in a virtual environment with the following commands:
 
 .. code-block:: console
@@ -27,6 +27,8 @@ install the Python requirements in a virtual environment with the following comm
     git clone https://github.com/cssr-tools/pofff.git
     # Get inside the folder
     cd pofff
+    # For a specific version (e.g., v2025.10), or skip this step (i.e., edge version)
+    git checkout v2025.10
     # Create virtual environment (to specific Python, python3.12 -m venv vpofff)
     python3 -m venv vpofff
     # Activate virtual environment
@@ -37,6 +39,10 @@ install the Python requirements in a virtual environment with the following comm
     pip install -e .
     # For contributions/testing/linting, install the dev-requirements
     pip install -r dev-requirements.txt
+
+.. tip::
+
+    Typing **git tag -l** writes all available specific versions.
 
 .. _opmflow:
 
@@ -49,7 +55,7 @@ You also need to install:
 .. tip::
 
     See the `CI.yml <https://github.com/cssr-tools/pofff/blob/main/.github/workflows/CI.yml>`_ script 
-    for installation of OPM Flow (binary packages) and the pofff package in Ubuntu 24.04 and Python 3.12.
+    for installation of OPM Flow (binary packages), LaTeX (optional) libraries, and the pofff package in Ubuntu 24.04 and Python 3.12.   
 
 Source build in Linux/Windows
 +++++++++++++++++++++++++++++
@@ -137,5 +143,4 @@ This builds OPM Flow, and it exports the path to the flow executable (i.e., exec
     See `this repository <https://github.com/daavid00/OPM-Flow_macOS>`_ dedicated to build OPM Flow from source in the latest macOS (GitHub actions).
     If you still face problems, raise an issue in the GitHub repository, or you could also send an email to the maintainers.
 
-For macOS, the LaTeX dependency can be installed from https://www.tug.org/mactex/. If after installation you still face an error due to LaTeX 
-when executing expreccs, then add the flag **-l 0** to **pofff**.
+For macOS, the LaTeX dependency can be installed from https://www.tug.org/mactex/.

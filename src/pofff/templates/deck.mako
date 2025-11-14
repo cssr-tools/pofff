@@ -130,9 +130,9 @@ ${dic['dims'][2]} ${dic["temperature"][0]} /
 SUMMARY
 ----------------------------------------------------------------------------
 PERFORMA
-FGIP
-FGIR
-FGIT
+FGMIP
+FGMIR
+FGMIT
 RGKDI
 /
 RGKDM
@@ -156,7 +156,7 @@ ${sensor[0]+1} ${sensor[1]+1} ${sensor[2]+1} /
 SCHEDULE
 ----------------------------------------------------------------------------
 RPTRST
-BASIC=2 DEN PCGW RESIDUAL RSWSAT /
+BASIC=2 DEN PCGW RSWSAT /
 
 INCLUDE
 BCPROP.INC /

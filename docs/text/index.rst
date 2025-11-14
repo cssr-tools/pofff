@@ -10,6 +10,7 @@ Welcome to pofff's documentation!
    installation
    configuration_file
    examples
+   publication
    api
    output_folder
    contributing

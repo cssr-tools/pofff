@@ -18,12 +18,12 @@ optimization:
   algorithm: scipy/differential_evolution
   max_function_evaluations: ${dic["max_function_evaluations"]}
   min_realizations_success: ${dic["min_realizations_success"]}
-% if max_batch_num in dic.keys():
+% if max_batch_num in dic:
   max_batch_num: ${dic["max_batch_num"]}
 % endif
   options:
 % for name in ["strategy", "maxiter", "popsize", "tol", "mutation", "recombination", "rng", "callback", "disp", "polish", "init", "atol", "updating", "workers", "constraints", "x0", "integratility", "vectorized"]:
-% if name in dic.keys():     
+% if name in dic:     
     ${name}: ${dic[name]}
 % endif
 % endfor

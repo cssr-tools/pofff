@@ -8,6 +8,7 @@
 Script to quantify the errors between simulation and experiments into a table.
 """
 
+import os
 import argparse
 import numpy as np
 
@@ -79,7 +80,11 @@ def error_table():
     ]
 
     if cmdargs["add"] == "1":
-        groups += ["YOURS"]
+        where = os.path.abspath(".").split("/")
+        if where[-1] == "best_simulation" and where[-2] == "figures":
+            groups += [where[-3]]
+        else:
+            groups += [where[-1]]
         fileNames += ["sparse_data.csv"]
 
     numGroups = len(groups)
@@ -158,12 +163,12 @@ def error_table():
             if len(name) < 7:
                 tab += "\t"
         errors = [
-            100.0 * abs(means[2, i] - expTable[0][0]) / expTable[0][0],
-            100.0 * abs(1e3 * means[3, i] - expTable[1][0]) / expTable[1][0],
-            100.0 * abs(1e3 * means[5, i] - expTable[2][0]) / expTable[2][0],
-            100.0 * abs(1e3 * means[6, i] - expTable[3][0]) / expTable[3][0],
-            100.0 * abs(1e3 * means[9, i] - expTable[4][0]) / expTable[4][0],
-            100.0 * abs(1e3 * means[12, i] - expTable[5][0]) / expTable[5][0],
+            100.0 * np.abs(means[2, i] - expTable[0][0]) / expTable[0][0],
+            100.0 * np.abs(1e3 * means[3, i] - expTable[1][0]) / expTable[1][0],
+            100.0 * np.abs(1e3 * means[5, i] - expTable[2][0]) / expTable[2][0],
+            100.0 * np.abs(1e3 * means[6, i] - expTable[3][0]) / expTable[3][0],
+            100.0 * np.abs(1e3 * means[9, i] - expTable[4][0]) / expTable[4][0],
+            100.0 * np.abs(1e3 * means[12, i] - expTable[5][0]) / expTable[5][0],
         ]
         err = (
             f"{np.mean(errors):.0E}"
