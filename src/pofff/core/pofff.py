@@ -95,7 +95,7 @@ def pofff():
         sys.exit()
 
     if dic["figures"] in ["all", "basic"] and dic["mode"] != "files":
-        if not shutil.which("latex") != "None":
+        if shutil.which("latex") == "None":
             print(
                 "\nLaTeX is recommended for the figures to show the "
                 "nice fonts and given formats. You can install it by "
