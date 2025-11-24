@@ -7,6 +7,7 @@ Script to generate figures with the benchmark format.
 """
 
 import argparse
+import shutil
 import os
 import matplotlib
 import matplotlib.pyplot as plt
@@ -23,13 +24,12 @@ def postprocessing():
     dic["l"] = cmdargs["location"]
     dic["a"] = cmdargs["add"]
     dic["u"] = cmdargs["use"] == "1"
-    dic["latex"] = int(cmdargs["latex"])
 
     font = {"family": "normal", "weight": "normal", "size": 14}
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": dic["latex"],
+            "text.usetex": shutil.which("latex") != "None",
             "legend.columnspacing": 0.9,
             "font.family": "monospace",
             "legend.handlelength": 3.5,
@@ -48,33 +48,32 @@ def benchmark(dic):
     """Figures and comaparisons to benchmark data"""
     os.system(
         f"python3 {dic['p']}general/evaluation/compare_time_series_pofff.py"
-        + f" -p {dic['p']} -l {dic['l']} -a {dic['a']} -latex {dic['latex']}"
+        + f" -p {dic['p']} -l {dic['l']} -a {dic['a']}"
     )
     if os.path.exists("sparse_data.csv"):
         os.system(
             f"python3 {dic['p']}general/evaluation/compare_sparse_data_pofff.py"
-            + f" -p {dic['p']} -l {dic['l']} -a {dic['a']} -latex {dic['latex']}"
+            + f" -p {dic['p']} -l {dic['l']} -a {dic['a']}"
         )
     if dic["f"] == "all":
         if dic["s"] == 0.01 and dic["c"] in [0.05, 0.1] and dic["u"]:
             os.system(
                 f"python3 {dic['p']}general/evaluation/"
                 + "calculate_segmented_emds_simplified_pofff.py "
-                + f"-p {dic['p']} -satmin {dic['s']} "
-                + f"-conmin {dic['c']} -l {dic['l']} -a {dic['a']}"
+                + f"-p {dic['p']} -satmin {dic['s']} -l {dic['l']} "
+                + f"-conmin {dic['c']} -a {dic['a']}"
             )
         else:
             os.system(
                 "python3 "
                 + f"{dic['p']}general/evaluation/calculate_segmented_emds_pofff.py "
-                + f"-p {dic['p']} -satmin {dic['s']} "
-                + f"-conmin {dic['c']} -l {dic['l']} -a {dic['a']}"
+                + f"-p {dic['p']} -satmin {dic['s']} -l {dic['l']} "
+                + f"-conmin {dic['c']} -a {dic['a']}"
             )
         os.system(
             "python3 "
             + f"{dic['p']}general/evaluation/means_from_segmented_distances"
-            + f"_pofff.py -satmin {dic['s']} -conmin {dic['c']} -a {dic['a']} "
-            + f"-latex {dic['latex']}"
+            + f"_pofff.py -satmin {dic['s']} -conmin {dic['c']} -a {dic['a']}"
         )
 
 
@@ -107,12 +106,6 @@ def load_parser():
         "--times",
         default="24,48,72,96,120",
         help="Times in hours for the images.",
-    )
-    parser.add_argument(
-        "-latex",
-        "--latex",
-        default="1",
-        help="Set to 0 to not use LaTeX formatting ('1' by default).",
     )
     parser.add_argument(
         "-f",

@@ -91,7 +91,7 @@ def structured_handling_fluidflower(dic):
                 )
                 if "multpv" in dic:
                     indx = pd.Series(
-                        abs(
+                        np.abs(
                             (dic["refxthickness"] - dic["xmx_center"][i]) ** 2
                             + (
                                 dic["refzthickness"]
@@ -158,7 +158,7 @@ def corner_point_handling_fluidflower(dic):
             boxes(dic, dic["xyz"][i][0], dic["xyz"][i][2], dic["fluxnum"][-1])
             if "multpv" in dic:
                 indx = pd.Series(
-                    abs(
+                    np.abs(
                         (dic["refxthickness"] - dic["xyz"][i][0]) ** 2
                         + (dic["refzthickness"] - dic["dims"][2] + dic["xyz"][i][2])
                         ** 2
@@ -315,12 +315,12 @@ def sensors(dic):
             if axis == "zmz":
                 dic["sensorijk"][j].append(
                     pd.Series(
-                        abs(dic["dims"][2] - sensor_coord - dic[f"{axis}_center"])
+                        np.abs(dic["dims"][2] - sensor_coord - dic[f"{axis}_center"])
                     ).argmin()
                 )
             else:
                 dic["sensorijk"][j].append(
-                    pd.Series(abs(sensor_coord - dic[f"{axis}_center"])).argmin()
+                    pd.Series(np.abs(sensor_coord - dic[f"{axis}_center"])).argmin()
                 )
 
 
@@ -339,7 +339,7 @@ def wells(dic):
     for j, _ in enumerate(dic["sources"]):
         for well_coord, axis in zip(dic["sources"][j], ["xmx", "ymy", "zmz"]):
             dic["wellijk"][j].append(
-                pd.Series(abs(well_coord - dic[f"{axis}_center"])).argmin() + 1
+                pd.Series(np.abs(well_coord - dic[f"{axis}_center"])).argmin() + 1
             )
 
 
@@ -420,8 +420,8 @@ def getpolygons(dic):
             if line < 0:
                 tmp.append(
                     [
-                        dic["points"][lines[abs(line) - 1][0] - 1][0],
-                        dic["points"][lines[abs(line) - 1][0] - 1][1],
+                        dic["points"][lines[np.abs(line) - 1][0] - 1][0],
+                        dic["points"][lines[np.abs(line) - 1][0] - 1][1],
                     ]
                 )
             else:
@@ -499,7 +499,7 @@ def corner(dic):
     for xcor in dic["xmx"]:
         for _, lcor in enumerate(horizonts):
             xcoord.append(xcor)
-            idx = pd.Series([abs(ii[0] - xcor) for ii in lcor]).argmin()
+            idx = pd.Series([np.abs(ii[0] - xcor) for ii in lcor]).argmin()
             if lcor[idx][0] < xcor:
                 zcoord.append(
                     lcor[idx][1]

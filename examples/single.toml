@@ -1,10 +1,11 @@
+# pofff -i single.toml -t 24,48,72
 # Set the full path to the flow executable and flags
 flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --enable-tuning=true --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"
 
 # Set the model parameters
 grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
-thickness="final" # Thickness maps
-mult_thickness=1 # Thickness multiplier
+thickness="final" # Thickness maps (measured 'initial', 'final', or a real positive value)
+mult_thickness=1 # Thickness multiplier (a real positive value)
 x=[70] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
 z=[3,2,2,2,2,2,2,3,3,3,1] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
 temperature=[20, 20] # Temperature bottom and top rig [C]
@@ -14,7 +15,7 @@ sources=[[0.9, 0.005, 0.3], [1.7, 0.005, 0.7]] # Source positions: x, y, and z c
 
 # Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)
 inj=[[8100, 8100, 3E-7, 0, '1e-2 1e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
-[10200, 10200, 0, 3E-7, '1e-2 1e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
+[10200, 10200, 3E-7, 3E-7, '1e-2 1e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
 [68100, 68100, 0, 0, '1e-2 5e-3 1e-20 1e-20 1.6 0.2 0.65 1.1'], 
 [172800, 86400, 0, 0, '1e-2 1e-2 1e-20 1e-20 1.6 0.2 0.65 1.1']]
 

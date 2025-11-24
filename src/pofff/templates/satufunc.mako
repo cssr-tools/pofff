@@ -24,7 +24,7 @@ def satufunc():
     if os.path.exists("NOMONOTONIC"):
         sys.exit()
 % endif
-% if dic["mode"] in ["ert", "everest"]:
+% if dic["everert"]:
     with open("para.json", "r", encoding="utf8") as file:
        coef = json.load(file)
 % endif
@@ -32,8 +32,8 @@ def satufunc():
     safu = [[0.0] * 8 for _ in range(7)]
 % for i in range(1,8):
 % for j,name in enumerate(["SWI","SNI","PEN","NKRW","NKRN","NPE","THRE","NPNT"]):
-% if f"{name}{i}" in dic.keys():
-% if dic["mode"] == "everest":
+% if f"{name}{i}" in dic and dic["everert"]:
+% if "popsize" in dic:
     safu[${i-1}][${j}] = ${dic[f"{name}{i}"][1]}+coef['${name}${i}']*(${dic[f"{name}{i}"][2]}-${dic[f"{name}{i}"][1]})/(1.0*${dic[f"{name}{i}"][3]})
 % else:
     safu[${i-1}][${j}] = coef['${name}${i}']
@@ -44,7 +44,7 @@ def satufunc():
 % endfor
 % endfor
     with open(
-% if dic["mode"] in ["ert", "everest"]:
+% if dic["everert"]:
         "TABLES.INC",
 % else:
         "${dic['fol']}/TABLES.INC",

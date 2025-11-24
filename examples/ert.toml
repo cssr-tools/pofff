@@ -4,8 +4,8 @@ flow="flow --newton-min-iterations=1 --solver-max-restarts=20 --enable-tuning=tr
 
 # Set the model parameters
 grid="corner-point" # Type of grid (cartesian, tensor, or corner-point)
-thickness="final" # Thickness maps
-mult_thickness=1 # Thickness multiplier
+thickness="final" # Thickness maps (measured 'initial', 'final', or a real positive value)
+mult_thickness=1 # Thickness multiplier (a real positive value)
 x=[70] # If cartesian, number of x cells [-]; otherwise, variable array of x-refinement
 z=[3,2,2,2,2,2,2,3,3,3,1] # If cartesian, number of z cells [-]; if tensor, variable array of z-refinement; if corner-point, fix array of z-refinement (18 entries)
 temperature=[20, 20] # Temperature bottom and top rig [C]

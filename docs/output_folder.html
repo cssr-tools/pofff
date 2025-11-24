@@ -49,8 +49,14 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration file</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publication.html">Publication</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Output folder</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Output folder</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#single-run">Single run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#everest">Everest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ert">ERT</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related.html">Related</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About pofff</a></li>
@@ -82,11 +88,40 @@
              
   <section id="output-folder">
 <h1>Output folder<a class="headerlink" href="#output-folder" title="Link to this heading"></a></h1>
+<section id="single-run">
+<h2>Single run<a class="headerlink" href="#single-run" title="Link to this heading"></a></h2>
 <p>The following screenshot shows the generated files in the output folder after executing <strong>pofff</strong>
-on the hello word example.</p>
+in the <strong>Adding your results</strong> subsection in the <a class="reference internal" href="examples.html"><span class="doc">examples</span></a>.</p>
 <figure class="align-default">
 <img alt="_images/output.png" src="_images/output.png" />
 </figure>
+</section>
+<section id="everest">
+<h2>Everest<a class="headerlink" href="#everest" title="Link to this heading"></a></h2>
+<p>The following screenshot shows the generated files in the output folder after executing <strong>pofff</strong>
+in the <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/examples/everest.toml">everest.toml</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>everest.toml<span class="w"> </span>-o<span class="w"> </span>everest<span class="w"> </span>-m<span class="w"> </span>everest
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="_images/everest.png" src="_images/everest.png" />
+</figure>
+<p>The best_simulation folder contains the closest simulation to the observations, and generates the tables
+and pngs figures as in the single run folder.</p>
+</section>
+<section id="ert">
+<h2>ERT<a class="headerlink" href="#ert" title="Link to this heading"></a></h2>
+<p>The following screenshot shows the generated files in the output folder after executing <strong>pofff</strong>
+in the <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/examples/ert.toml">ert.toml</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>ert.toml<span class="w"> </span>-o<span class="w"> </span>ert<span class="w"> </span>-m<span class="w"> </span>ert
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="_images/ert.png" src="_images/ert.png" />
+</figure>
+<p>The best_simulation folder contains the closest simulation to the observations, and generates the tables
+and pngs figures as in the single run folder.</p>
+</section>
 </section>
 
 

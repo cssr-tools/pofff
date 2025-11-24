@@ -9,6 +9,7 @@ lines based on the experimental data.
 """
 
 import argparse
+import shutil
 import csv
 import numpy as np
 import matplotlib
@@ -160,12 +161,6 @@ def maps():
         default=".",
         help="Location for the csv simulation data ('.' by default).",
     )
-    parser.add_argument(
-        "-latex",
-        "--latex",
-        default="1",
-        help="Set to 0 to not use LaTeX formatting ('1' by default).",
-    )
     parser.add_argument("-p", "--path", default=".", help="Path to the geometry data.")
     cmdargs = vars(parser.parse_args())
 
@@ -173,7 +168,7 @@ def maps():
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": int(cmdargs["latex"]),
+            "text.usetex": shutil.which("latex") != "None",
             "font.family": "monospace",
             "legend.columnspacing": 0.9,
             "legend.handlelength": 3.5,

@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
-# pylint: disable=R0912
+# pylint: disable=R0912,R0915
 
 """
 Utiliy functions to write files and variables
@@ -128,7 +128,7 @@ def opm_files(dic):
     ) as file:
         file.write(filledtemplate)
     names = ["bcprop", "equalreg", "satufunc"]
-    if dic["mode"] in ["ert", "everest"]:
+    if dic["everert"]:
         dic["hm"] = []
         for i in range(1, 8):
             for name in [
@@ -147,12 +147,13 @@ def opm_files(dic):
                 "THRE",
                 "NPNT",
             ]:
-                if f"{name}{i}" in dic.keys():
+                if f"{name}{i}" in dic:
                     dic["hm"].append(f"{name}{i}")
-        if "THICKNESSMULT" in dic.keys():
+        if "THICKNESSMULT" in dic:
             dic["hm"].append("THICKNESSMULT")
         names += ["flow", "copyd"]
-        if dic["mode"] == "everest":
+        if "popsize" in dic:
+            name = "everest"
             names += ["scale"]
             with open(
                 f"{dic['jobs']}/METRIC",
@@ -167,6 +168,7 @@ def opm_files(dic):
             ) as file:
                 file.write("EXECUTABLE data.py")
         else:
+            name = "ert"
             with open(
                 f"{dic['jobs']}/METRIC",
                 "w",
@@ -186,10 +188,10 @@ def opm_files(dic):
                 file.write(f"ARGLIST -t {dic['times']} -m {dic['deck']}/cellmap.npy")
         if dic["monotonic"]:
             names += ["monotonic"]
-        mytemplate = Template(filename=f"{dic['path']}/templates/{dic['mode']}.mako")
+        mytemplate = Template(filename=f"{dic['path']}/templates/{name}.mako")
         filledtemplate = mytemplate.render(**var)
         with open(
-            f"{dic['fol']}/{dic['mode']}.{'txt' if dic['mode']=='ert' else 'yml'}",
+            f"{dic['fol']}/{name}.{'yml' if 'popsize' in dic else 'txt'}",
             "w",
             encoding="utf8",
         ) as file:
@@ -197,6 +199,8 @@ def opm_files(dic):
     for name in names:
         mytemplate = Template(filename=f"{dic['path']}/templates/{name}.mako")
         filledtemplate = mytemplate.render(**var)
+        if os.path.exists(f"{dic['jobs']}/{name}.py"):
+            os.system(f"rm -rf {dic['jobs']}/{name}.py")
         with open(
             f"{dic['jobs']}/{name}.py",
             "w",
@@ -212,7 +216,7 @@ def opm_files(dic):
             if prosc.returncode != 0:
                 raise ValueError(f"Invalid result: { prosc.returncode }")
             os.system(f"rm -rf {dic['fol']}/{name}.py")
-    if dic["mode"] == "ert":
+    if "ertargs" in dic and dic["everert"]:
         for name in ["prior", "para", "obs"]:
             mytemplate = Template(filename=f"{dic['path']}/templates/{name}.mako")
             filledtemplate = mytemplate.render(**var)

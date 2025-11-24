@@ -5,6 +5,8 @@
 
 """Generate the sparse data figure"""
 
+import os
+import shutil
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -64,12 +66,6 @@ def compareSparseData():
         "as required by the benchmark description."
     )
     parser.add_argument(
-        "-latex",
-        "--latex",
-        default="1",
-        help="Set to 0 to not use LaTeX formatting ('1' by default).",
-    )
-    parser.add_argument(
         "-l",
         "--location",
         default=".",
@@ -116,7 +112,11 @@ def compareSparseData():
     ncol = 4
     if cmdargs["add"] == "1":
         fileNames += ["sparse_data.csv"]
-        groups += ["YOURS"]
+        where = os.path.abspath(".").split("/")
+        if where[-1] == "best_simulation" and where[-2] == "figures":
+            groups += [where[-3]]
+        else:
+            groups += [where[-1]]
         colors += ["#FF1493"]
         ncol = 5
 
@@ -124,7 +124,7 @@ def compareSparseData():
     matplotlib.rc("font", **font)
     plt.rcParams.update(
         {
-            "text.usetex": int(cmdargs["latex"]),
+            "text.usetex": shutil.which("latex") != "None",
             "font.family": "monospace",
             "legend.columnspacing": 0.9,
             "legend.handlelength": 1.2,

@@ -23,11 +23,9 @@ def process_input(dic, in_file):
 
     """
     dic["monotonic"] = False
-    dic["popsize"] = 15
-    dic["experiment"] = "run" + dic["experiment"][-1]
     with open(in_file, "rb") as file:
         dic.update(tomllib.load(file))
-    if "random_seed" in dic.keys():
+    if "random_seed" in dic:
         dic["rng"] = dic["random_seed"]
     dic["PARA"] = {}
     for i in range(1, 7):
@@ -54,7 +52,7 @@ def process_input(dic, in_file):
     dic["boxa"] = [[1.1, 0.0, 0.0], [2.8, 0.01, 0.6]]
     dic["boxb"] = [[0.0, 0.0, 0.6], [1.1, 0.01, 1.2]]
     dic["boxc"] = [[1.1, 0.0, 0.1], [2.6, 0.01, 0.4]]
-    dic["noCells"] = [sum(dic["x"]), 1, sum(dic["z"])]
+    dic["noCells"] = [np.sum(dic["x"]), 1, np.sum(dic["z"])]
     dic["diffusion"] = np.array(dic["diffusion"]) * 86400  # To [m^2/day]
     dic["noSands"] = 7
     dic["y"] = [1]
@@ -110,9 +108,9 @@ def handle_thickness_map(dic):
     if dic["thickness"] == "final":
         dic["multpv"] = []
         thickness = np.load(f"{dic['path']}/geology/final_thickness.npy")
-        dic["dims"][1] = thickness.min()
+        dic["dims"][1] = np.min(thickness)
         dic["multThickness"] = (
-            dic["mult_thickness"] * thickness.reshape(-1) / thickness.min()
+            dic["mult_thickness"] * thickness.reshape(-1) / np.min(thickness)
         )
         dic["refx"] = np.arange(0, 2.8 + 5.0e-3, 1.0e-2)
         dic["refzd"] = 1.5 - np.arange(0, 1.5 + 5.0e-3, 1.0e-2)
@@ -134,9 +132,11 @@ def handle_thickness_map(dic):
         )
         dic["refxthickness"] = thickness[:, 0] - 0.03
         dic["refzthickness"] = 1.34 - thickness[:, 2]
-        dic["dims"][1] = thickness[:, 1].min()
+        dic["dims"][1] = np.min(thickness[:, 1])
         dic["multThickness"] = (
-            dic["mult_thickness"] * thickness[:, 1].reshape(-1) / thickness[:, 1].min()
+            dic["mult_thickness"]
+            * thickness[:, 1].reshape(-1)
+            / np.min(thickness[:, 1])
         )
     else:
         dic["dims"][1] = float(dic["thickness"])
