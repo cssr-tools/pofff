@@ -3,7 +3,7 @@
 [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# pofff: An open-source image-based history-matching framework for the FluidFlower Benchmark study using OPM Flow
+# pofff: An open-source image-based history-matching framework for the FluidFlower benchmark study using OPM Flow
 
 <img src="docs/text/figs/pofff.png" width="830" height="247">
 

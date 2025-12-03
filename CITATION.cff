@@ -1,0 +1,22 @@
+cff-version: "1.2.0"
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Landa-Marbán
+  given-names: David
+  orcid: "https://orcid.org/0000-0002-3343-1005"
+- family-names: Sandve
+  given-names: Tor Harald
+  orcid: "https://orcid.org/0000-0002-3267-8276"
+- family-names: Both
+  given-names: Jakub Wiktor
+  orcid: "https://orcid.org/0000-0001-6131-4976"
+- family-names: Nordbotten
+  given-names: Jan Martin
+  orcid: "https://orcid.org/0000-0003-1455-5704"
+- family-names: Gasda
+  given-names: Sarah Eileen
+  orcid: "https://orcid.org/0000-0002-2610-8322"
+title: "Performance of an open-source image-based history   
+  matching framework for CO2 storage"
+year: 2025
+url: "https://arxiv.org/abs/2510.20614"

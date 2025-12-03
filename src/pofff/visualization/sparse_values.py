@@ -25,8 +25,8 @@ def postprocessing():
         )
         sys.exit()
     i_d = [val[0] for val in values].index(float(3 * 86400))
-    dic["sparse1a"] = np.max(val[1] for val in values)
-    dic["sparse1b"] = np.max(val[2] for val in values)
+    dic["sparse1a"] = max(val[1] for val in values)
+    dic["sparse1b"] = max(val[2] for val in values)
     dic["sparse2"] = values[np.array([val[3] for val in values]).argmax()][0]
     dic["sparse3a"] = values[i_d][3]
     dic["sparse3c"] = values[i_d][5]
