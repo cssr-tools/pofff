@@ -25,11 +25,11 @@ def calculate_emd(file_1, file_2):
     im1 = Image.open(file_1).convert("L")
     im1 = im1.resize((140, 60), Image.Resampling.LANCZOS)
     n_x, n_z = im1.size
-    a_1 = np.array(im1.getdata()).reshape(n_x, n_z)
+    a_1 = np.array(im1.get_flattened_data()).reshape(n_x, n_z)
 
     im2 = Image.open(file_2).convert("L")
     im2 = im2.resize(im1.size, Image.Resampling.LANCZOS)
-    b_1 = np.array(im2.getdata()).reshape(n_x, n_z)
+    b_1 = np.array(im2.get_flattened_data()).reshape(n_x, n_z)
     im2.save(file_2)
 
     # Make a and b 'true' distributions

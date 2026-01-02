@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 NORCE Research AS
+// SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 // SPDX-License-Identifier: GPL-3.0
 Line(1) = {1, 2};
 Line(2) = {2, 3};

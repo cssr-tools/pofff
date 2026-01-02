@@ -23,7 +23,7 @@ Figure 3:
     plopm -i figure3/FIGURE3 -v 'multx * 1.75' -grid 'black,1e-2' -remove 1,1,0,1 -d 20,15 -clabel 'Thickness map [cm]' -cformat .2f -cnum 5 -f 20 -o figure3 -save figure3b
 
 Figure 4 requires running the SPE11A cases using `pyopmspe11 <https://github.com/OPM/pyopmspe11>`_, which uses the simulation grid. You might need to edit the configuration files to
-adjust the computational resources to your machine (e.g., `r3_cp_1cmish_capmax2500Pa.txt <https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.txt>`_ is run with 32 cpus).
+adjust the computational resources to your machine (e.g., `r3_cp_1cmish_capmax2500Pa.toml <https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml>`_ is run with 32 cpus).
 
 .. tip::
     You can install `pyopmspe11 <https://github.com/OPM/pyopmspe11>`_ by executing in the terminal:
@@ -35,18 +35,18 @@ adjust the computational resources to your machine (e.g., `r3_cp_1cmish_capmax25
 .. code-block:: bash
 
     mkdir figure4 && cd figure4
-    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.txt
-    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.txt
-    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r4_Cart_1mm_capmax2500Pa.txt
-    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.txt
-    pyopmspe11 -i r2_Cart_1cm_capmax2500Pa.txt -o r2_Cart_1cm_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
-    pyopmspe11 -i r3_cp_1cmish_capmax2500Pa.txt -o r3_cp_1cmish_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
-    pyopmspe11 -i r4_Cart_1mm_capmax2500Pa.txt -o r4_Cart_1mm_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
-    pyopmspe11 -i r5_Cart_1mm_capmax2500Pa_strictol.txt -o r5_Cart_1mm_capmax2500Pa_strictol -t 1 -r 280,1,120 -w 0.16666666666666666
+    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml
+    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml
+    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r4_Cart_1mm_capmax2500Pa.toml
+    curl -O https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.toml
+    pyopmspe11 -i r2_Cart_1cm_capmax2500Pa.toml -o r2_Cart_1cm_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
+    pyopmspe11 -i r3_cp_1cmish_capmax2500Pa.toml -o r3_cp_1cmish_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
+    pyopmspe11 -i r4_Cart_1mm_capmax2500Pa.toml -o r4_Cart_1mm_capmax2500Pa -t 1 -r 280,1,120 -w 0.16666666666666666
+    pyopmspe11 -i r5_Cart_1mm_capmax2500Pa_strictol.toml -o r5_Cart_1mm_capmax2500Pa_strictol -t 1 -r 280,1,120 -w 0.16666666666666666
     plopm -v xco2l -r 53 -mask satnum -maskthr 7e-5 -i 'r2_Cart_1cm_capmax2500Pa/flow/R2_CART_1CM_CAPMAX2500PA r3_cp_1cmish_capmax2500Pa/flow/R3_CP_1CMISH_CAPMAX2500PA r4_Cart_1mm_capmax2500Pa/flow/R4_CART_1MM_CAPMAX2500PA r5_Cart_1mm_capmax2500Pa_strictol/flow/R5_CART_1MM_CAPMAX2500PA_STRICTOL' -cnum 3 -xlnum 8 -clabel 'OPM results for SPE11A: CO$_2$ mass fraction (liquid phase) after 2 days' -d 16,6.5 -t "(a) Cartesian grid 1cm  (b) Corner-point grid 1cmish  (c) Cartesian grid 1mm  (d) Cartesian grid 1mm stricter tolerances" -yunits cm -xunits cm -yformat .0f -xformat .0f -f 16 -save figure4 -cformat .2e -suptitle 0 -subfigs 2,2 -cbsfax 0.35,0.97,0.3,0.02 -delax 1 -c '#9ca245 #9da347 #9fa44a #a0a64d #a2a750 #a3a953 #a5aa56 #a6ac59 #a8ad5c #a9af5f #abb062 #adb164 #aeb367 #b0b46a #b1b66d #b3b770 #b4b973 #b6ba76 #b7bc79 #b9bd7c #babf7f #bcc082 #bec184 #bfc387 #c1c48a #c2c68d #c4c790 #c5c993 #c7ca96 #c8cc99 #cacd9c #cbcf9f #cdd0a2 #cfd1a4 #d0d3a7 #d2d4aa #d3d6ad #d5d7b0 #d6d9b3 #d8dab6 #d9dcb9 #dbddbc #dcdfbf #dee0c1 #e0e1c4 #e1e3c7 #e3e4ca #e4e6cd #e6e7d0 #e7e9d3 #e9ead6 #eaecd9 #eceddc #edefdf #eff0e1 #f1f1e4 #f2f3e7 #f4f4ea #f5f6ed #f7f7f0 #f8f9f3 #fafaf6 #fbfcf9 #fdfdfc #ffffff #fefbfb #fdf7f7 #fcf3f3 #fbefef #faebeb #f9e7e7 #f8e3e3 #f7e0e0 #f6dcdc #f5d8d8 #f4d4d4 #f3d0d0 #f2cccc #f1c8c8 #f0c5c5 #efc1c1 #eebdbd #edb9b9 #ecb5b5 #ebb1b1 #eaadad #e9aaaa #e8a6a6 #e7a2a2 #e69e9e #e59a9a #e49696 #e39292 #e28f8f #e18b8b #e08787 #df8383 #de7f7f #dd7b7b #dc7777 #db7474 #da7070 #d96c6c #d86868 #d76464 #d66060 #d55c5c #d45959 #d35555 #d25151 #d14d4d #d04949 #cf4545 #ce4141 #cd3e3e #cc3a3a #cb3636 #ca3232 #c92e2e #c82a2a #c72626 #c62323 #c51f1f #c41b1b #c31717 #c21313 #c10f0f #c00b0b'
 
 A similar figure without the need of running the simulations (not showing the sands in the background and using the reporting grid) can be obtained by downloading the SPE11A benchmark data in csv format available at 
-`this website <https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/DARUS-4750>`_ (the submitted benchmark data does not include the `r5_Cart_1mm_capmax2500Pa_strictol.txt <https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.txt>`_ results):
+`this website <https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/DARUS-4750>`_ (the submitted benchmark data does not include the `r5_Cart_1mm_capmax2500Pa_strictol.toml <https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.toml>`_ results):
 
 .. code-block:: bash
 

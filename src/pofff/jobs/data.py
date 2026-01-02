@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-FileCopyrightText: 2023 NORCE
+# SPDX-FileCopyrightText: 2023-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 # pylint: disable=C0302, R0912, R0914, R0801, R0915, E1102, C0325
 
@@ -317,9 +317,11 @@ def dense_data(dig):
         None
 
     """
-    dil = {"rstno": []}
-    for time in dig["dense_t"]:
-        dil["rstno"].append(dig["times"].index(time))
+    dil = {"rstno": [], "indices": []}
+    for i, time in enumerate(dig["dense_t"]):
+        if time in dig["times"]:
+            dil["rstno"].append(dig["times"].index(time))
+            dil["indices"].append(i)
     dil["nrstno"] = len(dil["rstno"])
     for i, j, k in zip(["x", "y", "z"], dig["dims"], dig["nxyz"]):
         dil[f"ref{i}vert"] = np.linspace(0, j, k + 1)
@@ -330,7 +332,7 @@ def dense_data(dig):
     dil["cell_cent"] = np.load(dig["maps"])
     dig["actindr"] = []
     names = ["sgas", "cco2"]
-    for i, t_n in enumerate(dil["rstno"]):
+    for i, t_n in zip(dil["indices"], dil["rstno"]):
         generate_arrays(dig, dil, names, t_n)
         map_to_report_grid(dil, names)
         if dig["dense_t"][i] % 3600 == 0:
