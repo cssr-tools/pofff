@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 NORCE Research AS
+# SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
 """Table C3 and Figure C4 in the pofff paper"""

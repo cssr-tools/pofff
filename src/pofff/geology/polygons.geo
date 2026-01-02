@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2025 NORCE Research AS
+// SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 // SPDX-License-Identifier: GPL-3.0
 Merge "fluidflower.jpg";
 Plugin(ModifyComponents).Expression0 = "v0 * 20000";
