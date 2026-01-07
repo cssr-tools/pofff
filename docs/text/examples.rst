@@ -22,7 +22,7 @@ Adding your results
 ===================
 
 The `publication <https://github.com/cssr-tools/pofff/blob/main/publication>`_ folder contains the configuration files used for the results in the
-`pofff paper <https://arxiv.org/abs/2510.20614>`_ (see :doc:`publication <./publication>` for details in the steps to reproduce the figures in the paper).
+`pofff paper <https://link.springer.com/article/10.1007/s11242-025-02275-0>`_ (see :doc:`publication <./publication>` for details in the steps to reproduce the figures in the paper).
 
 .. code-block:: bash
 

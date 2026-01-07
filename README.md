@@ -58,7 +58,7 @@ See the [_examples_](https://cssr-tools.github.io/pofff/examples.html) in the [_
 
 ## Citing
 
-* Landa-Marbán, D., Sandve, T.H., Both, J.W., Nordbotten, J.M., and Gasda, S.E., 2025. Performance of an open-source image-based history matching framework for CO2 storage. https://arxiv.org/abs/2510.20614.
+* Landa-Marbán, D., Sandve, T.H., Both, J.W., Nordbotten, J.M., and Gasda, S.E., 2026. Performance of an open-source image-based history matching framework for CO2 storage. Transp Porous Med 153, 21, https://doi.org/10.1007/s11242-025-02275-0.
 
 ## About pofff
 The pofff package is funded by the [_Center for Sustainable Subsurface Resources (CSSR)_](https://cssr.no) [project no. 331841].

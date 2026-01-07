@@ -52,7 +52,7 @@ jobs:
       
     - name: Run the tests
       run: |
-        pytest -x --cov=pofff --cov-report term-missing tests/
+        pytest --cov=pofff --exitfirst --cov-report term-missing tests/
         
     - name: Build documentation
       run: |
