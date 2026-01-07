@@ -2,7 +2,7 @@
 Publication
 ***********
 
-This section adds details in the steps to reproduce the figures in the `pofff paper <https://arxiv.org/abs/2510.20614>`_.
+This section adds details in the steps to reproduce the figures in the `pofff paper <https://link.springer.com/article/10.1007/s11242-025-02275-0>`_.
 
 To this end, we use our friend `plopm <https://github.com/cssr-tools/plopm>`_. All commands are executed from the pofff main directory,
 and the figures are saved in new folders corresponding to the figure number.
