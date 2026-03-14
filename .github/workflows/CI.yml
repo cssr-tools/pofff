@@ -46,7 +46,7 @@ jobs:
         
     - name: Check code style and linting
       run: |
-        black --check src/ tests/ publication/
+        black --target-version py312 --check src/ tests/ publication/
         pylint src/ tests/ publication/
         mypy --ignore-missing-imports src/ tests/ publication/
       
