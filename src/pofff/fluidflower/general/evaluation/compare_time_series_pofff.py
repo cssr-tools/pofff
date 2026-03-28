@@ -187,7 +187,7 @@ def compareTimeSeries():
         ls, medianMixingC, color="xkcd:brown", linewidth=3, label="forecast"
     )
 
-    (e1, e2) = addExpData(
+    e1, e2 = addExpData(
         f"{path}experiment/benchmarkdata/time_series/mobile_box_a.csv", axsA[0][0]
     )
     axsA[0][0].set_xscale("log")
