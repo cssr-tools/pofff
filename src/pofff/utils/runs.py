@@ -2,219 +2,183 @@
 # SPDX-License-Identifier: GPL-3.0
 
 """
-Utiliy functions for the simulations, data processing, and plotting.
+Utility functions for running simulations, processing data,
+and generating benchmark plots.
 """
 
-import os
+from pathlib import Path
 import subprocess
+from typing import Sequence
+
+from pofff.config.config import PofffConfig
 
 
-def flow(dic):
+def _run(cmd: Sequence[str]) -> None:
     """
-    Run OPM Flow
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        None
-
+    Execute a command and abort if it fails.
     """
-    os.system(
-        f"{dic['flow']} --output-dir={dic['fol']} "
-        f"{dic['fol']}/{dic['data']}.DATA & wait\n"
+    subprocess.run(cmd, check=True)
+
+
+def flow(cfg: PofffConfig) -> None:
+    """
+    Run the OPM Flow simulator with configured options.
+    """
+    _run(
+        cfg.flow.split(" ")
+        + [f"--output-dir={cfg.fol}", str(Path(cfg.fol) / f"{cfg.data}.DATA")]
     )
 
 
-def data(dic):
+def data(cfg: PofffConfig) -> None:
     """
-    Generate the benchmark data
-
-    Args:
-        dic (dict): Global dictionary with required parameters
-
-    Returns:
-        None
-
+    Generate benchmark time-series and spatial data.
     """
-    prosc = subprocess.run(
+    _run(
         [
             "python",
-            f"{dic['path']}/jobs/data.py",
+            str(cfg.path / "jobs" / "data.py"),
             "-m",
-            f"{dic['deck']}/cellmap.npy",
+            str(Path(cfg.deck) / "cellmap.npy"),
             "-t",
-            dic["times"],
-        ],
-        check=True,
+            cfg.times,
+        ]
     )
-    if prosc.returncode != 0:
-        raise ValueError(f"Invalid result: { prosc.returncode }")
-    prosc = subprocess.run(
+
+    _run(
         [
             "python",
-            f"{dic['path']}/jobs/metric.py",
+            str(cfg.path / "jobs" / "metric.py"),
             "-e",
-            dic["experiment"],
+            cfg.experiment,
             "-p",
-            dic["path"],
+            str(cfg.path),
             "-t",
-            dic["times"],
+            cfg.times,
             "-s",
-            dic["msat"],
+            cfg.msat,
             "-c",
-            dic["mcon"],
-        ],
-        check=True,
+            cfg.mcon,
+        ]
     )
-    if prosc.returncode != 0:
-        raise ValueError(f"Invalid result: { prosc.returncode }")
 
 
-def benchmark(dic):
+def benchmark(cfg: PofffConfig) -> None:
     """
-    Generate the benchmark figures
-
-    Args:
-        dic (dict): Global dictionary with required parameters
-
-    Returns:
-        None
-
+    Generate benchmark figures and comparisons.
     """
-    prosc = subprocess.run(
+    _run(
         [
             "python",
-            f"{dic['path']}/visualization/maps.py",
+            str(cfg.path / "visualization" / "maps.py"),
             "-e",
-            dic["experiment"],
+            cfg.experiment,
             "-t",
-            dic["times"],
+            cfg.times,
             "-p",
-            dic["path"],
+            str(cfg.path),
             "-s",
-            dic["msat"],
+            cfg.msat,
             "-c",
-            dic["mcon"],
+            cfg.mcon,
             "-l",
-            "." if dic["add"] == "1" else dic["location"],
-        ],
-        check=True,
+            "." if cfg.mode != "fair" else cfg.location,
+        ]
     )
-    if prosc.returncode != 0:
-        raise ValueError(f"Invalid result: { prosc.returncode }")
-    if dic["add"] == "1":
-        prosc = subprocess.run(
+
+    # Generate sparse values unless in fair mode
+    if cfg.mode != "fair":
+        _run(
             [
                 "python",
-                f"{dic['path']}/visualization/sparse_values.py",
-            ],
-            check=True,
+                str(cfg.path / "visualization" / "sparse_values.py"),
+            ]
         )
-        if prosc.returncode != 0:
-            raise ValueError(f"Invalid result: { prosc.returncode }")
-    prosc = subprocess.run(
+
+    # Generate benchmark plots
+    _run(
         [
             "python",
-            f"{dic['path']}/visualization/benchmark.py",
+            str(cfg.path / "visualization" / "benchmark.py"),
             "-f",
-            f"{dic['figures']}",
+            cfg.figures,
             "-p",
-            dic["path"],
+            str(cfg.path),
             "-s",
-            dic["msat"],
+            cfg.msat,
+            "-t",
+            cfg.times,
             "-c",
-            dic["mcon"],
+            cfg.mcon,
             "-l",
-            dic["location"],
+            cfg.location,
             "-a",
-            dic["add"],
+            str(int(cfg.mode != "fair")),
             "-u",
-            dic["use"],
-        ],
-        check=True,
+            cfg.use,
+        ]
     )
-    if prosc.returncode != 0:
-        raise ValueError(f"Invalid result: { prosc.returncode }")
-    if dic["figures"] == "all":
-        prosc = subprocess.run(
-            [
-                "python",
-                f"{dic['path']}/visualization/error_table.py",
-                "-p",
-                dic["path"],
-                "-s",
-                dic["msat"],
-                "-c",
-                dic["mcon"],
-                "-l",
-                dic["location"],
-                "-a",
-                dic["add"],
-            ],
-            check=True,
-        )
-        if prosc.returncode != 0:
-            raise ValueError(f"Invalid result: { prosc.returncode }")
+
+    # Optional error table (requires full benchmark times)
+    if cfg.figures == "all":
+        if cfg.times != "24,48,72,96,120":
+            print(
+                "The error table requires a 120-hour simulation.\n"
+                "Please run with -t '24,48,72,96,120' "
+                f"(current: -t {cfg.times})."
+            )
+        else:
+            _run(
+                [
+                    "python",
+                    str(cfg.path / "visualization" / "error_table.py"),
+                    "-p",
+                    str(cfg.path),
+                    "-s",
+                    cfg.msat,
+                    "-c",
+                    cfg.mcon,
+                    "-l",
+                    cfg.location,
+                    "-a",
+                    str(int(cfg.mode != "fair")),
+                ]
+            )
 
 
-def everest():
+def everest() -> None:
     """
-    Run everest and postprocess
-
-    Args:
-        dic (dict): Global dictionary with required parameters
-
-    Returns:
-        None
-
+    Run Everest optimization and skip interactive prompts.
     """
-    os.system("everest run everest.yml --skip-prompt")
+    _run(["everest", "run", "everest.yml", "--skip-prompt"])
 
 
-def ert(dic):
+def ert(cfg: PofffConfig) -> None:
     """
-    Run ert and postprocess
-
-    Args:
-        dic (dict): Global dictionary with required parameters
-
-    Returns:
-        None
-
+    Run ERT with configured arguments.
     """
-    os.system(f"ert {dic['ertargs']} ert.txt")
+    _run(["ert", *(cfg.ertargs or "").split(), "ert.txt"])
 
 
-def postprocess(dic):
+def postprocess(cfg: PofffConfig) -> None:
     """
-    Postprocess ert and everest
-
-    Args:
-        dic (dict): Global dictionary with required parameters
-
-    Returns:
-        None
-
+    Postprocess ERT and Everest simulation results.
     """
-    prosc = subprocess.run(
+    _run(
         [
             "python",
-            f"{dic['path']}/visualization/everert.py",
+            str(cfg.path / "visualization" / "everert.py"),
             "-e",
-            f"{dic['path']}",
+            str(cfg.path),
             "-s",
-            dic["msat"],
+            cfg.msat,
             "-c",
-            dic["mcon"],
+            cfg.mcon,
             "-r",
-            dic["experiment"],
+            cfg.experiment,
             "-t",
-            dic["times"],
+            cfg.times,
             "-m",
-            f"{dic['deck']}/cellmap.npy",
-        ],
-        check=True,
+            str(Path(cfg.deck) / "cellmap.npy"),
+        ]
     )
-    if prosc.returncode != 0:
-        raise ValueError(f"Invalid result: { prosc.returncode }")

@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Examples &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -139,13 +139,15 @@ last iteration of the history matching in the pofff paper corresponding to <a cl
 <p class="admonition-title">Warning</p>
 <p>If you are running everest_iter_3.toml locally in your machine, then you might need to decrease the number of parallel runs (cores = 50 in line 39) and maximum function evaluations (max_function_evaluations = 200000) to your system capabilities.</p>
 </div>
-<p>For additional examples on how to set the history matching studies using ert or everest,
+<p>The possible parameters to hm are the 13 parameters for facie 1 to 6 (e.g., permx2, pen5, np6), in addition to consider isotropic permeability (e.g., perm3), and a constant to multiply the tickness (i.e., thicknessmult).
+For additional examples on how to set the history matching studies using ert or everest,
 see/run the scripts in the <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/tests">tests</a> and <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/publication">publication folder</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We refer to the documentation of <a class="reference external" href="https://everest.readthedocs.io/en/latest/configuration/reference.html">everest</a> and <a class="reference external" href="https://ert.readthedocs.io/en/latest/reference/configuration/keywords.html#">ert</a>
 for the description of the different keywords. While via the toml configuration files in pofff we have added the most common keywords, then one could always
-add additional keywords to the generated (after execution of pofff) everest (everest.yml) and ert (ert.ert) configuration files, and after running the history matching directly using the everest/poff command line executables.
+add additional keywords to the generated (after execution of pofff) everest (everest.yml) and ert (ert.ert) configuration files, and after running the history matching directly using the everest/ert command line executables.
+Details on all supported (and format types) variables that can be assigned via toml configuration files can be found in <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/src/pofff/config/config.py">config.py</a>.
 After the runs, one can always use pofff to postprocess the data and generate the figures, running with the flag <strong>-m none</strong> (see the
 <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/sprofiling.py">profiling.py</a> for an example of splitting the generation of the files, running of everest, and postprocessing).
 Please raise an issue for missing keywords in the toml configuration files that you would like to be added.</p>

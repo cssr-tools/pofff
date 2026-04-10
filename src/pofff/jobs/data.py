@@ -1,102 +1,315 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2023-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
-# pylint: disable=C0302, R0912, R0914, R0801, R0915, E1102, C0325
 
 """
-Script to write the benchmark data
+Write benchmark time-series and spatial (dense) data from OPM simulations.
 """
+
+from __future__ import annotations
 
 import argparse
-import os
 import sys
-from io import StringIO
-from scipy.interpolate import interp1d
+from pathlib import Path
+from typing import Optional, Union
+from dataclasses import dataclass, field
+
 import numpy as np
+from scipy.interpolate import interp1d
+
 from opm.io.ecl import EclFile as OpmFile
 from opm.io.ecl import EGrid as OpmGrid
 from opm.io.ecl import ERst as OpmRestart
 from opm.io.ecl import ESmry as OpmSummary
 
+# =============================================================================
+# Constants
+# =============================================================================
+
+SECONDS_IN_DAY = 86400.0
+
 GAS_DEN_REF = 1.86843
 WAT_DEN_REF = 998.108
-SECONDS_IN_YEAR = 31536000
-KMOL_TO_KG = 1e3 * 0.044
+
+KMOL_TO_KG = 44.0
+
+FIP_BOXC = (4, 12, 17, 18)
+FIP_DISS_A = (2, 4, 5, 8)
+FIP_SEAL_A = (5, 8)
+FIP_DISS_B = (3, 6)
+FIP_SEAL_B = (6,)
+
+ArrayLike = Union[float, np.ndarray]
+
+# =============================================================================
+# Data containers
+# =============================================================================
 
 
-def main():
-    """Postprocessing to generate the benchmark data"""
-    parser = argparse.ArgumentParser(description="Main script to process the data")
-    parser.add_argument(
-        "-r",
-        "--resolution",
-        default="280,1,120",
-        help="Number of x, y, and z elements to write the data ('10,1,5' by default).",
-    )
-    parser.add_argument(
-        "-t",
-        "--time",
-        default="24,48,72,96,120",
-        help="If one number, time step for the spatial maps in [h] ('24' by default); "
-        "otherwise, times separated by commas.",
-    )
-    parser.add_argument(
-        "-m",
-        "--maps",
-        default="/Users/dmar/Github/pofff/src/pofff/geology/cellmap.npy",
-        help="Path to the cell maps",
-    )
-    if os.path.exists("NOMONOTONIC"):
-        sys.exit()
-    cmdargs = vars(parser.parse_known_args()[0])
-    dig = {"where": "./"}
-    dig["flowf"] = "."
-    dig["maps"] = cmdargs["maps"]
-    dig["nxyz"] = np.genfromtxt(
-        StringIO(cmdargs["resolution"]), delimiter=",", dtype=int
-    )
-    for file in os.listdir(dig["flowf"]):
-        if os.path.splitext(file)[1] == ".UNRST":
-            dig["sim"] = os.path.abspath(dig["flowf"] + f"/{os.path.splitext(file)[0]}")
-            break
-    dig["dense_t"] = (
-        np.genfromtxt(StringIO(cmdargs["time"]), delimiter=",", dtype=float) * 3600
-    )
-    dig["sparse_t"] = 1.0 * 600
-    dig["dims"] = [2.8, 1.0, 1.2]
-    dig["nocellsr"] = dig["nxyz"][0] * dig["nxyz"][2]
-    dig["noxzr"] = dig["nxyz"][0] * dig["nxyz"][2]
-    dig["time_initial"], dig["times"] = 0, []
-    read_opm(dig)
-    sparse_data(dig)
-    if isinstance(dig["dense_t"], float):
-        dig["dense_t"] = [
-            i * dig["dense_t"]
-            for i in range(1, int(np.floor((dig["times"][-1]) / dig["dense_t"])) + 1)
-        ]
-    dense_data(dig)
-
-
-def sparse_data(dig):
+@dataclass
+class SimulationContext:
     """
-    Generate the sparse data within the benchmark format
-
-    Args:
-        dig (dict): Global dictionary
-
-    Returns:
-        None
-
+    Simulation-wide state, file handles, and grid information.
     """
-    dil = {
-        "times_data": np.linspace(
-            0, dig["times"][-1], round(dig["times"][-1] / dig["sparse_t"]) + 1
+
+    resolution: np.ndarray
+    dense_t: np.ndarray
+    maps: Path
+
+    where: Path = Path(".")
+    sparse_t: float = 600.0
+    dims: np.ndarray = field(default_factory=lambda: np.array([2.8, 1.0, 1.2]))
+
+    sim: Optional[Path] = None
+
+    unrst: Optional[OpmRestart] = None
+    ini: Optional[OpmFile] = None
+    egrid: Optional[OpmGrid] = None
+    smspec: Optional[OpmSummary] = None
+
+    times: list[float] = field(default_factory=list)
+    times_summary: Optional[np.ndarray] = None
+    time_initial: float = 0.0
+
+    porv: Optional[np.ndarray] = None
+    actind: Optional[np.ndarray] = None
+    gxyz: Optional[tuple[int, int, int]] = None
+    norst: Optional[int] = None
+
+    @property
+    def nxz(self) -> np.ndarray:
+        """Alias for resolution to preserve original naming."""
+        return self.resolution
+
+
+@dataclass
+class SparseResults:
+    """
+    Container for sparse (time-series) benchmark quantities.
+    """
+
+    ctx: SimulationContext
+
+    times_data: np.ndarray = field(init=False)
+
+    fipnum: np.ndarray = field(init=False)
+    dx: np.ndarray = field(init=False)
+    dz: np.ndarray = field(init=False)
+
+    pop1: np.ndarray = field(init=False)
+    pop2: np.ndarray = field(init=False)
+    moba: np.ndarray = field(init=False)
+    imma: np.ndarray = field(init=False)
+    dissa: np.ndarray = field(init=False)
+    seala: np.ndarray = field(init=False)
+    mobb: np.ndarray = field(init=False)
+    immb: np.ndarray = field(init=False)
+    dissb: np.ndarray = field(init=False)
+    sealb: np.ndarray = field(init=False)
+    sealt: np.ndarray = field(init=False)
+
+    m_c_series: list[float] = field(default_factory=list)
+    m_c: Optional[np.ndarray] = None
+
+    def __post_init__(self) -> None:
+        assert self.ctx.ini
+        assert self.ctx.times
+
+        self.times_data = np.arange(
+            0.0, self.ctx.times[-1] + self.ctx.sparse_t, self.ctx.sparse_t
         )
-    }
-    dil["fipnum"] = list(dig["ini"]["FIPNUM"])
-    for name in ["dx", "dy", "dz"]:
-        dil[f"{name}"] = np.array(dig["ini"][name.upper()])
-    dil["names"] = [
+
+        self.fipnum = np.asarray(self.ctx.ini["FIPNUM"])
+        self.dx = np.asarray(self.ctx.ini["DX"])
+        self.dz = np.asarray(self.ctx.ini["DZ"])
+
+
+# =============================================================================
+# Main
+# =============================================================================
+
+
+def main() -> None:
+    """
+    Entry point for benchmark postprocessing.
+    """
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description="Benchmark postprocessing",
+    )
+    parser.add_argument("-r", "--resolution", default="280,120")
+    parser.add_argument("-t", "--time", default="24,48,72,96,120")
+    parser.add_argument("-m", "--maps", default="cellmap.npy")
+    args, _ = parser.parse_known_args()
+
+    if Path("NOMONOTONIC").exists():
+        sys.exit(1)
+
+    ctx = SimulationContext(
+        resolution=np.fromstring(args.resolution, sep=",", dtype=int),
+        dense_t=np.fromstring(args.time, sep=",") * 3600.0,
+        maps=Path(args.maps),
+    )
+
+    ctx.sim = find_simulation_base(ctx.where)
+    read_opm(ctx)
+    sparse_data(ctx)
+    dense_data(ctx)
+
+
+# =============================================================================
+# Utilities
+# =============================================================================
+
+
+def find_simulation_base(path: Path) -> Path:
+    """Locate simulation base name from .UNRST file."""
+    for f in path.iterdir():
+        if f.suffix == ".UNRST":
+            return f.with_suffix("")
+    raise FileNotFoundError("No .UNRST file found")
+
+
+# =============================================================================
+# Reading OPM data
+# =============================================================================
+
+
+def read_opm(ctx: SimulationContext) -> None:
+    """
+    Load OPM restart, grid, and summary data.
+    """
+    assert ctx.sim
+
+    ctx.unrst = OpmRestart(f"{ctx.sim}.UNRST")
+
+    t0: Optional[float] = None
+    for i in range(len(ctx.unrst.report_steps)):
+        t = SECONDS_IN_DAY * float(ctx.unrst["DOUBHEAD", i][0])
+
+        if t0 is None and np.any(ctx.unrst["RSW", i] > 0):
+            t0 = SECONDS_IN_DAY * float(ctx.unrst["DOUBHEAD", i - 1][0])
+            ctx.times.append(0.0)
+
+        if t0 is not None:
+            ctx.times.append(t - t0)
+
+    ctx.time_initial = t0 or 0.0
+
+    ctx.ini = OpmFile(f"{ctx.sim}.INIT")
+    ctx.egrid = OpmGrid(f"{ctx.sim}.EGRID")
+    ctx.smspec = OpmSummary(f"{ctx.sim}.SMSPEC")
+
+    ctx.porv = np.asarray(ctx.ini["PORV"])
+    ctx.actind = np.flatnonzero(ctx.porv > 0)
+
+    ctx.times_summary = np.r_[0.0, ctx.smspec["TIME"] * SECONDS_IN_DAY]
+    ctx.gxyz = tuple(ctx.egrid.dimension)
+    ctx.norst = len(ctx.unrst.report_steps)
+
+
+# =============================================================================
+# Sparse data
+# =============================================================================
+
+
+def sparse_data(ctx: SimulationContext) -> None:
+    """
+    Compute and write sparse time-series benchmark data.
+    """
+    res = SparseResults(ctx)
+
+    create_from_summary(ctx, res)
+    compute_m_c(ctx, res)
+    interpolate_sparse(ctx, res)
+    write_sparse_data(res)
+
+
+def create_from_summary(ctx: SimulationContext, res: SparseResults) -> None:
+    """
+    Extract sparse quantities from OPM summary vectors.
+    """
+    assert ctx.smspec
+    smry = ctx.smspec
+
+    bwpr = sorted(k for k in smry.keys() if k.startswith("BWPR") and "," in k)[:2]
+
+    def initial_pressure(fip: int) -> float:
+        assert ctx.unrst
+        idx = list(res.fipnum).index(fip)
+        p = ctx.unrst["PRESSURE", 0][idx]
+        return (p - ctx.unrst["PCGW", 0][idx]) * 1e5
+
+    res.pop1 = np.r_[initial_pressure(8), smry[bwpr[0]] * 1e5]
+    res.pop2 = np.r_[initial_pressure(9), smry[bwpr[1]] * 1e5]
+
+    def sum_smry(exprs) -> np.ndarray:
+        return sum(smry[e] for e in exprs) * KMOL_TO_KG
+
+    res.moba = sum_smry(f"RGKDM:{i}" for i in FIP_DISS_A)
+    res.imma = sum_smry(f"RGKDI:{i}" for i in FIP_DISS_A)
+    res.dissa = sum_smry(f"RWCD:{i}" for i in FIP_DISS_A)
+
+    res.seala = sum_smry(
+        f"{k}:{i}" for i in FIP_SEAL_A for k in ("RWCD", "RGKDM", "RGKDI")
+    )
+
+    res.mobb = sum_smry(f"RGKDM:{i}" for i in FIP_DISS_B)
+    res.immb = sum_smry(f"RGKDI:{i}" for i in FIP_DISS_B)
+    res.dissb = sum_smry(f"RWCD:{i}" for i in FIP_DISS_B)
+
+    res.sealb = sum_smry(
+        f"{k}:{i}" for i in FIP_SEAL_B for k in ("RWCD", "RGKDM", "RGKDI")
+    )
+
+    res.sealt = (
+        res.seala
+        + res.sealb
+        + sum_smry(f"{k}:{i}" for i in (7, 9) for k in ("RWCD", "RGKDM", "RGKDI"))
+    )
+
+
+def compute_m_c(ctx: SimulationContext, res: SparseResults) -> None:
+    """
+    Compute mass-center migration metric.
+    """
+    assert ctx.unrst
+    assert ctx.gxyz
+    assert ctx.norst
+
+    boxc = np.array([fip in FIP_BOXC for fip in res.fipnum])
+    nx, ny, _ = ctx.gxyz
+
+    boxc_x = np.roll(boxc, 1)
+    boxc_z = np.roll(boxc, -nx * ny)
+
+    for t_n in range(1, ctx.norst):
+        rss = np.asarray(ctx.unrst["RSW", t_n])
+        rssat = np.asarray(ctx.unrst["RSWSAT", t_n])
+
+        xcw = rss / (rss + WAT_DEN_REF / GAS_DEN_REF)
+        xcw /= rssat / (rssat + WAT_DEN_REF / GAS_DEN_REF)
+
+        mc = np.sum(
+            np.abs(xcw[boxc_x] - xcw[boxc]) * res.dz[boxc]
+            + np.abs(xcw[boxc_z] - xcw[boxc]) * res.dx[boxc]
+        )
+        res.m_c_series.append(mc)
+
+
+def interpolate_sparse(ctx: SimulationContext, res: SparseResults) -> None:
+    """
+    Interpolate sparse quantities onto uniform time grid.
+    """
+    assert ctx.times_summary is not None
+
+    res.m_c = interp1d(
+        ctx.times,
+        np.r_[0.0, res.m_c_series],
+        fill_value="extrapolate",
+    )(res.times_data)
+
+    for name in (
         "pop1",
         "pop2",
         "moba",
@@ -108,306 +321,99 @@ def sparse_data(dig):
         "dissb",
         "sealb",
         "sealt",
-    ]
-    for ent in dil["names"]:
-        dil[ent] = 0.0
-    dil["m_c"] = []
-    dil["fip_diss_a"] = [2, 4, 5, 8]
-    dil["fip_seal_a"] = [5, 8]
-    dil["fip_diss_b"] = [3, 6]
-    dil["fip_seal_b"] = [6]
-    create_from_summary(dig, dil)
-    compute_m_c(dig, dil)
-    write_sparse_data(dig, dil)
+    ):
+        data = getattr(res, name)
+        x = ctx.times_summary
+        y = data if name.startswith("pop") else np.r_[0.0, data]
+        setattr(res, name, interp1d(x, y, fill_value="extrapolate")(res.times_data))
 
 
-def create_from_summary(dig, dil):
+def write_sparse_data(res: SparseResults) -> None:
     """
-    Use the summary arrays for the sparse data interpolation
-
-    Args:
-        dig (dict): Global dictionary\n
-        dil (dict): Local dictionary
-
-    Returns:
-        dil (dict): Modified local dictionary
-
+    Write sparse time-series values to CSV.
     """
-    ind, names, i_jk = 0, [], []
-    for key in dig["smspec"].keys():
-        if key[0 : len("BWPR")] == "BWPR" and "," in key[len("BWPR") + 1 :]:
-            names.append(key)
-            i_jk.append(
-                np.genfromtxt(
-                    StringIO(key[len("BWPR") + 1 :]), delimiter=",", dtype=int
-                )[0]
-            )
-            ind += 1
-            if ind == 2:
-                break
-    sort = sorted(range(len(i_jk)), key=i_jk.__getitem__)
-    pop1 = dig["unrst"]["PRESSURE", 0][dil["fipnum"].index(8)]
-    pop2 = dig["unrst"]["PRESSURE", 0][dil["fipnum"].index(9)]
-    pop1 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(8)]
-    pop2 -= dig["unrst"]["PCGW", 0][dil["fipnum"].index(9)]
-    dil["pop1"] = [pop1 * 1.0e5] + list(dig["smspec"][names[sort[0]]] * 1.0e5)  # Pa
-    dil["pop2"] = [pop2 * 1.0e5] + list(dig["smspec"][names[sort[1]]] * 1.0e5)  # Pa
-    for i in dil["fip_diss_a"]:
-        dil["moba"] += dig["smspec"][f"RGKDM:{i}"] * KMOL_TO_KG
-        dil["imma"] += dig["smspec"][f"RGKDI:{i}"] * KMOL_TO_KG
-        dil["dissa"] += dig["smspec"][f"RWCD:{i}"] * KMOL_TO_KG
-    for i in dil["fip_seal_a"]:
-        dil["seala"] += (
-            dig["smspec"][f"RWCD:{i}"]
-            + dig["smspec"][f"RGKDM:{i}"]
-            + dig["smspec"][f"RGKDI:{i}"]
-        ) * KMOL_TO_KG
-    for i in dil["fip_diss_b"]:
-        dil["mobb"] += dig["smspec"][f"RGKDM:{i}"] * KMOL_TO_KG
-        dil["immb"] += dig["smspec"][f"RGKDI:{i}"] * KMOL_TO_KG
-        dil["dissb"] += dig["smspec"][f"RWCD:{i}"] * KMOL_TO_KG
-    for i in dil["fip_seal_b"]:
-        dil["sealb"] += (
-            dig["smspec"][f"RWCD:{i}"]
-            + dig["smspec"][f"RGKDM:{i}"]
-            + dig["smspec"][f"RGKDI:{i}"]
-        ) * KMOL_TO_KG
-    dil["sealt"] = dil["seala"] + dil["sealb"]
-    for name in ["RWCD", "RGKDM", "RGKDI"]:
-        dil["sealt"] += (
-            dig["smspec"][f"{name}:7"] + dig["smspec"][f"{name}:9"]
-        ) * KMOL_TO_KG
+    assert res.m_c is not None
 
-
-def compute_m_c(dig, dil):
-    """
-    Normalized total variation of the concentration field within Box C
-
-    Args:
-        dig (dict): Global dictionary\n
-        dil (dict): Local dictionary
-
-    Returns:
-        dil (dict): Modified local dictionary
-
-    """
-    dil["boxc"] = np.array([fip in (4, 12, 17, 18) for fip in dil["fipnum"]])
-    dil["boxc_x"] = np.roll(dil["boxc"], 1)
-    dil["boxc_y"] = np.roll(dil["boxc"], -dig["gxyz"][0])
-    dil["boxc_z"] = np.roll(dil["boxc"], -dig["gxyz"][0] * dig["gxyz"][1])
-    for t_n in range(1, dig["norst"]):
-        rss = np.array(dig["unrst"]["RSW", t_n])
-        dil["xcw"] = np.divide(rss, rss + WAT_DEN_REF / GAS_DEN_REF)
-        rssat = np.array(dig["unrst"]["RSWSAT", t_n])
-        x_l_co2_max = np.divide(rssat, rssat + WAT_DEN_REF / GAS_DEN_REF)
-        dil["xcw"] = np.divide(dil["xcw"], x_l_co2_max)
-        dil["m_c"].append(
-            np.sum(
-                np.abs(
-                    (dil["xcw"][dil["boxc_x"]] - dil["xcw"][dil["boxc"]])
-                    * dil["dz"][dil["boxc"]]
-                )
-                + np.abs(
-                    (dil["xcw"][dil["boxc_z"]] - dil["xcw"][dil["boxc"]])
-                    * dil["dx"][dil["boxc"]]
-                )
-            )
-        )
-
-
-def write_sparse_data(dig, dil):
-    """
-    Write the sparse data
-
-    Args:
-        dig (dict): Global dictionary\n
-        dil (dict): Local dictionary
-
-    Returns:
-        None
-
-    """
-    for name in dil["names"] + ["m_c"]:
-        if name == "m_c":
-            interp = interp1d(
-                dig["times"],
-                [0.0] + dil[f"{name}"],
-                fill_value="extrapolate",
-            )
-        elif "pop" in name:
-            interp = interp1d(
-                dig["times_summary"],
-                dil[f"{name}"],
-                fill_value="extrapolate",
-            )
-        else:
-            interp = interp1d(
-                dig["times_summary"],
-                [0.0] + list(dil[f"{name}"]),
-                fill_value="extrapolate",
-            )
-        dil[f"{name}"] = interp(dil["times_data"])
-    text = [
-        "# t [s], p1 [Pa], p2 [Pa], mobA [kg], immA [kg], dissA [kg], sealA [kg], "
-        + "<same for B>, MC [m^2], sealTot [kg]"
-    ]
-    for j, time in enumerate(dil["times_data"][1:]):
-        text.append(
-            f"{time:.3e},{dil['pop1'][j]:.5e},{dil['pop2'][j]:.5e},"
-            f"{dil['moba'][j]:.3e},{dil['imma'][j]:.3e},{dil['dissa'][j]:.3e},"
-            f"{dil['seala'][j]:.3e},{dil['mobb'][j]:.3e},{dil['immb'][j]:.3e},"
-            f"{dil['dissb'][j]:.3e},{dil['sealb'][j]:.3e},{dil['m_c'][j]:.3e},"
-            f"{dil['sealt'][j]:.3e}"
-        )
-    with open("time_series.csv", "w", encoding="utf8") as file:
-        file.write("\n".join(text))
-
-
-def read_opm(dig):
-    """
-    Read the simulation files using OPM
-
-    Args:
-        dig (dict): Global dictionary
-
-    Returns:
-        dig (dict): Modified global dictionary
-
-    """
-    dig["unrst"] = OpmRestart(f"{dig['sim']}.UNRST")
-    time = []
-    for i in range(len(dig["unrst"].report_steps)):
-        time.append(float(f"{86400 * dig['unrst']['DOUBHEAD', i][0]:.0f}"))
-        if len(dig["times"]) == 0:
-            if np.max(np.array(dig["unrst"]["RSW", i])) > 0:
-                dig["time_initial"] = 86400 * dig["unrst"]["DOUBHEAD", i - 1][0]
-                dig["times"].append(0)
-                dig["times"].append(time[-1] - dig["time_initial"])
-        else:
-            dig["times"].append(time[-1] - dig["time_initial"])
-    dig["ini"] = OpmFile(f"{dig['sim']}.INIT")
-    dig["egrid"] = OpmGrid(f"{dig['sim']}.EGRID")
-    dig["smspec"] = OpmSummary(f"{dig['sim']}.SMSPEC")
-    dig["norst"] = len(dig["unrst"].report_steps)
-    dig["porv"] = np.array(dig["ini"]["PORV"])
-    dig["actind"] = list(i for i, porv in enumerate(dig["porv"]) if porv > 0)
-    dig["porva"] = np.array([porv for porv in dig["porv"] if porv > 0])
-    dig["nocellst"], dig["nocellsa"] = (
-        len(dig["porv"]),
-        dig["egrid"].active_cells,
+    header = (
+        "# t [s], p1 [Pa], p2 [Pa], mobA [kg], immA [kg], dissA [kg], "
+        "sealA [kg], mobB [kg], immB [kg], dissB [kg], sealB [kg], "
+        "MC [m], sealTot [kg]"
     )
-    dig["times_summary"] = [0.0]
-    dig["times_summary"] += list(86400.0 * dig["smspec"]["TIME"])
-    dig["gxyz"] = [
-        dig["egrid"].dimension[0],
-        dig["egrid"].dimension[1],
-        dig["egrid"].dimension[2],
-    ]
-    dig["noxz"] = dig["egrid"].dimension[0] * dig["egrid"].dimension[2]
+    lines = [header]
+
+    for j, t in enumerate(res.times_data[1:]):
+        lines.append(
+            f"{t:.3e},{res.pop1[j]:.5e},{res.pop2[j]:.5e},"
+            f"{res.moba[j]:.3e},{res.imma[j]:.3e},{res.dissa[j]:.3e},"
+            f"{res.seala[j]:.3e},{res.mobb[j]:.3e},{res.immb[j]:.3e},"
+            f"{res.dissb[j]:.3e},{res.sealb[j]:.3e},"
+            f"{res.m_c[j]:.3e},{res.sealt[j]:.3e}"
+        )
+
+    Path("time_series.csv").write_text("\n".join(lines), encoding="utf-8")
 
 
-def dense_data(dig):
+# =============================================================================
+# Dense data
+# =============================================================================
+
+
+def dense_data(ctx: SimulationContext) -> None:
     """
-    Generate the dense data within the benchmark format
-
-    Args:
-        dig (dict): Global dictionary
-
-    Returns:
-        None
-
+    Write spatial maps for selected dense output times.
     """
-    dil = {"rstno": [], "indices": []}
-    for i, time in enumerate(dig["dense_t"]):
-        if time in dig["times"]:
-            dil["rstno"].append(dig["times"].index(time))
-            dil["indices"].append(i)
-    dil["nrstno"] = len(dil["rstno"])
-    for i, j, k in zip(["x", "y", "z"], dig["dims"], dig["nxyz"]):
-        dil[f"ref{i}vert"] = np.linspace(0, j, k + 1)
-        dil[f"ref{i}cent"] = 0.5 * (dil[f"ref{i}vert"][1:] + dil[f"ref{i}vert"][:-1])
-    dil["refxgrid"] = np.zeros(dig["nxyz"][0] * dig["nxyz"][2])
-    dil["refzgrid"] = np.zeros(dig["nxyz"][0] * dig["nxyz"][2])
-    dil["refpoly"] = []
-    dil["cell_cent"] = np.load(dig["maps"])
-    dig["actindr"] = []
-    names = ["sgas", "cco2"]
-    for i, t_n in zip(dil["indices"], dil["rstno"]):
-        generate_arrays(dig, dil, names, t_n)
-        map_to_report_grid(dil, names)
-        if dig["dense_t"][i] % 3600 == 0:
-            write_dense_data(dig, dil, int(dig["dense_t"][i] / 3600))
-        else:
-            write_dense_data(dig, dil, int(dig["dense_t"][i]) / 3600)
+    assert ctx.unrst
+    assert ctx.porv is not None
+    assert ctx.actind is not None
+
+    dx, _, dz = ctx.dims
+
+    refx = 0.5 * (
+        np.linspace(0, dx, ctx.nxz[0] + 1)[:-1] + np.linspace(0, dx, ctx.nxz[0] + 1)[1:]
+    )
+    refz = 0.5 * (
+        np.linspace(0, dz, ctx.nxz[1] + 1)[:-1] + np.linspace(0, dz, ctx.nxz[1] + 1)[1:]
+    )
+
+    cell_cent = np.load(ctx.maps).astype(int)
+
+    for t in ctx.dense_t:
+        if t not in ctx.times:
+            continue
+        t_n = ctx.times.index(t)
+
+        sgas = np.abs(ctx.unrst["SGAS", t_n])
+        rhow = ctx.unrst["WAT_DEN", t_n]
+        rsw = ctx.unrst["RSW", t_n]
+        xlco2 = rsw / (rsw + WAT_DEN_REF / GAS_DEN_REF)
+
+        s_full = np.zeros(len(ctx.porv))
+        c_full = np.zeros(len(ctx.porv))
+        s_full[ctx.actind] = sgas
+        c_full[ctx.actind] = xlco2 * rhow
+
+        hours = int(t / 3600.0) if t % 3600 == 0 else t / 3600.0
+        write_dense_data(ctx, [refx, refz], s_full[cell_cent], c_full[cell_cent], hours)
 
 
-def generate_arrays(dig, dil, names, t_n):
+def write_dense_data(ctx: SimulationContext, refxz, sgas, cco2, hours) -> None:
     """
-    Arrays for the dense data
-
-    Args:
-        dig (dict): Global dictionary\n
-        dil (dict): Local dictionary\n
-        names (list): Strings with the quantities for the spatial maps\n
-        t_n (int): Index for the number of restart file
-
-    Returns:
-        dil (dict): Modified local dictionary
-
+    Write single spatial map CSV.
     """
-    for name in names:
-        dil[f"{name}_array"] = np.zeros(dig["nocellst"], dtype=float)
-        dil[f"{name}_refg"] = np.zeros(dig["nocellsr"], dtype=float)
-    sgas = np.abs(np.array(dig["unrst"]["SGAS", t_n]))
-    rhow = np.array(dig["unrst"]["WAT_DEN", t_n])
-    rsw = np.array(dig["unrst"]["RSW", t_n])
-    xlco2 = np.divide(rsw, rsw + WAT_DEN_REF / GAS_DEN_REF)
-    dil["sgas_array"][dig["actind"]] = sgas
-    dil["cco2_array"][dig["actind"]] = xlco2 * rhow
+    nx, nz = ctx.nxz
+    lines = ["x,z,saturation,concentration"]
+
+    for k, z in enumerate(refxz[1]):
+        for i, x in enumerate(refxz[0]):
+            idx = -nx * (nz - k) + i
+            lines.append(f"{x:.3f},{z:.3f},{sgas[idx]:.3f},{cco2[idx]:.3f}")
+
+    (ctx.where / f"spatial_map_{hours}h.csv").write_text("\n".join(lines))
 
 
-def map_to_report_grid(dil, names):
-    """
-    Map the simulation grid to the reporting grid
-
-    Args:
-        dil (dict): Local dictionary\n
-        names (list): Strings with the quantities for the spatial maps
-
-    Returns:
-        dil (dict): Modified local dictionary
-
-    """
-    for i, ind in enumerate(dil["cell_cent"]):
-        for name in names:
-            dil[f"{name}_refg"][i] = dil[f"{name}_array"][int(ind)]
-
-
-def write_dense_data(dig, dil, n):
-    """
-    Map the quantities to the cells
-
-    Args:
-        dig (dict): Global dictionary\n
-        dil (dict): Local dictionary\n
-        n (int): Number of csv file
-
-    Returns:
-        None
-
-    """
-    text = ["x,z,saturation,concentration"]
-    for k, zcord in enumerate(dil["refzcent"]):
-        for i, xcord in enumerate(dil["refxcent"]):
-            idc = -dig["nxyz"][0] * (dig["nxyz"][2] - k) + i
-            text.append(
-                f"{xcord:.3f}, {zcord:.3f}, "
-                + f"{dil['sgas_refg'][idc]:.3f}, "
-                + f"{dil['cco2_refg'][idc]:.3f}"
-            )
-    with open(f"{dig['where']}/spatial_map_{n}h.csv", "w", encoding="utf8") as file:
-        file.write("\n".join(text))
-
+# =============================================================================
+# Entry point
+# =============================================================================
 
 if __name__ == "__main__":
     main()

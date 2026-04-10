@@ -10,8 +10,9 @@ def scale_evaluation():
         coef = json.load(file)
     para = "{"
 % for para in dic["hm"]:
+<% lo, hi, scale = dic['hm'][f'{para}'][1], dic['hm'][f'{para}'][2], dic['hm'][f'{para}'][3]%>\
     para += f""""${para}":"""
-    para += f"{${dic[f"{para}"][1]}+coef['${para}']*(${dic[f"{para}"][2]}-${dic[f"{para}"][1]})/(1.0*${dic[f"{para}"][3]})}${'' if loop.last else ','}"
+    para += f"{${lo}+coef['${para}']*(${hi}-${lo})/(1.0*${scale})}${'' if loop.last else ','}"
 % endfor
     para += "}"
     with open("parameters.json", "w", encoding="utf8") as file:

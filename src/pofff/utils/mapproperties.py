@@ -1,594 +1,513 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
-# pylint: disable=C0302, R0912, R0914, R0915, E1102
+# pylint: disable=R0914, E1102
 
 """
-Utiliy function for the grid and locations in the geological models.
+Utility functions for grid generation and spatial indexing
+in geological FluidFlower-style models.
 """
 
-import os
 import csv
+import shutil
+from pathlib import Path
 import numpy as np
-import pandas as pd
 from shapely.geometry import Point, Polygon
 from alive_progress import alive_bar
+
 from pofff.utils.writefile import create_corner_point_grid
 
+# =============================================================================
+# GRID DISPATCH
+# =============================================================================
 
-def grid(dic):
+
+def grid_and_properties(cfg):
     """
-    Handle the different grid types (Cartesian, tensor, and corner-point grids)
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Dispatch grid generation and spatial property assignment
+    based on the selected grid type.
     """
-    getpolygons(dic)
-    if dic["grid"] == "corner-point":
-        corner(dic)
-    elif dic["grid"] == "cartesian":
-        dic["dsize"] = [1.0 * dic["dims"][i] / dic["noCells"][i] for i in range(3)]
-        for i, name in enumerate(["xmx", "ymy", "zmz"]):
-            dic[f"{name}"] = np.linspace(0, dic["dims"][i], dic["noCells"][i] + 1)
+    polygons, points = getpolygons(cfg)
+
+    # Corner-point grid handling
+    if cfg.grid == "corner-point":
+        xyz = corner(cfg, points)
+        positions(cfg, polygons, xyz=xyz)
+        return
+
+    dims = np.asarray(cfg.dims, float)
+
+    # Cartesian grid
+    if cfg.grid == "cartesian":
+        xvert = np.linspace(0, dims[0], cfg.nxz[0] + 1)
+        zvert = np.linspace(0, dims[2], cfg.nxz[1] + 1)
+
+    # Tensor grid
     else:
-        for i, (name, arr) in enumerate(zip(["xmx", "ymy", "zmz"], ["x", "y", "z"])):
-            dic[f"{name}"] = [0.0]
-            for j, num in enumerate(dic[f"{arr}"]):
-                for k in range(num):
-                    dic[f"{name}"].append(
-                        (j + (k + 1.0) / num) * dic["dims"][i] / len(dic[f"{arr}"])
-                    )
-            dic[f"{name}"] = np.array(dic[f"{name}"])
-            dic["noCells"][i] = len(dic[f"{name}"]) - 1
-    if dic["grid"] != "corner-point":
-        for name, size in zip(["xmx", "ymy", "zmz"], ["dx", "dy", "dz"]):
-            dic[f"{name}_center"] = (dic[f"{name}"][1:] + dic[f"{name}"][:-1]) / 2.0
-            dic[f"{size}"] = dic[f"{name}"][1:] - dic[f"{name}"][:-1]
+
+        def tensor(parts, dim):
+            """Construct non-uniform grid edges from part sizes."""
+            return np.concatenate(
+                [
+                    np.linspace(
+                        i * dim / len(parts),
+                        (i + 1) * dim / len(parts),
+                        n + 1,
+                        endpoint=True,
+                    )[:-1]
+                    for i, n in enumerate(parts)
+                ]
+                + [np.array([dim])]
+            )
+
+        xvert = tensor(cfg.x, dims[0])
+        zvert = tensor(cfg.z, dims[2])
+        cfg.nxz = [len(xvert) - 1, len(zvert) - 1]
+
+    # Cell centers
+    xcent = 0.5 * (xvert[:-1] + xvert[1:])
+    zcent = 0.5 * (zvert[:-1] + zvert[1:])
+
+    # Cell sizes
+    setattr(cfg, "dx", xvert[1:] - xvert[:-1])
+    setattr(cfg, "dz", zvert[1:] - zvert[:-1])
+
+    positions(cfg, polygons, xcent=xcent, zcent=zcent)
+
+    # Tensor grid expansion (OPM-compatible)
+    if cfg.grid == "tensor":
+        cfg.dx = list(map(str, xvert[1:] - xvert[:-1]))
+        dz = list(map(str, zvert[1:] - zvert[:-1]))
+
+        cfg.dz = [dz[0]] * cfg.nxz[0]
+        for i in range(cfg.nxz[1] - 1):
+            cfg.dx.extend(cfg.dx[-cfg.nxz[0] :])
+            cfg.dz.extend([dz[i + 1]] * cfg.nxz[0])
 
 
-def structured_handling_fluidflower(dic):
+# =============================================================================
+# CORNER-POINT GEOMETRY
+# =============================================================================
+
+
+def corner(cfg, points):
     """
-    Locate the geological positions in the tensor/cartesian grid for fluidflower
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Build corner-point grid coordinates and compute cell centroids.
     """
-    sensor1, sensor2 = [], []
-    with alive_bar(dic["noCells"][0] * dic["noCells"][2]) as bar_animation:
-        for k in range(dic["noCells"][2]):
-            for i in range(dic["noCells"][0]):
-                bar_animation()
-                n = -1
-                for ind in range(len(dic["polygons"])):
-                    if dic["polygons"][ind].contains(
-                        Point(dic["xmx_center"][i], dic["zmz_center"][k])
-                    ):
-                        n = dic["facies"][ind]
-                        break
-                sensor1.append(
-                    (dic["xmx_center"][i] - dic["sensors"][0][0]) ** 2
-                    + (dic["zmz_center"][k] + dic["sensors"][0][2] - dic["dims"][2])
-                    ** 2
+    horizonts = get_lines(cfg, points)
+
+    # Horizontal grid lines in x
+    xvert = np.concatenate(
+        [
+            np.linspace(
+                i * cfg.dims[0] / len(cfg.x),
+                (i + 1) * cfg.dims[0] / len(cfg.x),
+                n + 1,
+                endpoint=True,
+            )[:-1]
+            for i, n in enumerate(cfg.x)
+        ]
+        + [np.array([cfg.dims[0]])]
+    )
+
+    xcoord, zcoord = [], []
+
+    # Interpolate z-coordinates along horizons
+    for x in xvert:
+        for layer in horizonts:
+            xs = np.array([p[0] for p in layer])
+            zs = np.array([p[1] for p in layer])
+            i = np.argmin(np.abs(xs - x))
+
+            if xs[i] < x:
+                z = zs[i] + (zs[i + 1] - zs[i]) / (xs[i + 1] - xs[i]) * (x - xs[i])
+            else:
+                z = zs[i - 1] + (zs[i] - zs[i - 1]) / (xs[i] - xs[i - 1]) * (
+                    x - xs[i - 1]
                 )
-                sensor2.append(
-                    (dic["xmx_center"][i] - dic["sensors"][1][0]) ** 2
-                    + (dic["zmz_center"][k] + dic["sensors"][1][2] - dic["dims"][2])
-                    ** 2
-                )
-                dic["fluxnum"].append(str(n))
-                boxes(
-                    dic,
-                    dic["xmx_center"][i],
-                    dic["zmz_center"][k],
-                    dic["fluxnum"][-1],
-                )
-                if "multpv" in dic:
-                    indx = pd.Series(
-                        np.abs(
-                            (dic["refxthickness"] - dic["xmx_center"][i]) ** 2
-                            + (
-                                dic["refzthickness"]
-                                - dic["dims"][2]
-                                + dic["zmz_center"][k]
-                            )
-                            ** 2
-                        )
-                    ).argmin()
-                    dic["multpv"].append(str(dic["multThickness"][indx]))
-                if "cellmaps" in dic:
-                    dic["simxcent"].append(dic["xmx_center"][i])
-                    dic["simzcent"].append(dic["dims"][2] - dic["zmz_center"][k])
-    dic["pop1"] = pd.Series(sensor1).argmin()
-    dic["pop2"] = pd.Series(sensor2).argmin()
-    dic["fipnum"][dic["pop1"]] = "8"
-    dic["fipnum"][dic["pop2"]] = "9"
-    sensors(dic)
-    wells(dic)
+
+            xcoord.append(x)
+            zcoord.append(z)
+
+    xcoord, zcoord = np.asarray(xcoord), np.asarray(zcoord)
+
+    stride = len(cfg.z) + 1
+    cfg.nxz[0] = len(xcoord) // stride - 1
+    cfg.nxz[1] = stride - 1
+
+    # Vertical refinement
+    xcoord, zcoord, cfg.nxz[0], cfg.nxz[1] = refinement_z(
+        xcoord, zcoord, cfg.nxz[1], cfg.z
+    )
+
+    create_corner_point_grid(cfg, xcoord, zcoord)
+
+    # Compute cell centroids
+    xyz = np.zeros((cfg.nxz[0] * cfg.nxz[1], 3))
+    stride = cfg.nxz[1] + 1
+    idx = 0
+
+    for k in range(cfg.nxz[1]):
+        for i in range(cfg.nxz[0]):
+            n = i * stride + k
+            m = (i + 1) * stride + k
+
+            x = np.array([xcoord[n], xcoord[m], xcoord[m + 1], xcoord[n + 1]])
+            z = np.array([zcoord[n], zcoord[m], zcoord[m + 1], zcoord[n + 1]])
+
+            a = x * np.roll(z, -1) - np.roll(x, -1) * z
+            area = 0.5 * np.sum(a)
+
+            if abs(area) > 1e-12:
+                cx = np.sum((x + np.roll(x, -1)) * a) / (6 * area)
+                cz = np.sum((z + np.roll(z, -1)) * a) / (6 * area)
+            else:
+                # Fallback for degenerate cells
+                cx, cz = np.mean(x), np.mean(z)
+
+            xyz[idx] = [cx, 0.0, cz]
+            idx += 1
+
+    return xyz
 
 
-def corner_point_handling_fluidflower(dic):
+# =============================================================================
+# STRUCTURED POSITION HANDLING
+# =============================================================================
+
+
+def handle_thickness_map(cfg):
     """
-    Locate the geological positions in the corner-point grid for the fluidflower
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Load and normalize thickness map and corresponding multipliers.
     """
-    well1, well2, sensor1, sensor2 = [], [], [], []
-    dic["wellijk"] = [[] for _ in range(len(dic["sources"]))]
-    with alive_bar(dic["no_cells"]) as bar_animation:
-        for i in range(dic["no_cells"]):
+    geology = cfg.path / "geology"
+
+    if cfg.thickness == "final":
+        thickness = np.load(geology / "final_thickness.npy")
+        ydim = float(np.min(thickness))
+        mult = cfg.mult_thickness * thickness.reshape(-1) / np.min(thickness)
+
+        refx = np.arange(0, 2.8 + 5.0e-3, 1.0e-2)
+        refz = 1.5 - np.arange(0, 1.5 + 5.0e-3, 1.0e-2)
+        refx = 0.5 * (refx[1:] + refx[:-1])
+        refz = 0.5 * (refz[1:] + refz[:-1])
+        x, z = np.meshgrid(refx, refz, indexing="xy")
+
+        return ydim, x.ravel(), z.ravel(), mult
+
+    thickness = np.genfromtxt(geology / "initial_thickness.csv", delimiter=",")
+    return (
+        float(np.min(thickness[:, 1])),
+        thickness[:, 0] - 0.03,
+        1.34 - thickness[:, 2],
+        cfg.mult_thickness * thickness[:, 1] / np.min(thickness[:, 1]),
+    )
+
+
+def structured_handling_fluidflower(cfg, xcent, zcent, polygons):
+    """
+    Assign facies, boxes, sensors, and wells on structured grids.
+    """
+    nx, nz = cfg.nxz
+    x = np.tile(xcent, nz)
+    z = np.repeat(zcent, nx)
+    ztop = cfg.dims[2] - z
+
+    flux = np.full(len(x), -1)
+
+    if cfg.thickness in {"initial", "final"}:
+        cfg.dims[1], xth, zth, mult = handle_thickness_map(cfg)
+    else:
+        cfg.dims[1] = float(cfg.thickness)
+
+    with alive_bar(len(x)) as bar_animation:
+        for i, (xi, zi) in enumerate(zip(x, z)):
             bar_animation()
-            i_x = int(i % dic["noCells"][0])
-            k_z = int(np.floor(i / dic["noCells"][0]))
-            n = -1
-            for ind in range(len(dic["polygons"])):
-                if dic["polygons"][ind].contains(
-                    Point(dic["xyz"][i][0], dic["xyz"][i][2])
-                ):
-                    n = dic["facies"][ind]
+            pt = Point(xi, zi)
+            for j, poly in enumerate(polygons):
+                if poly.contains(pt):
+                    flux[i] = cfg.facies[j]
                     break
-            well1.append(
-                (dic["sources"][0][0] - dic["xyz"][i][0]) ** 2
-                + (dic["sources"][0][2] - dic["xyz"][i][2]) ** 2
-            )
-            well2.append(
-                (dic["sources"][1][0] - dic["xyz"][i][0]) ** 2
-                + (dic["sources"][1][2] - dic["xyz"][i][2]) ** 2
-            )
-            sensor1.append(
-                (dic["xyz"][i][0] - dic["sensors"][0][0]) ** 2
-                + (dic["xyz"][i][2] + dic["sensors"][0][2] - dic["dims"][2]) ** 2
-            )
-            sensor2.append(
-                (dic["xyz"][i][0] - dic["sensors"][1][0]) ** 2
-                + (dic["xyz"][i][2] + dic["sensors"][1][2] - dic["dims"][2]) ** 2
-            )
-            dic["fluxnum"].append(str(n))
-            boxes(dic, dic["xyz"][i][0], dic["xyz"][i][2], dic["fluxnum"][-1])
-            if "multpv" in dic:
-                indx = pd.Series(
-                    np.abs(
-                        (dic["refxthickness"] - dic["xyz"][i][0]) ** 2
-                        + (dic["refzthickness"] - dic["dims"][2] + dic["xyz"][i][2])
-                        ** 2
-                    )
-                ).argmin()
-                dic["multpv"].append(str(dic["multThickness"][indx]))
-            if "cellmaps" in dic:
-                dic["simxcent"].append(dic["xyz"][i][0])
-                dic["simzcent"].append(dic["dims"][2] - dic["xyz"][i][2])
-    dic["pop1"] = pd.Series(sensor1).argmin()
-    dic["pop2"] = pd.Series(sensor2).argmin()
-    dic["fipnum"][dic["pop1"]] = "8"
-    dic["fipnum"][dic["pop2"]] = "9"
-    idwell1 = pd.Series(well1).argmin()
-    idwell2 = pd.Series(well2).argmin()
-    i_x = int(idwell1 % dic["noCells"][0])
-    k_z = int(np.floor(idwell1 / dic["noCells"][0]))
-    well1ijk = [i_x, 0, k_z]
-    i_x = int(idwell2 % dic["noCells"][0])
-    k_z = int(np.floor(idwell2 / dic["noCells"][0]))
-    well2ijk = [i_x, 0, k_z]
-    i_x = int(dic["pop1"] % dic["noCells"][0])
-    k_z = int(np.floor(dic["pop1"] / dic["noCells"][0]))
-    dic["sensorijk"][0] = [i_x, 0, k_z]
-    i_x = int(dic["pop2"] % dic["noCells"][0])
-    k_z = int(np.floor(dic["pop2"] / dic["noCells"][0]))
-    dic["sensorijk"][1] = [i_x, 0, k_z]
-    dic["wellijk"][0] = [well1ijk[0] + 1, 1, well1ijk[2] + 1]
-    dic["wellijk"][1] = [well2ijk[0] + 1, 1, well2ijk[2] + 1]
 
+            if cfg.thickness in {"initial", "final"}:
+                idx = np.argmin((xth - xi) ** 2 + (zth - (cfg.dims[2] - zi)) ** 2)
+                cfg.multpv.append(str(mult[idx]))
 
-def boxes(dic, x_c, z_c, fluxnum):
-    """
-    Find the global indices for the different boxes for the report data
+    cfg.fluxnum = flux.astype(str).tolist()
+    cfg.fipnum = classify_boxes(cfg, x, ztop, cfg.fluxnum)
 
-    Args:
-        dic (dict): Global dictionary\n
-        x_c (float): x-position of the cell center\n
-        z_c (float): z-position of the cell center\n
-        fluxnum (int): Number of the facie in the cell
+    s1, s2 = sensors_structured(cfg, xcent, zcent)
+    cfg.fipnum[s1], cfg.fipnum[s2] = "8", "9"
 
-    Returns:
-        dic (dict): Modified global dictionary
+    wells_structured(cfg, xcent, zcent)
 
-    """
-    if (
-        (dic["dims"][2] - z_c >= dic["boxb"][0][2])
-        & (dic["dims"][2] - z_c <= dic["boxb"][1][2])
-        & (x_c >= dic["boxb"][0][0])
-        & (x_c <= dic["boxb"][1][0])
-    ):
-        check_facie1(dic, fluxnum, "6", "3")
-    elif (
-        (dic["dims"][2] - z_c >= dic["boxc"][0][2])
-        & (dic["dims"][2] - z_c <= dic["boxc"][1][2])
-        & (x_c >= dic["boxc"][0][0])
-        & (x_c <= dic["boxc"][1][0])
-    ):
-        check_facie1(dic, fluxnum, "12", "4")
-    elif (
-        (dic["dims"][2] - z_c >= dic["boxa"][0][2])
-        & (dic["dims"][2] - z_c <= dic["boxa"][1][2])
-        & (x_c >= dic["boxa"][0][0])
-        & (x_c <= dic["boxa"][1][0])
-    ):
-        check_facie1(dic, fluxnum, "5", "2")
-    elif fluxnum == "1":
-        dic["fipnum"].append("7")
+    if cfg.hascellmaps:
+        get_cellmaps(cfg, x.tolist(), ztop.tolist())
     else:
-        dic["fipnum"].append("1")
+        shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
 
-def check_facie1(dic, fluxnum, numa, numb):
+# =============================================================================
+# CORNER-POINT POSITION HANDLING
+# =============================================================================
+
+
+def corner_point_handling_fluidflower(cfg, xyz, polygons):
     """
-    Handle the overlaping with facie 1
-
-    Args:
-        dic (dict): Global dictionary\n
-        fluxnum (int): Number of the facie in the cell\n
-        numa (int): Fipnum to assign to the cell if it overlaps with Facie 1\n
-        numb (int): Fipnum to assign to the cell otherwise.
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Assign facies, boxes, sensors, and wells for corner-point grids.
     """
-    if fluxnum == "1":
-        dic["fipnum"].append(numa)
+    x = xyz[:, 0]
+    ztop = cfg.dims[2] - xyz[:, 2]
+
+    if cfg.thickness in {"initial", "final"}:
+        cfg.dims[1], xth, zth, mult = handle_thickness_map(cfg)
     else:
-        dic["fipnum"].append(numb)
+        cfg.dims[1] = float(cfg.thickness)
 
+    flux = np.full(len(x), -1)
 
-def positions(dic):
-    """
-    Function to locate sand and well positions
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
-    """
-    dic["sensorijk"] = [[] for _ in range(len(dic["sensors"]))]
-    for names in ["fluxnum", "fipnum", "porv"]:
-        dic[f"{names}"] = []
-    if dic["grid"] == "corner-point":
-        corner_point_handling_fluidflower(dic)
-    else:
-        structured_handling_fluidflower(dic)
-    if "cellmaps" in dic:
-        get_cellmaps(dic)
-    else:
-        os.system(f"cp {dic['path']}/geology/cellmap.npy {dic['deck']}/")
-
-
-def get_cellmaps(dic):
-    """
-    Write the mapping between simulation and reporting grid
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        None
-
-    """
-    cellmaps = []
-    print("\nMapping simulation to reporting grid, please wait.")
-    with alive_bar(len(dic["refxgrid"])) as bar_animation:
-        for xcen, zcen in zip(dic["refxgrid"], dic["refzgrid"]):
+    with alive_bar(len(x)) as bar_animation:
+        for i, (xi, zi) in enumerate(zip(x, ztop)):
             bar_animation()
-            cellmaps.append(
-                np.argmin(
-                    np.abs(dic["simxcent"] - xcen) + np.abs(dic["simzcent"] - zcen)
-                )
-            )
-    np.save(f"{dic['deck']}/cellmap", cellmaps)
+            pt = Point(xi, cfg.dims[2] - zi)
+            for j, poly in enumerate(polygons):
+                if poly.contains(pt):
+                    flux[i] = cfg.facies[j]
+                    break
+
+            if cfg.thickness in {"initial", "final"}:
+                idx = np.argmin((xth - xi) ** 2 + (zth - zi) ** 2)
+                cfg.multpv.append(str(mult[idx]))
+
+    cfg.fluxnum = flux.astype(str).tolist()
+    cfg.fipnum = classify_boxes(cfg, x, ztop, cfg.fluxnum)
+
+    s1, s2 = sensors_corner_point(cfg, x, ztop)
+    cfg.fipnum[s1], cfg.fipnum[s2] = "8", "9"
+
+    wells_corner_point(cfg, x, ztop)
+
+    if cfg.hascellmaps:
+        get_cellmaps(cfg, x.tolist(), ztop.tolist())
+    else:
+        shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
 
-def sensors(dic):
+# =============================================================================
+# DISPATCHER
+# =============================================================================
+
+
+def positions(cfg, polygons, xcent=None, zcent=None, xyz=None):
     """
-    Find the i,j,k sensor indices
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Dispatch spatial indexing for either grid type.
     """
-    for j, _ in enumerate(dic["sensors"]):
-        for sensor_coord, axis in zip(dic["sensors"][j], ["xmx", "ymy", "zmz"]):
-            if axis == "zmz":
-                dic["sensorijk"][j].append(
-                    pd.Series(
-                        np.abs(dic["dims"][2] - sensor_coord - dic[f"{axis}_center"])
-                    ).argmin()
-                )
-            else:
-                dic["sensorijk"][j].append(
-                    pd.Series(np.abs(sensor_coord - dic[f"{axis}_center"])).argmin()
-                )
+    if cfg.grid == "corner-point":
+        corner_point_handling_fluidflower(cfg, xyz, polygons)
+    else:
+        structured_handling_fluidflower(cfg, xcent, zcent, polygons)
 
 
-def wells(dic):
+# =============================================================================
+# SENSOR AND WELL HELPERS
+# =============================================================================
+
+
+def sensors_structured(cfg, xcent, zcent):
     """
-    Function to find the wells/sources index
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Determine structured-grid sensor indices.
     """
-    dic["wellijk"] = [[] for _ in range(len(dic["sources"]))]
-    for j, _ in enumerate(dic["sources"]):
-        for well_coord, axis in zip(dic["sources"][j], ["xmx", "ymy", "zmz"]):
-            dic["wellijk"][j].append(
-                pd.Series(np.abs(well_coord - dic[f"{axis}_center"])).argmin() + 1
-            )
+    sx1, sz1 = cfg.sensors[0]
+    sx2, sz2 = cfg.sensors[1]
+    dimz = cfg.dims[2]
+
+    d1, d2 = [], []
+
+    for k in range(cfg.nxz[1]):
+        for i in range(cfg.nxz[0]):
+            d1.append((xcent[i] - sx1) ** 2 + (zcent[k] + sz1 - dimz) ** 2)
+            d2.append((xcent[i] - sx2) ** 2 + (zcent[k] + sz2 - dimz) ** 2)
+
+    i1, i2 = int(np.argmin(d1)), int(np.argmin(d2))
+
+    for j, s in enumerate(cfg.sensors):
+        cfg.sensor_ik[j] = [
+            int(np.argmin(np.abs(xcent - s[0]))),
+            int(np.argmin(np.abs(dimz - s[1] - zcent))),
+        ]
+
+    return i1, i2
 
 
-def getpolygons(dic):
+def wells_structured(cfg, xcent, zcent):
     """
-    Function to create the polygons from the benchmark geo file
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Determine structured-grid well indices.
     """
-    dic["points"] = []
-    lines = []
-    curves = []
-    dic["polygons"] = []
-    dic["facies"] = []
-    facie = 0
-    h_ref = 1.5 / 1490
-    l_ref = 2.8 / 2594
-    dic["ztopbot"] = dic["dims"][2] - 0.644
-    dic["zmidbot"] = dic["dims"][2] - 0.265
-    with open(
-        f"{dic['path']}/geology/points.geo",
-        "r",
-        encoding="utf8",
-    ) as file:
-        for row in csv.reader(file, delimiter=" "):
-            if row[0][:5] == "Point":
-                dic["points"].append(
-                    [
-                        l_ref * float(row[2][1:-1]),
-                        dic["dims"][2] - h_ref * float(row[3][:-1]),
-                    ]
-                )
-    with open(
-        f"{dic['path']}/geology/lines.geo",
-        "r",
-        encoding="utf8",
-    ) as file:
-        for row in csv.reader(file, delimiter=" "):
-            if row[0][:4] == "Line":
-                lines.append([int(row[2][1:-1]), int(row[3][:-2])])
-    with open(
-        f"{dic['path']}/geology/polygons.geo",
-        "r",
-        encoding="utf8",
-    ) as file:
-        for row in csv.reader(file, delimiter=" "):
-            if row[0] == "Curve":
-                dic["facies"].append(facie)
-                tmp = []
-                tmp.append(int(row[3][1:-1]))
-                for col in row[4:-1]:
-                    tmp.append(int(col[:-1]))
-                tmp.append(int(row[-1][:-2]))
-                curves.append(tmp)
-            if len(row) > 1:
-                if row[1] in ["Sand", "Water"]:
-                    facie += 1
-    for curve in curves:
-        tmp = []
-        tmp.append(
-            [
-                dic["points"][lines[curve[0] - 1][0] - 1][0],
-                dic["points"][lines[curve[0] - 1][0] - 1][1],
-            ]
-        )
-        tmp.append(
-            [
-                dic["points"][lines[curve[0] - 1][1] - 1][0],
-                dic["points"][lines[curve[0] - 1][1] - 1][1],
-            ]
-        )
-        for line in curve[1:]:
-            if line < 0:
-                tmp.append(
-                    [
-                        dic["points"][lines[np.abs(line) - 1][0] - 1][0],
-                        dic["points"][lines[np.abs(line) - 1][0] - 1][1],
-                    ]
-                )
-            else:
-                tmp.append(
-                    [
-                        dic["points"][lines[line - 1][1] - 1][0],
-                        dic["points"][lines[line - 1][1] - 1][1],
-                    ]
-                )
-        tmp.append(tmp[0])
-        dic["polygons"].append(Polygon(tmp))
+    for i, w in enumerate(cfg.sources):
+        cfg.source_ik[i] = [
+            int(np.argmin(np.abs(xcent - w[0]))) + 1,
+            int(np.argmin(np.abs(cfg.dims[2] - w[1] - zcent))) + 1,
+        ]
 
 
-def get_lines(dic):
+def sensors_corner_point(cfg, x, ztop):
     """
-    Read the points in the z-surface lines
+    Determine corner-point sensor indices.
+    """
+    coords = np.column_stack((x, ztop))
+    sensors = np.array(cfg.sensors)
+    d = ((coords[:, None] - sensors) ** 2).sum(axis=2)
 
-     Args:
-        dic (dict): Global dictionary
+    s1, s2 = int(np.argmin(d[:, 0])), int(np.argmin(d[:, 1]))
+    nx = cfg.nxz[0]
 
-     Returns:
-        horizonts (list): List with the coordinates of the horizonts
+    cfg.sensor_ik[0] = [s1 % nx, s1 // nx]
+    cfg.sensor_ik[1] = [s2 % nx, s2 // nx]
 
+    return s1, s2
+
+
+def wells_corner_point(cfg, x, ztop):
+    """
+    Determine corner-point well indices.
+    """
+    coords = np.column_stack((x, ztop))
+    wells = np.array(cfg.sources)
+    d = ((coords[:, None] - wells) ** 2).sum(axis=2)
+
+    for i in range(2):
+        idx = np.argmin(d[:, i])
+        cfg.source_ik[i] = [idx % cfg.nxz[0] + 1, idx // cfg.nxz[0] + 1]
+
+
+# =============================================================================
+# UTILITIES
+# =============================================================================
+
+
+def classify_boxes(cfg, x, z, flux):
+    """
+    Assign box-specific FIP numbers based on spatial regions.
+    """
+    x, z, flux = map(np.asarray, (x, z, flux))
+    fip = np.full(len(x), "1", dtype=object)
+
+    def box(b, a, b2):
+        m = (x >= b[0][0]) & (x <= b[1][0]) & (z >= b[0][1]) & (z <= b[1][1])
+        sel = m & (fip == "1")
+        fip[sel & (flux == "1")] = a
+        fip[sel & (flux != "1")] = b2
+
+    # Priority order preserved
+    box(cfg.boxb, "6", "3")
+    box(cfg.boxc, "12", "4")
+    box(cfg.boxa, "5", "2")
+
+    fip[(flux == "1") & (fip == "1")] = "7"
+    return fip.tolist()
+
+
+def get_cellmaps(cfg, simxcent, simzcent):
+    """
+    Construct mapping from structured grid to reference grid.
+    """
+    refx = np.arange(0, 2.8 + 5.0e-3, 1.0e-2)
+    refz = np.arange(0, 1.2 + 5.0e-3, 1.0e-2)
+    refx = 0.5 * (refx[1:] + refx[:-1])
+    refz = 0.5 * (refz[1:] + refz[:-1])
+
+    x, z = np.meshgrid(refx, refz, indexing="xy")
+    ref = np.column_stack((x.ravel(), z.ravel()))
+    sim = np.column_stack((simxcent, simzcent))
+
+    d = np.abs(sim[:, None] - ref).sum(axis=2)
+    np.save(Path(cfg.deck) / "cellmap.npy", np.argmin(d, axis=0))
+
+
+# =============================================================================
+# GEOMETRY INPUT
+# =============================================================================
+
+
+def get_lines(cfg, points):
+    """
+    Read geological horizon lines.
     """
     horizonts = []
-    with open(
-        f"{dic['path']}/geology/horizonts.geo",
-        "r",
-        encoding="utf8",
-    ) as file:
-        for row in csv.reader(file, delimiter=" "):
-            if row[0][:4] == "Line":
+    with open(cfg.path / "geology/horizonts.geo", encoding="utf8") as file:
+        for r in csv.reader(file, delimiter=" "):
+            if r[0].startswith("Line"):
                 if not horizonts[-1]:
-                    horizonts[-1].append(
-                        [
-                            dic["points"][int(row[2][1:-1]) - 1][0],
-                            dic["points"][int(row[2][1:-1]) - 1][1],
-                        ]
-                    )
-                horizonts[-1].append(
-                    [
-                        dic["points"][int(row[3][:-2]) - 1][0],
-                        dic["points"][int(row[3][:-2]) - 1][1],
-                    ]
-                )
-            if len(row) > 1:
-                if row[1] == "Horizont":
-                    horizonts.append([])
+                    horizonts[-1].append(points[int(r[2][1:-1]) - 1])
+                horizonts[-1].append(points[int(r[3][:-2]) - 1])
+            if len(r) > 1 and r[1] == "Horizont":
+                horizonts.append([])
     return horizonts[::-1]
 
 
-def corner(dic):
+def getpolygons(cfg):
     """
-    Create a FludFlower corner-point grid
-
-    Args:
-        dic (dict): Global dictionary
-
-    Returns:
-        dic (dict): Modified global dictionary
-
+    Read geological polygons and facies definitions.
     """
-    # Read the geometries
-    horizonts = get_lines(dic)
-    xcoord, zcoord = [], []
-    dic["xmx"] = [0.0]
-    for i, n_x in enumerate(dic["x"]):
-        for j in range(n_x):
-            dic["xmx"].append((i + (j + 1.0) / n_x) * dic["dims"][0] / len(dic["x"]))
-    dic["ymy"] = [0.0]
-    for i, n_y in enumerate(dic["y"]):
-        for j in range(n_y):
-            dic["ymy"].append((i + (j + 1.0) / n_y) * dic["dims"][1] / len(dic["y"]))
-    dic["noCells"][1] = len(dic["ymy"]) - 1
-    for xcor in dic["xmx"]:
-        for _, lcor in enumerate(horizonts):
-            xcoord.append(xcor)
-            idx = pd.Series([np.abs(ii[0] - xcor) for ii in lcor]).argmin()
-            if lcor[idx][0] < xcor:
-                zcoord.append(
-                    lcor[idx][1]
-                    + (
-                        (lcor[idx + 1][1] - lcor[idx][1])
-                        / (lcor[idx + 1][0] - lcor[idx][0])
-                    )
-                    * (xcor - lcor[idx][0])
+    polygons, points, lines, curves, facie = [], [], [], [], 0
+    h_ref, l_ref = 1.5 / 1490, 2.8 / 2594
+
+    with open(cfg.path / "geology/points.geo", encoding="utf8") as file:
+        for r in csv.reader(file, delimiter=" "):
+            if r[0].startswith("Point"):
+                points.append(
+                    [l_ref * float(r[2][1:-1]), cfg.dims[2] - h_ref * float(r[3][:-1])]
                 )
-            else:
-                zcoord.append(
-                    lcor[idx - 1][1]
-                    + (
-                        (lcor[idx][1] - lcor[idx - 1][1])
-                        / (lcor[idx][0] - lcor[idx - 1][0])
-                    )
-                    * (xcor - lcor[idx - 1][0])
-                )
-    res = list(filter(lambda i: i == zcoord[-1], zcoord))[0]
-    n_z = zcoord.index(res)
-    res = list(filter(lambda i: i > 0, xcoord))[0]
-    n_x = round(len(xcoord) / xcoord.index(res)) - 1
-    dic["noCells"][0], dic["noCells"][2] = n_x, n_z
-    # Refine the grid
-    xcoord, zcoord, dic["noCells"][0], dic["noCells"][2] = refinement_z(
-        xcoord, zcoord, dic["noCells"][0], dic["noCells"][2], dic["z"]
-    )
-    dic["xmx"] = np.array(dic["xmx"])
-    dic["ymy_center"] = 0.5 * (np.array(dic["ymy"])[1:] + np.array(dic["ymy"])[:-1])
-    dic["d_y"] = np.array(dic["ymy"])[1:] - np.array(dic["ymy"])[:-1]
-    dic["d_x"] = np.array(dic["xmx"])[1:] - np.array(dic["xmx"])[:-1]
-    dic["no_cells"] = dic["noCells"][0] * dic["noCells"][2]
-    create_corner_point_grid(dic, xcoord, zcoord)
-    dic["xyz"] = []
-    dic["d_z"] = []
-    for k in range(dic["noCells"][2]):
-        for i in range(dic["noCells"][0]):
-            n = (i * (dic["noCells"][2] + 1)) + k
-            m = ((i + 1) * (dic["noCells"][2] + 1)) + k
-            poly = Polygon(
-                [
-                    [xcoord[n], zcoord[n]],
-                    [xcoord[m], zcoord[m]],
-                    [xcoord[m + 1], zcoord[m + 1]],
-                    [xcoord[n + 1], zcoord[n + 1]],
-                    [xcoord[n], zcoord[n]],
-                ]
-            )
-            pxz = poly.centroid.wkt
-            pxz = list(float(j) for j in pxz[7:-1].split(" "))
-            dic["xyz"].append([pxz[0], 0, pxz[1]])
-            dic["d_z"].append(poly.area / (xcoord[m] - xcoord[n]))
+
+    with open(cfg.path / "geology/lines.geo", encoding="utf8") as file:
+        for r in csv.reader(file, delimiter=" "):
+            if r[0].startswith("Line"):
+                lines.append([int(r[2][1:-1]), int(r[3][:-2])])
+
+    with open(cfg.path / "geology/polygons.geo", encoding="utf8") as file:
+        for r in csv.reader(file, delimiter=" "):
+            if r[0] == "Curve":
+                cfg.facies.append(facie)
+                curve = []
+                for t in r[3:]:
+                    t = t.strip(",;{}")
+                    if t:
+                        curve.append(int(t))
+                curves.append(curve)
+            if len(r) > 1 and r[1] in {"Sand", "Water"}:
+                facie += 1
+
+    for c in curves:
+        poly = []
+        for lid in c:
+            idx = 0 if lid < 0 else 1
+            poly.append(points[lines[abs(lid) - 1][idx] - 1])
+        poly.append(poly[0])
+        polygons.append(Polygon(poly))
+
+    return polygons, points
 
 
-def refinement_z(xci, zci, ncx, ncz, znr):
+def refinement_z(xci, zci, ncz, znr):
     """
-    Refinement of the grid in the z-dir
-
-    Args:
-        xci (list): Floats with the x-coordinates of the cell corners\n
-        zci (list): Floats with the z-coordinates of the cell corners\n
-        ncx (int): Number of cells in the x-dir\n
-        ncz (int): Number of cells in the z-dir\n
-        znr (list): Integers with the number of z-refinements per cell
-
-    Returns:
-        xcr (list): Floats with the new x-coordinates of the cell corners\n
-        zcr (list): Floats with the new z-coordinates of the cell corners\n
-        ncx (int): New number of cells in the x-dir\n
-        ncz (int): New number of cells in the z-dir
-
+    Refine grid vertically according to znr refinement factors.
     """
+    xci, zci = np.asarray(xci), np.asarray(zci)
+    stride = ncz + 1
+    ncols = len(xci) // stride
+
     xcr, zcr = [], []
-    for j in range(ncx + 1):
-        zcr.append(zci[j * (ncz + 1)])
-        xcr.append(xci[j * (ncz + 1)])
+
+    for j in range(ncols):
+        b = j * stride
+        xcr.append(xci[b])
+        zcr.append(zci[b])
         for i in range(ncz):
-            for k in range(znr[i]):
-                alp = np.arange(1.0 / znr[i], 1.0 + 1.0 / znr[i], 1.0 / znr[i]).tolist()
-                zcr.append(
-                    zci[j * (ncz + 1) + i]
-                    + (zci[j * (ncz + 1) + i + 1] - zci[j * (ncz + 1) + i]) * alp[k]
-                )
-                xcr.append(
-                    xci[j * (ncz + 1) + i]
-                    + (xci[j * (ncz + 1) + i + 1] - xci[j * (ncz + 1) + i]) * alp[k]
-                )
-    res = list(filter(lambda i: i > 0, xcr))[0]
-    ncx = round(len(xcr) / xcr.index(res)) - 1
-    res = list(filter(lambda i: i == zcr[-1], zcr))[0]
-    ncz = zcr.index(res)
-    return xcr, zcr, ncx, ncz
+            w = np.linspace(1 / znr[i], 1, znr[i])
+            xcr.extend(xci[b + i] + (xci[b + i + 1] - xci[b + i]) * w)
+            zcr.extend(zci[b + i] + (zci[b + i + 1] - zci[b + i]) * w)
+
+    xcr, zcr = np.asarray(xcr), np.asarray(zcr)
+    ncx_new = ncols - 1
+    ncz_new = np.where(zcr == zcr[-1])[0][0]
+
+    return xcr.tolist(), zcr.tolist(), ncx_new, ncz_new

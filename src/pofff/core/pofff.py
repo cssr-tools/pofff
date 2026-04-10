@@ -1,194 +1,267 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
-# pylint: disable=R0912,R0915
 
-"""Main script for pofff"""
+"""
+Main entry script for pofff.
+"""
 
 import os
-import sys
 import shutil
 import argparse
-from pofff.utils.inputvalues import process_input
+from pathlib import Path
+from dataclasses import asdict
+
+from pofff.config.config import CliConfig, PofffConfig
+from pofff.utils.inputvalues import load_toml, build_config, postprocess_config
 from pofff.utils.runs import flow, data, benchmark, everest, ert, postprocess
-from pofff.utils.writefile import opm_files
-from pofff.utils.mapproperties import grid, positions
+from pofff.utils.writefile import write_files
+from pofff.utils.mapproperties import grid_and_properties
 
 
-def pofff():
-    """Main function for the pofff executable"""
-    cmdargs = load_parser()
-    file = cmdargs["input"].strip()  # Name of the input file
-    dic = {"fol": os.path.abspath(cmdargs["output"])}  # Name for the output folder
-    dic["figures"] = cmdargs["figures"].strip()  # Which figures to generate
-    dic["experiment"] = cmdargs["experiment"].strip()  # Experiment to history match
-    dic["mode"] = cmdargs["mode"].strip()  # Parts of the workflow to run
-    dic["path"] = os.path.dirname(__file__)[:-5]  # Path to the pofff folder
-    dic["times"] = cmdargs["times"]  # Temporal resolution to write the dense data
-    dic["mcon"] = cmdargs["minimumconcentration"]  # Con threshold for segmentation
-    dic["msat"] = cmdargs["minimumsaturation"]  # Sat threshold for segmentation
-    dic["use"] = cmdargs["use"]  # Use precopmpued WD matrix?
+def main() -> None:
+    """
+    Main pofff execution routine.
+    """
+    args = parse_args()
+    pofff_path = Path(__file__).resolve().parents[1]
 
-    if dic["figures"] == "none" and dic["mode"] == "none":
+    cli = cli_config(args, pofff_path=pofff_path)
+
+    # Nothing to do case
+    if cli.figures == "none" and cli.mode == "none":
         print("Nothing to do since -m none -f none")
-        sys.exit()
+        return
 
-    if not os.path.exists(f"{dic['fol']}"):  # Make the output folders
-        os.system(f"mkdir {dic['fol']}")
+    cli.fol.mkdir(parents=True, exist_ok=True)
 
-    dic["location"] = dic["path"] + "/fluidflower/cssr/conmin"
-    dic["location"] += "5e-2" if float(dic["mcon"]) == 5e-2 else "1e-1"
-    dic["experiment"] = "run" + dic["experiment"][-1]
-    dic["deck"] = dic["jobs"] = dic["fol"]
+    # Fair comparison mode (no simulation)
+    if cli.mode == "fair":
+        cfg = build_config(pofff_path=pofff_path, cli=asdict(cli), toml={})
+        cfg.path = pofff_path
+        cfg.figures = "all"
+        cfg.times = "24,48,72,96,120"
+        cfg.experiment = "run2"
 
-    if dic["mode"] == "none":
-        dic["everert"] = False
-        os.chdir(f"{dic['fol']}")
-        dic["add"] = "1"
-        for name in ["deck", "jobs"]:
-            dic[name] += f"/{name}"
-    elif dic["mode"] != "fair":
-        dic["add"] = "1"
-        process_input(dic, file)  # Process the input file
-        dic["everert"] = "cores" in dic and dic["mode"] != "single"
-        if dic["mode"] in ["files", "ert", "everest"] or (
-            dic["mode"] == "none" and dic["everert"]
-        ):
-            for name in ["deck", "jobs"]:
-                dic[name] += f"/{name}"
-                if not os.path.exists(f"{dic['fol']}/{name}"):
-                    os.system(f"mkdir {dic['fol']}/{name}")
-        os.chdir(f"{dic['fol']}")
-        if dic["mode"] not in ["none", "data"]:
-            print("\nGenerating the input files, please wait.")
-            grid(dic)  # Initialize the grid
-            positions(dic)  # Get the sand and source positions
-            opm_files(dic)  # Write used opm related files
+    # Input file generation only
+    elif cli.mode == "none":
+        cfg = build_config(pofff_path=pofff_path, cli=asdict(cli), toml={})
+        prepare_simulation(cfg)
+
+    # Normal workflow (TOML-driven)
     else:
-        dic["everert"] = False
-        os.chdir(f"{dic['fol']}")
-        dic["add"] = "0"
-        dic["figures"] = "all"
-        dic["times"] = "24,48,72,96,120"
-        dic["experiment"] = "run2"
-    if dic["everert"]:
-        os.system(f"cp -a {dic['path']}/jobs/. {dic['fol']}/jobs/.")
-        for name in ["data", "delete", "metric"]:
-            os.system(f"chmod u+x {dic['jobs']}/{name}.py")
-    if dic["mode"] == "single":
-        print("\nRunning the simulation, please wait.")
-        flow(dic)
-        print("\nGenerating the data, please wait.")
-        data(dic)
-    elif dic["mode"] == "data":
-        print("\nGenerating the data, please wait.")
-        data(dic)
-    elif dic["mode"] == "everest":
-        print("\nRunning everest, please wait.")
-        everest()
-    elif dic["mode"] == "ert":
-        print("\nRunning ert, please wait.")
-        ert(dic)
-    elif dic["mode"] in ["none", "fair", "files"]:
-        pass
-    else:
-        print(f"Unknow -m {dic['mode']}")
-        sys.exit()
+        toml = load_toml(args.input)
+        cfg = build_config(pofff_path=pofff_path, cli=asdict(cli), toml=toml.copy())
+        postprocess_config(cfg, toml)
+        prepare_simulation(cfg)
 
-    if dic["figures"] in ["all", "basic"] and dic["mode"] != "files":
-        if shutil.which("latex") == "None":
-            print(
-                "\nLaTeX is recommended for the figures to show the "
-                "nice fonts and given formats. You can install it by "
-                "following the instructions in the pofff's "
-                "documentation."
-            )
-        if os.path.exists(f"{dic['fol']}/jobs"):
-            postprocess(dic)
-        if os.path.exists(f"{dic['fol']}/figures/best_simulation"):
-            os.chdir(f"{dic['fol']}/figures/best_simulation")
-        else:
-            os.chdir(f"{dic['fol']}")
-        print("\nGenerating the benchmark files, please wait.")
-        benchmark(dic)
-    if dic["mode"] == "files":
-        print(f"\nThe files have been written to {dic['fol']}")
-    else:
-        print(f"\nThe results have been written to {dic['fol']}")
+    run_simulation_steps(cfg)
 
+    # Generate figures unless disabled
+    if cfg.figures in {"basic", "all"} and cfg.mode != "files":
+        generate_figures(cfg)
 
-def load_parser():
-    """Argument options"""
-    parser = argparse.ArgumentParser(
-        description="pofff, a Python tool for history matching the "
-        "FluidFlower images using OPM Flow, ERT, and everest.",
+    msg = (
+        "The files have been written to"
+        if cfg.mode == "files"
+        else "The results have been written to"
     )
+    print(f"\n{msg} {cfg.fol}")
+
+
+def cli_config(args: argparse.Namespace, *, pofff_path: Path) -> CliConfig:
+    """
+    Build normalized CLI configuration object.
+    """
+    output = Path(args.output).absolute()
+
+    # Reference experiment location for fair benchmarks
+    location = (
+        pofff_path
+        / "fluidflower"
+        / "cssr"
+        / f"conmin{'5e-2' if float(args.minimumconcentration) == 5e-2 else '1e-1'}"
+    )
+
+    return CliConfig(
+        fol=output,
+        deck=output,
+        jobs=output,
+        experiment=f"run{args.experiment[-1]}",
+        times=args.times,
+        msat=args.minimumsaturation,
+        mcon=args.minimumconcentration,
+        mode=args.mode,
+        figures=args.figures,
+        location=str(location),
+        use=args.use,
+    )
+
+
+def prepare_simulation(cfg: PofffConfig) -> None:
+    """
+    Prepare directories and generate all input files.
+    """
+    # Adjust directory layout depending on mode
+    if cfg.mode == "none":
+        cfg.deck = cfg.deck / "deck"
+        cfg.jobs = cfg.jobs / "jobs"
+    elif cfg.mode in {"files", "ert", "everest", "data"} and cfg.everert:
+        cfg.deck = cfg.deck / "deck"
+        cfg.jobs = cfg.jobs / "jobs"
+        for sub in ("deck", "jobs"):
+            (cfg.fol / sub).mkdir(parents=True, exist_ok=True)
+
+    # Copy job templates if needed
+    if cfg.mode in ["everest", "ert"] or (cfg.everert and cfg.mode == "files"):
+        prepare_jobs_folder(cfg)
+
+    # Generate grid, properties, and deck files
+    if cfg.mode not in {"data", "none"}:
+        print("\nGenerating the input files, please wait.")
+        grid_and_properties(cfg)
+        write_files(cfg)
+
+
+def prepare_jobs_folder(cfg: PofffConfig) -> None:
+    """
+    Copy job scripts into output/jobs and make them executable.
+    """
+    src = cfg.path / "jobs"
+    dst = cfg.fol / "jobs"
+    shutil.copytree(src, dst, dirs_exist_ok=True)
+
+    for script in ("data", "delete", "metric"):
+        script_path = dst / f"{script}.py"
+        if script_path.exists():
+            script_path.chmod(0o755)
+
+
+def run_simulation_steps(cfg: PofffConfig) -> None:
+    """
+    Run the selected execution mode.
+    """
+    os.chdir(cfg.fol)
+
+    if cfg.mode == "single":
+        print("\nRunning the simulation, please wait.")
+        flow(cfg)
+        print("\nGenerating the data, please wait.")
+        data(cfg)
+
+    elif cfg.mode == "data":
+        data(cfg)
+
+    elif cfg.mode == "ert":
+        ert(cfg)
+
+    elif cfg.mode == "everest":
+        everest()
+
+    elif cfg.mode in {"files", "fair", "none"}:
+        pass
+
+    else:
+        raise SystemExit(f"Unknown -m {cfg.mode}")
+
+
+def generate_figures(cfg: PofffConfig) -> None:
+    """
+    Generate benchmark plots and comparison figures.
+    """
+    if shutil.which("latex") is None:
+        print(
+            "\nLaTeX is recommended for high-quality figures.\n"
+            "See the pofff documentation for installation instructions."
+        )
+
+    # Postprocess ensemble results if available
+    if (cfg.fol / "jobs").exists():
+        postprocess(cfg)
+
+    figures_dir = cfg.fol / "figures" / "best_simulation"
+    if figures_dir.exists():
+        os.chdir(figures_dir)
+    else:
+        os.chdir(cfg.fol)
+
+    print("\nGenerating the benchmark files, please wait.")
+    benchmark(cfg)
+
+
+def parse_args():
+    """
+    Define and parse command-line arguments.
+    """
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description=(
+            "pofff, a Python tool for history matching FluidFlower images "
+            "using OPM Flow, ERT, and Everest."
+        ),
+    )
+
     parser.add_argument(
         "-i",
         "--input",
         default="input.toml",
-        help="The base name of the input file ('input.toml' by default).",
+        help="Input TOML configuration file.",
     )
     parser.add_argument(
         "-o",
         "--output",
         default="output",
-        help="The base name of the output folder ('output' by default).",
+        help="Output directory name.",
     )
     parser.add_argument(
         "-f",
         "--figures",
         default="basic",
-        help="Use 'all' to generate all benchmark figures, 'basic' to not generate the "
-        "Wasserstain distance plot (it is slow), and 'none' for no figures ('basic' "
-        "by default).",
+        help=(
+            "Figure generation mode: 'all', 'basic', or 'none'. "
+            "'basic' skips Wasserstein plots."
+        ),
     )
     parser.add_argument(
         "-m",
         "--mode",
         default="single",
-        help="Run a 'single' simulation, generate only the input 'files', generate only "
-        "the csv 'data', 'everest', 'ert', 'fair', or 'none' ('none' is useful to "
-        "generate only figures in combination to '-f') ('single' by default).",
+        help=(
+            "Execution mode: 'single', 'files', 'data', 'everest', "
+            "'ert', 'fair', or 'none'."
+        ),
     )
     parser.add_argument(
         "-t",
         "--times",
         default="0.25",
-        help="Times in hours separated by commas to evaluate the metrics "
-        "('0.25' by default).",
+        help="Evaluation times in hours, comma-separated.",
     )
     parser.add_argument(
         "-e",
         "--experiment",
         default="C2",
-        help="Experimental data to history match, valid options are C1 to C5 "
-        "('C2' by default).",
+        help="Experimental dataset (C1-C5).",
     )
     parser.add_argument(
         "-s",
         "--minimumsaturation",
         default="1e-2",
-        help="The minimum saturation above which gaseous CO2 is considered for "
-        "the segmentation ('1e-2' by default).",
+        help="Minimum gas saturation threshold.",
     )
     parser.add_argument(
         "-c",
         "--minimumconcentration",
         default="1e-1",
-        help="The minimum concentration above which CO2 is considered to be "
-        "dissolved for the segmentation ('1e-1' by default).",
+        help="Minimum dissolved CO2 concentration threshold.",
     )
     parser.add_argument(
         "-u",
         "--use",
         default="1",
-        help="Use the precomputed wasserstein distance matrix values for minimum "
-        "concentration of 1e-1 and 5e-2 (minimum saturation of 1e-2) to speed up "
-        "the computations ('1' by default; set to '0' to compute all).",
+        help=(
+            "Use precomputed Wasserstein distances if available "
+            "(set to '0' to recompute)."
+        ),
     )
-    return vars(parser.parse_known_args()[0])
 
-
-def main():
-    """Main function"""
-    pofff()
+    return parser.parse_known_args()[0]

@@ -13,6 +13,9 @@ This repository contains runscripts to simulate CO2 injection in the
 matching studies using the ensemble reservoir simulation tool 
 [_ERT_](https://github.com/equinor/ert) or the decision-making tool [_everest_](https://github.com/equinor/everest-tutorials).
 
+See this [_nice video_](https://cssr-tools.github.io/pofff/introduction.html#) for a dynamic comparison of the FluidFlower experiment and
+OPM simulations.
+
 ## Installation
 You will first need to install
 * OPM Flow (https://opm-project.org, Release 2025.10 or current master branches)

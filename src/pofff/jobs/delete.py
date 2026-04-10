@@ -6,13 +6,14 @@
 Script to delete large files
 """
 
-import os
+from pathlib import Path
 import sys
 
-if os.path.exists("NOMONOTONIC"):
-    sys.exit()
+# Exit early if sentinel file exists
+if Path("NOMONOTONIC").exists():
+    sys.exit(0)
 
-for suff in [
+suffixes = {
     "INC",
     "EGRID",
     "DBG",
@@ -23,8 +24,10 @@ for suff in [
     "INIT",
     "csv",
     "DATA",
-]:
-    for filename in os.listdir("."):
-        if filename.endswith(suff):
-            os.system(f"rm -rf *.{suff}")
-            break
+}
+
+cwd = Path(".")
+
+for path in cwd.iterdir():
+    if path.is_file() and path.suffix.lstrip(".") in suffixes:
+        path.unlink()

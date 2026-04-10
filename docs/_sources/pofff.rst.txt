@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
+   pofff.config
    pofff.core
    pofff.jobs
    pofff.utils

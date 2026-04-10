@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.visualization.everert module &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -86,101 +86,292 @@
              
   <section id="module-pofff.visualization.everert">
 <span id="pofff-visualization-everert-module"></span><h1>pofff.visualization.everert module<a class="headerlink" href="#module-pofff.visualization.everert" title="Link to this heading"></a></h1>
-<p>Script to postprocess everest and ert studies.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.figures">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">figures</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.figures" title="Link to this definition"></a></dt>
-<dd><p>Main function to postprocess everest results (differential_evolution)</p>
+<p>Postprocess Everest (ERT) ensemble and optimization studies.
+Generates diagnostics, plots, and extracts best simulations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">external</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_saturation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_concentration</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.Config" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Runtime configuration and paths.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.external">
+<span class="sig-name descname"><span class="pre">external</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.external" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.jobs">
+<span class="sig-name descname"><span class="pre">jobs</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.Config.jobs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.maps">
+<span class="sig-name descname"><span class="pre">maps</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.maps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.min_concentration">
+<span class="sig-name descname"><span class="pre">min_concentration</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.min_concentration" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.min_saturation">
+<span class="sig-name descname"><span class="pre">min_saturation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.min_saturation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.path">
+<span class="sig-name descname"><span class="pre">path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.path" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.run" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.Config.times">
+<span class="sig-name descname"><span class="pre">times</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#pofff.visualization.everert.Config.times" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">EnsembleState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_e</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_obs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_para</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_ens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miss_ens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par_dis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idrealisation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_ens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">para_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds ensemble simulations and diagnostics.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.cumulative">
+<span class="sig-name descname"><span class="pre">cumulative</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.cumulative" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.idrealisation">
+<span class="sig-name descname"><span class="pre">idrealisation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.idrealisation" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.miss_ens">
+<span class="sig-name descname"><span class="pre">miss_ens</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.miss_ens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.n_e">
+<span class="sig-name descname"><span class="pre">n_e</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.n_e" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.n_i">
+<span class="sig-name descname"><span class="pre">n_i</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.n_i" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.no_obs">
+<span class="sig-name descname"><span class="pre">no_obs</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.no_obs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.no_para">
+<span class="sig-name descname"><span class="pre">no_para</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.no_para" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.num_ens">
+<span class="sig-name descname"><span class="pre">num_ens</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.num_ens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.observations">
+<span class="sig-name descname"><span class="pre">observations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.observations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.par_dis">
+<span class="sig-name descname"><span class="pre">par_dis</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.par_dis" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.para_file">
+<span class="sig-name descname"><span class="pre">para_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.para_file" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.para_names">
+<span class="sig-name descname"><span class="pre">para_names</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.para_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.sim_ens">
+<span class="sig-name descname"><span class="pre">sim_ens</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.sim_ens" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.EnsembleState.simulations">
+<span class="sig-name descname"><span class="pre">simulations</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.EnsembleState.simulations" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">OptimizationState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimal_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_batch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ind_sim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tot_eval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks optimization progress and outcomes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.ind_batch">
+<span class="sig-name descname"><span class="pre">ind_batch</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.ind_batch" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.ind_sim">
+<span class="sig-name descname"><span class="pre">ind_sim</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.ind_sim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.optimal_value">
+<span class="sig-name descname"><span class="pre">optimal_value</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-inf</span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.optimal_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.optimization">
+<span class="sig-name descname"><span class="pre">optimization</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.optimization" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.s">
+<span class="sig-name descname"><span class="pre">s</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.s" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.tot_eval">
+<span class="sig-name descname"><span class="pre">tot_eval</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.tot_eval" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.visualization.everert.OptimizationState.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.visualization.everert.OptimizationState.x" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.find_best">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">find_best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.find_best" title="Link to this definition"></a></dt>
-<dd><p>Find the closest simulation to the observations</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.copy_tree_contents">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">copy_tree_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.copy_tree_contents" title="Link to this definition"></a></dt>
+<dd><p>Copy contents of src into dst (cp -r src/. dst/).</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.find_optimal">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">find_optimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.find_optimal" title="Link to this definition"></a></dt>
-<dd><p>Find the well locations and folder for the ‘optimal’ obtained solution</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.ensure_dir">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">ensure_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.ensure_dir" title="Link to this definition"></a></dt>
+<dd><p>Create directory if missing.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.initialize_ert">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">initialize_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.initialize_ert" title="Link to this definition"></a></dt>
-<dd><p>Variables for the plotting method</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.visualization.everert.extract_best_simulation">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">extract_best_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.extract_best_simulation" title="Link to this definition"></a></dt>
+<dd><p>Extract best-fitting ensemble realization.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.load_parser">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">load_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.load_parser" title="Link to this definition"></a></dt>
-<dd><p>Argument options</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.extract_optimal_solution">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">extract_optimal_solution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.OptimizationState" title="pofff.visualization.everert.OptimizationState"><span class="pre">OptimizationState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.extract_optimal_solution" title="Link to this definition"></a></dt>
+<dd><p>Extract and postprocess optimal optimization result.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.make_figures">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">make_figures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.make_figures" title="Link to this definition"></a></dt>
-<dd><p>Write the plots</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.initialize_ensemble">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">initialize_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></span><a class="headerlink" href="#pofff.visualization.everert.initialize_ensemble" title="Link to this definition"></a></dt>
+<dd><p>Initialize ensemble from simulation folders.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.para_dist">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">para_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.para_dist" title="Link to this definition"></a></dt>
-<dd><p>Plot the parameter distributions</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.visualization.everert.main">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.main" title="Link to this definition"></a></dt>
+<dd><p>Entry point.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.parse_args">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></span><a class="headerlink" href="#pofff.visualization.everert.parse_args" title="Link to this definition"></a></dt>
+<dd><p>Parse command-line arguments.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.visualization.everert.plot_cumulative_misfit">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_cumulative_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_cumulative_misfit" title="Link to this definition"></a></dt>
-<dd><p>Plot the cumulative misfit per iteration</p>
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_cumulative_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_cumulative_misfit" title="Link to this definition"></a></dt>
+<dd><p>Plot cumulative misfit contributions per observation.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_hm_missmatch">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_hm_missmatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_hm_missmatch" title="Link to this definition"></a></dt>
+<dd><p>Plot ensemble-mean misfit per iteration.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_misfit">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_misfit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_misfit" title="Link to this definition"></a></dt>
+<dd><p>Plot ensemble misfit per iteration.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_observable_distribution">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_observable_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_observable_distribution" title="Link to this definition"></a></dt>
+<dd><p>Plot observable sum distributions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_optimization">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.OptimizationState" title="pofff.visualization.everert.OptimizationState"><span class="pre">OptimizationState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_optimization" title="Link to this definition"></a></dt>
+<dd><p>Plot optimization progress.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.visualization.everert.plot_optimization_details">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_optimization_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_optimization_details" title="Link to this definition"></a></dt>
-<dd><p>Plot the number of failed and succeed simulations over steps</p>
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_optimization_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.OptimizationState" title="pofff.visualization.everert.OptimizationState"><span class="pre">OptimizationState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_optimization_details" title="Link to this definition"></a></dt>
+<dd><p>Plot optimization success statistics.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.plot_optimization_results">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_optimization_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_optimization_results" title="Link to this definition"></a></dt>
-<dd><p>Plot the optimization values over steps</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_parameter_distributions">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_parameter_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_parameter_distributions" title="Link to this definition"></a></dt>
+<dd><p>Boxplots of parameter distributions.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.plot_parameters">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inidist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">findist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_parameters" title="Link to this definition"></a></dt>
-<dd><p>Routine to make the plots iteratively</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.plot_simulation_ensemble">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">plot_simulation_ensemble</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tab20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.plot_simulation_ensemble" title="Link to this definition"></a></dt>
+<dd><p>Plot initial and final ensemble simulations.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.process_optimization_results">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">process_optimization_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.process_optimization_results" title="Link to this definition"></a></dt>
-<dd><p>Process the optimization results over steps (batches)</p>
+<dt class="sig sig-object py" id="pofff.visualization.everert.process_optimization">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">process_optimization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pofff.visualization.everert.OptimizationState" title="pofff.visualization.everert.OptimizationState"><span class="pre">OptimizationState</span></a></span></span><a class="headerlink" href="#pofff.visualization.everert.process_optimization" title="Link to this definition"></a></dt>
+<dd><p>Process Everest optimization results.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.visualization.everert.read_hm">
-<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">read_hm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.read_hm" title="Link to this definition"></a></dt>
-<dd><p>Extract relevant hm data</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.visualization.everert.read_realisation">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">read_realisation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.Config" title="pofff.visualization.everert.Config"><span class="pre">Config</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.visualization.everert.EnsembleState" title="pofff.visualization.everert.EnsembleState"><span class="pre">EnsembleState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.read_realisation" title="Link to this definition"></a></dt>
+<dd><p>Read one realization and update ensemble statistics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.run">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.visualization.everert.run" title="Link to this definition"></a></dt>
+<dd><p>Execute external command and abort on failure.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.save_figure">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">save_figure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.save_figure" title="Link to this definition"></a></dt>
+<dd><p>Save figure and release memory.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.everert.setup_matplotlib">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.everert.</span></span><span class="sig-name descname"><span class="pre">setup_matplotlib</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.everert.setup_matplotlib" title="Link to this definition"></a></dt>
+<dd><p>Apply consistent matplotlib styling.</p>
 </dd></dl>
 
 </section>

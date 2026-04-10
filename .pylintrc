@@ -1,2 +1,2 @@
 [MASTER]
-disable=R0801
+disable=R0801,R0902 # Glocally removing warnings for Duplicated code and Too many instance attributes

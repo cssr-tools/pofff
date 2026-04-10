@@ -19,6 +19,12 @@ via pip install in Python 3.14).
     
     Then, you should be able to open resinsight by typing in the terminal **resinsight**.
 
+    The **plopm** tool can be installed by executing:
+
+    .. code-block:: bash
+
+        pip install git+https://github.com/cssr-tools/plopm.git
+
 .. _vpofff:
 
 Python package
@@ -112,7 +118,10 @@ in the terminal the following lines (which in turn should build flow in the fold
 
 .. tip::
 
-    You can create a .sh file (e.g., build_opm_mpi.sh), copy the previous lines, and run in the terminal **source build_opm_mpi.sh**  
+    You can create a .sh file (e.g., build_opm_mpi.sh), copy the previous lines, and run in the terminal **source build_opm_mpi.sh**.
+    You can test if the built succeeded by typing **./build/opm-simulators/bin/flow \-\-help**. Then, you can add flow to your search path by
+    opening your **~/.bashrc** or **~/.zshrc** file and adding at the end **export PATH="$PATH:/full/path/to/your/flow"**. Then, you can reload the
+    configuration file (**source ~/.bashrc** or **source ~/.zshrc**) and test if this succeeded by simply typing **flow \-\-help**.
 
 .. _macOS:
 

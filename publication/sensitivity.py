@@ -1,14 +1,15 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Table C4 in the pofff paper"""
+"""Table 8 in the pofff paper"""
 
-import os
+import subprocess
 from mako.template import Template
 
 mytemplate = Template(filename="appendixc.mako")
-for case, random_seed in zip(["base", "random_seed"], [7, 11]):
-    var = {"cores": 64, "random_seed": random_seed, "cnv": 1e-2, "cnv_relaxed": 1}
+for case, rng in zip(["base", "rng"], [7, 11]):
+    # Modify the number of cores according to your resources
+    var = {"cores": 64, "rng": rng, "cnv": 1e-2, "cnv_relaxed": 1}
     filledtemplate = mytemplate.render(**var)
     with open(
         f"{case}.toml",
@@ -16,4 +17,19 @@ for case, random_seed in zip(["base", "random_seed"], [7, 11]):
         encoding="utf8",
     ) as file:
         file.write(filledtemplate)
-    os.system(f"pofff -i {case}.toml -o {case} -m everest -t 24,48,72,96,120 -f all")
+    subprocess.run(
+        [
+            "pofff",
+            "-i",
+            f"{case}.toml",
+            "-o",
+            case,
+            "-m",
+            "everest",
+            "-t",
+            "24,48,72,96,120",
+            "-f",
+            "all",
+        ],
+        check=True,
+    )

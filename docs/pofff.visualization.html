@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.visualization package &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -97,22 +97,69 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pofff.visualization.error_table.html">pofff.visualization.error_table module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pofff.visualization.error_table.html#pofff.visualization.error_table.error_table"><code class="docutils literal notranslate"><span class="pre">error_table()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.error_table.html#pofff.visualization.error_table.load_sparse_csv"><code class="docutils literal notranslate"><span class="pre">load_sparse_csv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.error_table.html#pofff.visualization.error_table.parse_arguments"><code class="docutils literal notranslate"><span class="pre">parse_arguments()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pofff.visualization.everert.html">pofff.visualization.everert module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.figures"><code class="docutils literal notranslate"><span class="pre">figures()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.find_best"><code class="docutils literal notranslate"><span class="pre">find_best()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.find_optimal"><code class="docutils literal notranslate"><span class="pre">find_optimal()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.initialize_ert"><code class="docutils literal notranslate"><span class="pre">initialize_ert()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.load_parser"><code class="docutils literal notranslate"><span class="pre">load_parser()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.make_figures"><code class="docutils literal notranslate"><span class="pre">make_figures()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.para_dist"><code class="docutils literal notranslate"><span class="pre">para_dist()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.external"><code class="docutils literal notranslate"><span class="pre">Config.external</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.jobs"><code class="docutils literal notranslate"><span class="pre">Config.jobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.maps"><code class="docutils literal notranslate"><span class="pre">Config.maps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.min_concentration"><code class="docutils literal notranslate"><span class="pre">Config.min_concentration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.min_saturation"><code class="docutils literal notranslate"><span class="pre">Config.min_saturation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.path"><code class="docutils literal notranslate"><span class="pre">Config.path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.run"><code class="docutils literal notranslate"><span class="pre">Config.run</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.Config.times"><code class="docutils literal notranslate"><span class="pre">Config.times</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState"><code class="docutils literal notranslate"><span class="pre">EnsembleState</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.cumulative"><code class="docutils literal notranslate"><span class="pre">EnsembleState.cumulative</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.idrealisation"><code class="docutils literal notranslate"><span class="pre">EnsembleState.idrealisation</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.miss_ens"><code class="docutils literal notranslate"><span class="pre">EnsembleState.miss_ens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.n_e"><code class="docutils literal notranslate"><span class="pre">EnsembleState.n_e</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.n_i"><code class="docutils literal notranslate"><span class="pre">EnsembleState.n_i</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.no_obs"><code class="docutils literal notranslate"><span class="pre">EnsembleState.no_obs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.no_para"><code class="docutils literal notranslate"><span class="pre">EnsembleState.no_para</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.num_ens"><code class="docutils literal notranslate"><span class="pre">EnsembleState.num_ens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.observations"><code class="docutils literal notranslate"><span class="pre">EnsembleState.observations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.par_dis"><code class="docutils literal notranslate"><span class="pre">EnsembleState.par_dis</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.para_file"><code class="docutils literal notranslate"><span class="pre">EnsembleState.para_file</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.para_names"><code class="docutils literal notranslate"><span class="pre">EnsembleState.para_names</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.sim_ens"><code class="docutils literal notranslate"><span class="pre">EnsembleState.sim_ens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState.simulations"><code class="docutils literal notranslate"><span class="pre">EnsembleState.simulations</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState"><code class="docutils literal notranslate"><span class="pre">OptimizationState</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.ind_batch"><code class="docutils literal notranslate"><span class="pre">OptimizationState.ind_batch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.ind_sim"><code class="docutils literal notranslate"><span class="pre">OptimizationState.ind_sim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.optimal_value"><code class="docutils literal notranslate"><span class="pre">OptimizationState.optimal_value</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.optimization"><code class="docutils literal notranslate"><span class="pre">OptimizationState.optimization</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.s"><code class="docutils literal notranslate"><span class="pre">OptimizationState.s</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.tot_eval"><code class="docutils literal notranslate"><span class="pre">OptimizationState.tot_eval</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState.x"><code class="docutils literal notranslate"><span class="pre">OptimizationState.x</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.copy_tree_contents"><code class="docutils literal notranslate"><span class="pre">copy_tree_contents()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.ensure_dir"><code class="docutils literal notranslate"><span class="pre">ensure_dir()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.extract_best_simulation"><code class="docutils literal notranslate"><span class="pre">extract_best_simulation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.extract_optimal_solution"><code class="docutils literal notranslate"><span class="pre">extract_optimal_solution()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.initialize_ensemble"><code class="docutils literal notranslate"><span class="pre">initialize_ensemble()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_cumulative_misfit"><code class="docutils literal notranslate"><span class="pre">plot_cumulative_misfit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_hm_missmatch"><code class="docutils literal notranslate"><span class="pre">plot_hm_missmatch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_misfit"><code class="docutils literal notranslate"><span class="pre">plot_misfit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_observable_distribution"><code class="docutils literal notranslate"><span class="pre">plot_observable_distribution()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_optimization"><code class="docutils literal notranslate"><span class="pre">plot_optimization()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_optimization_details"><code class="docutils literal notranslate"><span class="pre">plot_optimization_details()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_optimization_results"><code class="docutils literal notranslate"><span class="pre">plot_optimization_results()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_parameters"><code class="docutils literal notranslate"><span class="pre">plot_parameters()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.process_optimization_results"><code class="docutils literal notranslate"><span class="pre">process_optimization_results()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.read_hm"><code class="docutils literal notranslate"><span class="pre">read_hm()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_parameter_distributions"><code class="docutils literal notranslate"><span class="pre">plot_parameter_distributions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.plot_simulation_ensemble"><code class="docutils literal notranslate"><span class="pre">plot_simulation_ensemble()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.process_optimization"><code class="docutils literal notranslate"><span class="pre">process_optimization()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.read_realisation"><code class="docutils literal notranslate"><span class="pre">read_realisation()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.save_figure"><code class="docutils literal notranslate"><span class="pre">save_figure()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pofff.visualization.everert.html#pofff.visualization.everert.setup_matplotlib"><code class="docutils literal notranslate"><span class="pre">setup_matplotlib()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pofff.visualization.maps.html">pofff.visualization.maps module</a><ul>

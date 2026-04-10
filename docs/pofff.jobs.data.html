@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.jobs.data module &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -86,128 +86,265 @@
              
   <section id="module-pofff.jobs.data">
 <span id="pofff-jobs-data-module"></span><h1>pofff.jobs.data module<a class="headerlink" href="#module-pofff.jobs.data" title="Link to this heading"></a></h1>
-<p>Script to write the benchmark data</p>
+<p>Write benchmark time-series and spatial (dense) data from OPM simulations.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">SimulationContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dense_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">where</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sparse_t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">600.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dims</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unrst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ERst</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EclFile</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">egrid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">EGrid</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smspec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ESmry</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">times_summary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_initial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">porv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gxyz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]</span> <span class="pre">|</span> <span class="pre">None</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.SimulationContext" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulation-wide state, file handles, and grid information.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.actind">
+<span class="sig-name descname"><span class="pre">actind</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.actind" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.dense_t">
+<span class="sig-name descname"><span class="pre">dense_t</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.dense_t" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.dims">
+<span class="sig-name descname"><span class="pre">dims</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.dims" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.egrid">
+<span class="sig-name descname"><span class="pre">egrid</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EGrid</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.egrid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.gxyz">
+<span class="sig-name descname"><span class="pre">gxyz</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.gxyz" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.ini">
+<span class="sig-name descname"><span class="pre">ini</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EclFile</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.ini" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.maps">
+<span class="sig-name descname"><span class="pre">maps</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.maps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.norst">
+<span class="sig-name descname"><span class="pre">norst</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.norst" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.nxz">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">nxz</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.nxz" title="Link to this definition"></a></dt>
+<dd><p>Alias for resolution to preserve original naming.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.porv">
+<span class="sig-name descname"><span class="pre">porv</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.porv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.resolution" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.sim">
+<span class="sig-name descname"><span class="pre">sim</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.sim" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.smspec">
+<span class="sig-name descname"><span class="pre">smspec</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ESmry</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.smspec" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.sparse_t">
+<span class="sig-name descname"><span class="pre">sparse_t</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">600.0</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.sparse_t" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.time_initial">
+<span class="sig-name descname"><span class="pre">time_initial</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.time_initial" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.times">
+<span class="sig-name descname"><span class="pre">times</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.times" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.times_summary">
+<span class="sig-name descname"><span class="pre">times_summary</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.times_summary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.unrst">
+<span class="sig-name descname"><span class="pre">unrst</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ERst</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.unrst" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SimulationContext.where">
+<span class="sig-name descname"><span class="pre">where</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('.')</span></span><a class="headerlink" href="#pofff.jobs.data.SimulationContext.where" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">SparseResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_c_series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_c</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.SparseResults" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Container for sparse (time-series) benchmark quantities.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.ctx">
+<span class="sig-name descname"><span class="pre">ctx</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.ctx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.dissa">
+<span class="sig-name descname"><span class="pre">dissa</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.dissa" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.dissb">
+<span class="sig-name descname"><span class="pre">dissb</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.dissb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.dx">
+<span class="sig-name descname"><span class="pre">dx</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.dx" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.dz">
+<span class="sig-name descname"><span class="pre">dz</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.dz" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.fipnum">
+<span class="sig-name descname"><span class="pre">fipnum</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.fipnum" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.imma">
+<span class="sig-name descname"><span class="pre">imma</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.imma" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.immb">
+<span class="sig-name descname"><span class="pre">immb</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.immb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.m_c">
+<span class="sig-name descname"><span class="pre">m_c</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.m_c" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.m_c_series">
+<span class="sig-name descname"><span class="pre">m_c_series</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.m_c_series" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.moba">
+<span class="sig-name descname"><span class="pre">moba</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.moba" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.mobb">
+<span class="sig-name descname"><span class="pre">mobb</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.mobb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.pop1">
+<span class="sig-name descname"><span class="pre">pop1</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.pop1" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.pop2">
+<span class="sig-name descname"><span class="pre">pop2</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.pop2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.seala">
+<span class="sig-name descname"><span class="pre">seala</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.seala" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.sealb">
+<span class="sig-name descname"><span class="pre">sealb</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.sealb" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.sealt">
+<span class="sig-name descname"><span class="pre">sealt</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.sealt" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pofff.jobs.data.SparseResults.times_data">
+<span class="sig-name descname"><span class="pre">times_data</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></span><a class="headerlink" href="#pofff.jobs.data.SparseResults.times_data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.compute_m_c">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">compute_m_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dil</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.compute_m_c" title="Link to this definition"></a></dt>
-<dd><p>Normalized total variation of the concentration field within Box C</p>
-<dl>
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-<p>dil (dict): Local dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>dil (dict): Modified local dictionary</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">compute_m_c</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SparseResults" title="pofff.jobs.data.SparseResults"><span class="pre">SparseResults</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.compute_m_c" title="Link to this definition"></a></dt>
+<dd><p>Compute mass-center migration metric.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.create_from_summary">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">create_from_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dil</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.create_from_summary" title="Link to this definition"></a></dt>
-<dd><p>Use the summary arrays for the sparse data interpolation</p>
-<dl>
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-<p>dil (dict): Local dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>dil (dict): Modified local dictionary</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">create_from_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SparseResults" title="pofff.jobs.data.SparseResults"><span class="pre">SparseResults</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.create_from_summary" title="Link to this definition"></a></dt>
+<dd><p>Extract sparse quantities from OPM summary vectors.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.dense_data">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">dense_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.dense_data" title="Link to this definition"></a></dt>
-<dd><p>Generate the dense data within the benchmark format</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">dense_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.dense_data" title="Link to this definition"></a></dt>
+<dd><p>Write spatial maps for selected dense output times.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.jobs.data.generate_arrays">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">generate_arrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.generate_arrays" title="Link to this definition"></a></dt>
-<dd><p>Arrays for the dense data</p>
-<dl>
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-<p>dil (dict): Local dictionary</p>
-<p>names (list): Strings with the quantities for the spatial maps</p>
-<p>t_n (int): Index for the number of restart file</p>
-</dd>
-<dt>Returns:</dt><dd><p>dil (dict): Modified local dictionary</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.jobs.data.find_simulation_base">
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">find_simulation_base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#pofff.jobs.data.find_simulation_base" title="Link to this definition"></a></dt>
+<dd><p>Locate simulation base name from .UNRST file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.jobs.data.interpolate_sparse">
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">interpolate_sparse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SparseResults" title="pofff.jobs.data.SparseResults"><span class="pre">SparseResults</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.interpolate_sparse" title="Link to this definition"></a></dt>
+<dd><p>Interpolate sparse quantities onto uniform time grid.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.main">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.main" title="Link to this definition"></a></dt>
-<dd><p>Postprocessing to generate the benchmark data</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="pofff.jobs.data.map_to_report_grid">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">map_to_report_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.map_to_report_grid" title="Link to this definition"></a></dt>
-<dd><p>Map the simulation grid to the reporting grid</p>
-<dl>
-<dt>Args:</dt><dd><p>dil (dict): Local dictionary</p>
-<p>names (list): Strings with the quantities for the spatial maps</p>
-</dd>
-<dt>Returns:</dt><dd><p>dil (dict): Modified local dictionary</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.main" title="Link to this definition"></a></dt>
+<dd><p>Entry point for benchmark postprocessing.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.read_opm">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">read_opm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.read_opm" title="Link to this definition"></a></dt>
-<dd><p>Read the simulation files using OPM</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>dig (dict): Modified global dictionary</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">read_opm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.read_opm" title="Link to this definition"></a></dt>
+<dd><p>Load OPM restart, grid, and summary data.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.sparse_data">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">sparse_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.sparse_data" title="Link to this definition"></a></dt>
-<dd><p>Generate the sparse data within the benchmark format</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">sparse_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.sparse_data" title="Link to this definition"></a></dt>
+<dd><p>Compute and write sparse time-series benchmark data.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.write_dense_data">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">write_dense_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dil</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.write_dense_data" title="Link to this definition"></a></dt>
-<dd><p>Map the quantities to the cells</p>
-<dl>
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-<p>dil (dict): Local dictionary</p>
-<p>n (int): Number of csv file</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">write_dense_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SimulationContext" title="pofff.jobs.data.SimulationContext"><span class="pre">SimulationContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">refxz</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sgas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cco2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hours</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.write_dense_data" title="Link to this definition"></a></dt>
+<dd><p>Write single spatial map CSV.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.data.write_sparse_data">
-<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">write_sparse_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dil</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.data.write_sparse_data" title="Link to this definition"></a></dt>
-<dd><p>Write the sparse data</p>
-<dl>
-<dt>Args:</dt><dd><p>dig (dict): Global dictionary</p>
-<p>dil (dict): Local dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>None</p>
-</dd>
-</dl>
+<span class="sig-prename descclassname"><span class="pre">pofff.jobs.data.</span></span><span class="sig-name descname"><span class="pre">write_sparse_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pofff.jobs.data.SparseResults" title="pofff.jobs.data.SparseResults"><span class="pre">SparseResults</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.jobs.data.write_sparse_data" title="Link to this definition"></a></dt>
+<dd><p>Write sparse time-series values to CSV.</p>
 </dd></dl>
 
 </section>
