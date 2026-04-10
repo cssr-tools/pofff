@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.jobs.metric module &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -86,29 +86,33 @@
              
   <section id="module-pofff.jobs.metric">
 <span id="pofff-jobs-metric-module"></span><h1>pofff.jobs.metric module<a class="headerlink" href="#module-pofff.jobs.metric" title="Link to this heading"></a></h1>
-<p>Script to plot the results</p>
+<p>Plot spatial results and compute Wasserstein (EMD) distances
+between simulated and experimental segmentations.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.metric.before_emd">
 <span class="sig-prename descclassname"><span class="pre">pofff.jobs.metric.</span></span><span class="sig-name descname"><span class="pre">before_emd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">experimental_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.metric.before_emd" title="Link to this definition"></a></dt>
-<dd><p>Segment the results</p>
+<dd><p>Create PNG images from segmentation maps and compute EMD.
+PNG round-trip is required to preserve original behavior.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.metric.calculate_emd">
 <span class="sig-prename descclassname"><span class="pre">pofff.jobs.metric.</span></span><span class="sig-name descname"><span class="pre">calculate_emd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.metric.calculate_emd" title="Link to this definition"></a></dt>
-<dd><p>Compute the Wasserstein distance</p>
+<dd><p>Compute Wasserstein distance between two images.
+Reproduces the original numerical behavior exactly.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.metric.generate_segment_map">
 <span class="sig-prename descclassname"><span class="pre">pofff.jobs.metric.</span></span><span class="sig-name descname"><span class="pre">generate_segment_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zlim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conmin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.metric.generate_segment_map" title="Link to this definition"></a></dt>
-<dd><p>Use the thresholds for the segmentation</p>
+<dd><p>Convert continuous saturation and concentration fields
+into a discrete segmentation map.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.jobs.metric.main">
 <span class="sig-prename descclassname"><span class="pre">pofff.jobs.metric.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.jobs.metric.main" title="Link to this definition"></a></dt>
-<dd><p>Script to evaluate the Wasserstein distance</p>
+<dd><p>Segment maps at requested times and compute total EMD score.</p>
 </dd></dl>
 
 </section>

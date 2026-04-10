@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.visualization.error_table module &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -86,11 +86,25 @@
              
   <section id="module-pofff.visualization.error_table">
 <span id="pofff-visualization-error-table-module"></span><h1>pofff.visualization.error_table module<a class="headerlink" href="#module-pofff.visualization.error_table" title="Link to this heading"></a></h1>
-<p>Script to quantify the errors between simulation and experiments into a table.</p>
+<p>Quantify errors between simulation results and experimental data
+and summarize them in a comparison table.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.visualization.error_table.error_table">
 <span class="sig-prename descclassname"><span class="pre">pofff.visualization.error_table.</span></span><span class="sig-name descname"><span class="pre">error_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.error_table.error_table" title="Link to this definition"></a></dt>
-<dd><p>Compare errors</p>
+<dd><p>Compute error metrics and Wasserstein distances
+and write a formatted comparison table to disk.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.error_table.load_sparse_csv">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.error_table.</span></span><span class="sig-name descname"><span class="pre">load_sparse_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.error_table.load_sparse_csv" title="Link to this definition"></a></dt>
+<dd><p>Load a sparse CSV file, automatically handling optional headers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.visualization.error_table.parse_arguments">
+<span class="sig-prename descclassname"><span class="pre">pofff.visualization.error_table.</span></span><span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pofff.visualization.error_table.parse_arguments" title="Link to this definition"></a></dt>
+<dd><p>Parse command-line arguments controlling paths and thresholds.</p>
 </dd></dl>
 
 </section>

@@ -1,4 +1,5 @@
 include LICENSE
+include src/pofff/config/*
 include src/pofff/core/*
 include src/pofff/fluidflower/*
 include src/pofff/geology/*

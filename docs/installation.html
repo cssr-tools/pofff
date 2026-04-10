@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Installation &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -105,6 +105,10 @@ via pip install in Python 3.14).</p>
 </pre></div>
 </div>
 <p>Then, you should be able to open resinsight by typing in the terminal <strong>resinsight</strong>.</p>
+<p>The <strong>plopm</strong> tool can be installed by executing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/cssr-tools/plopm.git
+</pre></div>
+</div>
 </div>
 <section id="python-package">
 <span id="vpofff"></span><h2>Python package<a class="headerlink" href="#python-package" title="Link to this heading"></a></h2>
@@ -185,7 +189,10 @@ in the terminal the following lines (which in turn should build flow in the fold
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>You can create a .sh file (e.g., build_opm_mpi.sh), copy the previous lines, and run in the terminal <strong>source build_opm_mpi.sh</strong></p>
+<p>You can create a .sh file (e.g., build_opm_mpi.sh), copy the previous lines, and run in the terminal <strong>source build_opm_mpi.sh</strong>.
+You can test if the built succeeded by typing <strong>./build/opm-simulators/bin/flow --help</strong>. Then, you can add flow to your search path by
+opening your <strong>~/.bashrc</strong> or <strong>~/.zshrc</strong> file and adding at the end <strong>export PATH=”$PATH:/full/path/to/your/flow”</strong>. Then, you can reload the
+configuration file (<strong>source ~/.bashrc</strong> or <strong>source ~/.zshrc</strong>) and test if this succeeded by simply typing <strong>flow --help</strong>.</p>
 </div>
 </section>
 <section id="brew-formula-for-macos">

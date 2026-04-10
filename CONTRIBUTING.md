@@ -4,8 +4,9 @@ Contributions are more than welcome using the fork and pull request approach ðŸ™
 
 ## Ground Rules
 
-- We use Black code formatting
-- We use Pylint
+- We use [_Black code formatting_](https://black.readthedocs.io/en/stable/)
+- We use [_Pylint_](https://pylint.readthedocs.io/en/stable/)
+- We use [_Ruff_](https://docs.astral.sh/ruff/)
 - We document our code
 
 ## Contribute to the software
@@ -14,9 +15,10 @@ Contributions are more than welcome using the fork and pull request approach ðŸ™
 1. In the main repo execute:
     1. **pip install -r dev-requirements.txt** (this installs the [_dev-requirements.txt_](https://github.com/cssr-tools/pofff/blob/main/dev-requirements.txt))
     1. **black --target-version py312 src/ tests/ publication/** (this formats the code)
-    1. **pylint src/ tests/** (this analyses the code, and might rise issues that need to be fixed before the pull request)
-    1. **mypy --ignore-missing-imports src/ tests/** (this is a static checker, and might rise issues that need to be fixed before the pull request)
-    1. **pytest --cov=pofff --cov-report term-missing tests/** (this runs locally the tests, and might rise issues that need to be fixed before the pull request)
+    1. **pylint src/ tests/ publication/** (this analyses the code, and might rise issues that need to be fixed before the pull request)
+    1. **ruff check src/ tests/ publication/** (this also analyses the code, and might rise issues that need to be fixed before the pull request)
+    1. **mypy --ignore-missing-imports src/ tests/ publication/** (this is a static checker, and might rise issues that need to be fixed before the pull request)
+    1. **pytest tests/ --cov=pofff --exitfirst --cov-report term-missing --basetemp=test_outputs** (this runs locally the tests, and might rise issues that need to be fixed before the pull request)
     1. **pushd docs & make html** (this generates the documentation, and might rise issues that need to be fixed before the pull request; if the build succeeds and if the contribution changes the documentation, then delete all content from the [_docs_](https://github.com/cssr-tools/pofff/tree/main/docs) folder except [_Makefile_](https://github.com/OPM/pofff/blob/main/docs/Makefile), [_text_](https://github.com/OPM/pofff/blob/main/docs/text), and [_.nojekyll_](https://github.com/OPM/pofff/blob/main/docs/.nojekyll), after copy all contents from the docs/_build/html/ folder, and finally paste them in the [_docs_](https://github.com/cssr-tools/pofff/tree/main/docs) folder)
     * Tip for Linux users: See the [_CI.yml_](https://github.com/cssr-tools/pofff/blob/main/.github/workflows/CI.yml) script and the [_Actions_](https://github.com/cssr-tools/pofff/actions) for installation of pofff, OPM Flow (binary packages), and dependencies, as well as the execution of the six previous steps in Ubuntu 24.04 using Python 3.12.
     * Tip for macOS users: See the [_ci_pycopm_macos_.yml_](https://github.com/daavid00/OPM-Flow_macOS/blob/main/.github/workflows/ci_pycopm_macos.yml) script and the [_OPM-Flow_macOS Actions_](https://github.com/cssr-tools/pycopm/actions) for installation of pycopm (a related tool to pofff), OPM Flow (source build), and dependencies, as well as running the tests in macOS 26 using Python 3.13. Note that to run the pofff tests, you have to add the directory containing the OPM Flow executable to your system's PATH environment variable (e.g., export PATH=$PATH:/path/to/opm-flow); you can check if this worked by after typing in the terminal 'flow \-\-help'.

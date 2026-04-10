@@ -10,8 +10,9 @@ documentation about collaborating with pull request; also, looking at previous m
 Ground Rules 
 ============
 
-- We use Black code formatting
-- We use Pylint
+- We use `Black code formatting <https://black.readthedocs.io/en/stable/>`_
+- We use `Pylint <https://pylint.readthedocs.io/en/stable/>`_
+- We use `Ruff <https://docs.astral.sh/ruff/>`_
 - We document our code
 
 ==========================
@@ -22,10 +23,11 @@ Contribute to the software
 #. In the main repo execute:
 
     #. **pip install -r dev-requirements.txt** (this installs the `dev-requirements.txt <https://github.com/cssr-tools/pofff/blob/main/dev-requirements.txt>`_)
-    #. **black --target-version py312 src/ tests/ publication/** (this formats the code)
-    #. **pylint src/ tests/** (this analyses the code, and might rise issues that need to be fixed before the pull request)
-    #. **mypy --ignore-missing-imports src/ tests/** (this is a static checker, and might rise issues that need to be fixed before the pull request)
-    #. **pytest --cov=pofff --cov-report term-missing tests/** (this runs locally the tests, and might rise issues that need to be fixed before the pull request)
+    #. **black \-\-target-version py312 src/ tests/ publication/** (this formats the code)
+    #. **pylint src/ tests/ publication/** (this analyses the code, and might rise issues that need to be fixed before the pull request)
+    #. **ruff check src/ tests/ publication/** (this also analyses the code, and might rise issues that need to be fixed before the pull request)
+    #. **mypy \-\-ignore-missing-imports src/ tests/** (this is a static checker, and might rise issues that need to be fixed before the pull request)
+    #. **pytest tests/ \-\-cov=pofff \-\-exitfirst \-\-cov-report term-missing \-\-basetemp=test_outputs** (this runs locally the tests, and might rise issues that need to be fixed before the pull request)
     #. **pushd docs & make html** (this generates the documentation, and might rise issues that need to be fixed before the pull request; if the build succeeds and if the contribution changes the documentation, then copy all content from the docs/_build/html/ folder and replace the files in the `docs <https://github.com/cssr-tools/pofff/tree/main/docs>`_ folder)
     
     .. tip::

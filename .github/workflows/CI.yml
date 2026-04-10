@@ -48,11 +48,12 @@ jobs:
       run: |
         black --target-version py312 --check src/ tests/ publication/
         pylint src/ tests/ publication/
+        ruff check src/ tests/ publication/
         mypy --ignore-missing-imports src/ tests/ publication/
       
     - name: Run the tests
       run: |
-        pytest --cov=pofff --exitfirst --cov-report term-missing tests/
+        pytest tests/ --cov=pofff --exitfirst --cov-report term-missing --basetemp=test_outputs
         
     - name: Build documentation
       run: |

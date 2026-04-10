@@ -3,627 +3,680 @@
 # SPDX-License-Identifier: GPL-3.0
 
 """
-Script to postprocess everest and ert studies.
+Postprocess Everest (ERT) ensemble and optimization studies.
+Generates diagnostics, plots, and extracts best simulations.
 """
 
+from __future__ import annotations
+
 import argparse
-import shutil
 import csv
-import os
 import math
+import os
+import shutil
+import subprocess
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import List
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
 
-tab20s = matplotlib.colormaps["tab20"]
+# =============================================================================
+# Configuration & state containers
+# =============================================================================
 
 
-def figures():
-    """Main function to postprocess everest results (differential_evolution)"""
-    cmdargs = load_parser()
-    dic = {"t": cmdargs["times"]}
-    dic["j"] = (cmdargs["jobs"].strip()).split(",")
-    dic["p"] = os.path.abspath(cmdargs["path"].strip())
-    dic["e"] = cmdargs["external"].strip()
-    dic["r"] = cmdargs["run"].strip()
-    dic["m"] = cmdargs["maps"].strip()
-    dic["s"] = float(cmdargs["minimumsaturation"])
-    dic["c"] = float(cmdargs["minimumconcentration"])
+@dataclass
+class Config:
+    """Runtime configuration and paths."""
 
-    font = {"family": "normal", "weight": "normal", "size": 14}
-    matplotlib.rc("font", **font)
+    path: Path
+    times: str
+    jobs: List[str]
+    external: Path
+    run: str
+    maps: Path
+    min_saturation: float
+    min_concentration: float
+
+
+@dataclass
+class EnsembleState:
+    """Holds ensemble simulations and diagnostics."""
+
+    observations: np.ndarray
+    n_e: int
+    n_i: int
+    no_obs: int
+    no_para: int
+
+    simulations: List[List[list]] = field(default_factory=list)
+    sim_ens: List[List[float]] = field(default_factory=list)
+    miss_ens: List[List[float]] = field(default_factory=list)
+    par_dis: List[List[float]] = field(default_factory=list)
+    idrealisation: List[List[int]] = field(default_factory=list)
+    num_ens: List[int] = field(default_factory=list)
+    cumulative: List[List[List[float]]] = field(default_factory=list)
+
+    para_file: Path | None = None
+    para_names: List[str] = field(default_factory=list)
+
+
+@dataclass
+class OptimizationState:
+    """Tracks optimization progress and outcomes."""
+
+    optimization: List[float] = field(default_factory=list)
+    optimal_value: float = -np.inf
+    ind_batch: int = 0
+    ind_sim: int = 0
+    tot_eval: int = 0
+
+    s: List[List[int]] = field(default_factory=lambda: [[], [], []])
+    x: List[int] = field(default_factory=lambda: [0, 0, 0])
+
+
+# =============================================================================
+# Utilities
+# =============================================================================
+
+
+def run(cmd: List[str]) -> None:
+    """Execute external command and abort on failure."""
+    subprocess.run(cmd, check=True)
+
+
+def ensure_dir(path: Path):
+    """Create directory if missing."""
+    path.mkdir(parents=True, exist_ok=True)
+
+
+def save_figure(fig, path: Path, dpi=300):
+    """Save figure and release memory."""
+    fig.savefig(path, bbox_inches="tight", dpi=dpi)
+    plt.close(fig)
+
+
+def copy_tree_contents(src: Path, dst: Path):
+    """Copy contents of src into dst (cp -r src/. dst/)."""
+    ensure_dir(dst)
+    for item in src.iterdir():
+        target = dst / item.name
+        if item.is_dir():
+            shutil.copytree(item, target, dirs_exist_ok=True)
+        else:
+            shutil.copy2(item, target)
+
+
+# =============================================================================
+# Argument parsing & matplotlib
+# =============================================================================
+
+
+def parse_args() -> Config:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+        description="Visualization of optimization studies using Everest (ERT)",
+    )
+    parser.add_argument("-p", "--path", default=".")
+    parser.add_argument("-t", "--times", default="24")
+    parser.add_argument("-j", "--jobs", default="equalreg,bcprop,satufunc,flow")
+    parser.add_argument("-e", "--external", default="/home/ThirdParty")
+    parser.add_argument("-r", "--run", default="run2")
+    parser.add_argument("-s", "--minimumsaturation", default="1e-2")
+    parser.add_argument("-c", "--minimumconcentration", default="1e-1")
+    parser.add_argument("-m", "--maps", default="cellmap.npy")
+
+    a = parser.parse_args()
+
+    return Config(
+        path=Path(a.path).resolve(),
+        times=a.times,
+        jobs=[j.strip() for j in a.jobs.split(",")],
+        external=Path(a.external),
+        run=a.run,
+        maps=Path(a.maps),
+        min_saturation=float(a.minimumsaturation),
+        min_concentration=float(a.minimumconcentration),
+    )
+
+
+def setup_matplotlib():
+    """Apply consistent matplotlib styling."""
+    matplotlib.rc("font", family="monospace", size=14)
     plt.rcParams.update(
         {
-            "text.usetex": shutil.which("latex") != "None",
-            "font.family": "monospace",
-            "legend.columnspacing": 0.9,
-            "legend.handlelength": 3.5,
-            "legend.fontsize": 14,
-            "lines.linewidth": 4,
-            "axes.titlesize": 14,
+            "text.usetex": shutil.which("latex") is not None,
             "axes.grid": True,
             "figure.figsize": (16, 8),
         }
     )
-
-    # Make the figures folder
-    if not os.path.exists("figures"):
-        os.system("mkdir figures")
-
-    if os.path.exists("everest_output"):
-        dic["ind_batch"], dic["ind_sim"] = [0, 0], [0, 0]
-        for i in range(3):
-            dic[f"s{i}"] = []
-            dic[f"x{i}"] = 0
-        process_optimization_results(dic)
-        plot_optimization_results(dic)
-        plt.rcParams.update({"axes.grid": False})
-        plot_optimization_details(dic)
-        find_optimal(dic)
-    else:
-        initialize_ert(dic)
-        for j in range(dic["n_e"]):
-            for i in range(dic["n_i"]):
-                read_hm(dic, i, j)
-        para_dist(dic)
-        make_figures(dic)
-        plot_cumulative_misfit(dic)
-        find_best(dic)
+    return matplotlib.colormaps["tab20"]
 
 
-def find_best(dic):
-    """
-    Find the closest simulation to the observations
-    """
-    if dic["observations"].ndim == 1:
-        diffo = dic["simulations"][-1] - dic["observations"][0]
+# =============================================================================
+# Ensemble reading
+# =============================================================================
 
-    else:
-        diffo = np.sum(
-            np.array(list(dic["simulations"][-1]))
-            - np.array([row[0] for row in dic["observations"]]),
-            axis=1,
-        )
-    eobs = np.where(np.abs(diffo) == np.min(np.abs(diffo)))
-    bestid = dic["idrealisation"][-1][eobs[0][0]]
-    if not os.path.exists(f"{dic['p']}/figures/best_simulation"):
-        os.system(f"mkdir {dic['p']}/figures/best_simulation")
-    os.system(
-        f"cp -r output/simulations/realisation-{bestid}/iter-{dic['n_i']-1}/. "
-        "figures/best_simulation/."
+
+def initialize_ensemble(cfg: Config) -> EnsembleState:
+    """Initialize ensemble from simulation folders."""
+    obs = np.genfromtxt(cfg.path / "deck/obs.txt")
+    no_obs = 1 if obs.ndim == 1 else len(obs)
+
+    sim_root = cfg.path / "output/simulations"
+    n_e = len(list(sim_root.iterdir()))
+    n_i = max(len(list((sim_root / f"realisation-{i}").iterdir())) for i in range(n_e))
+
+    return EnsembleState(
+        observations=obs,
+        n_e=n_e,
+        n_i=n_i,
+        no_obs=no_obs,
+        no_para=0,
+        simulations=[[] for _ in range(n_i)],
+        sim_ens=[[] for _ in range(n_i)],
+        miss_ens=[[] for _ in range(n_i)],
+        par_dis=[[] for _ in range(n_i)],
+        idrealisation=[[] for _ in range(n_i)],
+        num_ens=[0 for _ in range(n_i)],
+        cumulative=[[[] for _ in range(no_obs)] for _ in range(n_i)],
     )
-    os.chdir(f"{dic['p']}/figures/best_simulation")
-    os.system(f"python3 {dic['p']}/jobs/copyd.py")
-    for job in dic["j"]:
-        os.system(f"python3 {dic['p']}/jobs/{str(job)}.py")
-    os.system(f"python3 {dic['p']}/jobs/data.py -t {dic['t']} -m {dic['m']}")
-    os.system(
-        f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['r']} "
-        f"-p {dic['e']} -s {dic['s']} -c {dic['c']}"
-    )
-    print(
-        f"Best: {dic['p']}/output/simulations/realisation-{bestid}/iter-{dic['n_i']-1}"
-    )
-    if dic["n_i"] == 1 or dic["simulations"][-1][eobs[0][0]].size == 1:
-        print(f"Values: {dic['simulations'][0][eobs[0][0]]}")
+
+
+def read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
+    """Read one realization and update ensemble statistics."""
+    base = cfg.path / f"output/simulations/realisation-{j}/iter-{i}"
+    if not (base / "OK").exists():
+        return
+
+    state.num_ens[i] += 1
+    state.idrealisation[i].append(j)
+
+    sim = np.atleast_1d(np.genfromtxt(base / "sim_metrics_0.txt")).astype(float)
+    state.simulations[i].append(sim.tolist())
+
+    obs = state.observations
+
+    if obs.ndim == 1:
+        miss = ((sim[0] - obs[0]) / obs[1]) ** 2
+        state.cumulative[i][0].append(sim[0])
+        sim_sum = sim[0]
+        n = 1
     else:
-        print(f"Values: {list(dic['simulations'][-1][eobs[0][0]])}")
+        miss = np.sum(((sim - obs[:, 0]) / obs[:, 1]) ** 2)
+        for k, v in enumerate(sim):
+            state.cumulative[i][k].append(v)
+        sim_sum = np.sum(sim)
+        n = len(sim)
+
+    state.miss_ens[i].append(miss / (2 * n))
+    state.sim_ens[i].append(sim_sum)
+
+    para = base / "parameters.txt"
+    if para.exists():
+        state.para_file = para
+        data = np.atleast_2d(np.genfromtxt(para))
+        state.no_para = data.ndim
+        for row in data:
+            state.par_dis[i].append(row[1])
 
 
-def plot_cumulative_misfit(dic):
-    """
-    Plot the cumulative misfit per iteration
-    """
-    for i in range(dic["n_i"]):
-        fig, axis = plt.subplots()
-        allw = 0
-        for j in range(dic["no_obs"]):
-            allw += np.array(dic["cum"][i][j])
-        allw = np.array(allw)
-        indc = np.argsort(allw)
-        allw = np.sort(allw)
-        axis.axhline(
-            y=allw.mean() / dic["no_obs"],
-            color="black",
-            ls="--",
-            lw=1,
-            label=f"Total average {allw.mean()/dic['no_obs']:.2f}",
-        )
-        axis.bar(
-            list(range(len(dic["cum"][i][0]))),
-            allw,
-            color=tab20s.colors[0],
-            label=f"obs-{0}",
-        )
-        for j in range(dic["no_obs"] - 1):
-            allw -= np.array([dic["cum"][i][j][r] for r in indc])
-            axis.bar(
-                list(range(len(dic["cum"][i][j + 1]))),
-                allw,
-                color=tab20s.colors[j + 1],
-                label=f"obs-{j+1}",
-            )
-        axis.set_title(f"Realization (iter-{i})")
-        axis.set_ylabel("Cumulative misfit")
-        axis.legend()
-        fig.savefig(
-            f"figures/cumulative_misfit_ite-{i}.png",
-            bbox_inches="tight",
-        )
+# =============================================================================
+# Plotting
+# =============================================================================
 
 
-def make_figures(dic):
-    """
-    Write the plots
-    """
-    if dic["observations"].ndim == 1:
-        marker = "o"
-    else:
-        marker = ""
-    fig, axis = plt.subplots()
-    for values in dic["simulations"][0][:-1]:
-        axis.plot(
-            range(1, dic["no_obs"] + 1),
-            values,
-            color=[51 / 255.0, 153 / 255.0, 255 / 255.0],
-            lw=0.5,
-            marker=marker,
-        )
-    axis.plot(
-        range(1, dic["no_obs"] + 1),
-        dic["simulations"][0][-1],
-        color=[51 / 255.0, 153 / 255.0, 255 / 255.0],
+def plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
+    """Plot initial and final ensemble simulations."""
+    fig, ax = plt.subplots()
+
+    x = range(1, state.no_obs + 1)
+    marker = "o" if state.observations.ndim == 1 else ""
+
+    for vals in state.simulations[0][:-1]:
+        ax.plot(x, vals, color=tab20.colors[0], lw=0.5, marker=marker)
+
+    ax.plot(
+        x,
+        state.simulations[0][-1],
+        color=tab20.colors[0],
         lw=0.5,
         marker=marker,
         label="Initial ensemble",
     )
-    if dic["n_i"] > 1:
-        for values in dic["simulations"][-1][:-1]:
-            axis.plot(
-                range(1, dic["no_obs"] + 1),
-                values,
-                color=[0 / 255.0, 204 / 255.0, 0 / 255.0],
-                lw=0.5,
-                marker=marker,
-            )
-        axis.plot(
-            range(1, dic["no_obs"] + 1),
-            dic["simulations"][-1][-1],
-            color=[0 / 255.0, 204 / 255.0, 0 / 255.0],
+
+    if state.n_i > 1:
+        for vals in state.simulations[-1][:-1]:
+            ax.plot(x, vals, color=tab20.colors[2], lw=0.5, marker=marker)
+
+        ax.plot(
+            x,
+            state.simulations[-1][-1],
+            color=tab20.colors[2],
             lw=0.5,
             marker=marker,
             label="Final ensemble",
         )
-    if dic["observations"].ndim == 1:
-        axis.errorbar(
-            1,
-            dic["observations"][0],
-            yerr=dic["observations"][1],
-            fmt="o",
-            color=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-            ecolor=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-            elinewidth=1,
-            capsize=0,
-            markersize="0.5",
-            label="Observation",
-        )
-    else:
-        for i, obs in enumerate(dic["observations"][:-1]):
-            axis.errorbar(
-                i + 1,
-                obs[0],
-                yerr=obs[1],
-                fmt="o",
-                color=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-                ecolor=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-                elinewidth=1,
-                capsize=0,
-                markersize="0.5",
-            )
-        axis.errorbar(
-            dic["no_obs"],
-            dic["observations"][-1][0],
-            yerr=dic["observations"][-1][1],
-            fmt="o",
-            color=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-            ecolor=[128 / 255.0, 128 / 255.0, 128 / 255.0],
-            elinewidth=1,
-            capsize=0,
-            markersize="0.5",
-            label="Observation",
-        )
-    axis.set_ylabel("EMD [gr cm]")
-    axis.set_xlabel("No. Obs")
-    axis.set_ylim(bottom=0)
-    axis.set_xticks(range(1, dic["no_obs"] + 1))
-    axis.legend()
-    fig.savefig(
-        "figures/simulationensemble.png",
-        bbox_inches="tight",
-    )
 
-    fig, axis = plt.subplots()
-    for i in range(dic["n_i"]):
-        axis.plot(
-            i,
-            np.sum(dic["miss_ens"][i]) / len(dic["miss_ens"][i]),
-            markersize="10",
-            marker="o",
-            label=r"$N_{ens}=$" + f"{dic['num_ens'][i]}",
-            c=tab20s.colors[i],
+    obs = state.observations
+    if obs.ndim == 1:
+        ax.errorbar(1, obs[0], yerr=obs[1], fmt="o", color="gray", label="Observation")
+    else:
+        for i, (v, e) in enumerate(obs[:-1]):
+            ax.errorbar(i + 1, v, yerr=e, fmt="o", color="gray")
+        ax.errorbar(
+            state.no_obs,
+            obs[-1][0],
+            yerr=obs[-1][1],
+            fmt="o",
+            color="gray",
+            label="Observation",
         )
-    axis.set_title(
-        r"$O_i=\frac{1}{N_{ens}}\sum_{j}^{N_{ens}}O_{i,j}$, \#"
-        + f"HM parameters: {dic['data'].ndim}"
-    )
-    axis.legend()
-    axis.set_xlabel(r"\# iteration [-]")
-    axis.set_ylabel("Missmatch [-]")
-    axis.set_xticks(range(dic["n_i"]))
-    fig.savefig(
-        "figures/hm_missmatch.png",
-        bbox_inches="tight",
-    )
-    fig, axis = plt.subplots()
-    axis.boxplot(
-        [dic["miss_ens"][i] for i in range(dic["n_i"])],
-        positions=list(range(dic["n_i"])),
-    )
-    axis.set_title(
+
+    ax.set_xlabel(r"Obsservable [\#]")
+    ax.set_ylabel("Wasserstein distance [gr cm]")
+    ax.set_ylim(bottom=0)
+    ax.set_xticks(x)
+    ax.legend()
+
+    save_figure(fig, cfg.path / "figures/simulationensemble.png")
+
+
+def plot_misfit(cfg: Config, state: EnsembleState):
+    """Plot ensemble misfit per iteration."""
+    fig, ax = plt.subplots()
+    ax.boxplot(state.miss_ens)
+    ax.set_xlabel(r"Iteration [\#]")
+    ax.set_ylabel("Misfit [-]")
+    ax.set_title(
         r"$O_{i,j}=\frac{1}{2N_{obs}}\sum_n^{N_{obs}}((d^{n}_{i,j}-d^{n})/\sigma_n)^2$"
     )
-    axis.set_xlabel(r"\# iteration [-]")
-    axis.set_ylabel("Missmatch [-]")
-    axis.set_xticks(range(dic["n_i"]))
-    fig.savefig(
-        "figures/dist_missmatch.png",
-        bbox_inches="tight",
-    )
-    fig, axis = plt.subplots()
-    axis.boxplot(
-        [dic["sim_ens"][i] for i in range(dic["n_i"])],
-        positions=list(range(dic["n_i"])),
-    )
-    axis.set_title(r"$\sum_n^{N_{obs}}d^{n}_{i,j}$")
-    axis.set_xlabel(r"\# iteration [-]")
-    axis.set_ylabel("EMD distance")
-    axis.set_xticks(range(dic["n_i"]))
-    fig.savefig(
-        "figures/dist_observable.png",
-        bbox_inches="tight",
-    )
+    save_figure(fig, cfg.path / "figures/dist_missmatch.png")
 
 
-def para_dist(dic):
-    """
-    Plot the parameter distributions
+def plot_parameter_distributions(cfg: Config, state: EnsembleState):
+    """Boxplots of parameter distributions."""
+    if not state.para_file:
+        return
 
-    Args:
-        dig (dict): Global dictionary
+    with open(state.para_file, encoding="utf8") as f:
+        state.para_names = [row[0] for row in csv.reader(f, delimiter=" ")]
 
-    Returns:
-        None
+    n_params = len(state.para_names)
+    rows = math.ceil(n_params / 3)
+    fig = plt.figure(figsize=(25, n_params))
 
-    """
-    dic["name"] = []
-    if "para" in dic:
-        with open(dic["para"], "r", encoding="utf8") as file:
-            for row in csv.reader(file, delimiter=" "):
-                dic["name"].append(row)
-        if dic["data"].ndim == 1:
-            l_data = 1
-        else:
-            l_data = len(dic["data"])
-        dic["p_a"] = math.ceil(l_data / 3)
-        figd = plt.figure(figsize=(25, l_data))
-        for k in range(l_data):
-            plot_parameters(
-                figd,
-                [
-                    dic["par_dis"][0][i]
-                    for i in range(k, len(dic["par_dis"][0]), l_data)
-                ],
-                [
-                    dic["par_dis"][-1][j]
-                    for j in range(k, len(dic["par_dis"][-1]), l_data)
-                ],
-                k + 1,
-                dic,
+    for k in range(n_params):
+        ax = fig.add_subplot(rows, 3, k + 1)
+        ini_dist = state.par_dis[0][k::n_params]
+
+        if state.n_i > 1:
+            fin_dist = state.par_dis[-1][k::n_params]
+            ax.boxplot([ini_dist, fin_dist], tick_labels=["Initial", "Final"])
+            ax.set_title(
+                f"Box plot of initial and final {state.para_names[k].lower()} parameter"
             )
-        figd.savefig(
-            "figures/parameterdistributions.png",
-            bbox_inches="tight",
-        )
-
-
-def plot_parameters(fig, inidist, findist, k, dic):
-    """
-    Routine to make the plots iteratively
-    """
-    axis = fig.add_subplot(dic["p_a"], 3, k)
-    if dic["n_i"] == 1:
-        axis.boxplot([inidist])
-        axis.set_title(
-            f"Box plot of initial {dic['name'][k-1][0]} parameter distribution"
-        )
-    else:
-        axis.boxplot([inidist, findist])
-        axis.set_title(
-            f"Box plot of initial and final {dic['name'][k-1][0]} parameter distribution"
-        )
-
-
-def read_hm(dic, i, j):
-    """
-    Extract relevant hm data
-
-    Args:
-        dig (dict): Global dictionary
-
-    Returns:
-        None
-
-    """
-    if os.path.exists(f"output/simulations/realisation-{j}/iter-{i}/OK") == 1:
-        dic["num_ens"][i] += 1
-        dic["idrealisation"][i].append(j)
-        dic["simulations"][i].append(
-            np.genfromtxt(
-                f"output/simulations/realisation-{j}/iter-{i}/sim_metrics_0.txt",
-                delimiter=" ",
-            )
-        )
-        miss_ens = 0
-        sim_ens = 0
-        coun = 0
-        if dic["observations"].ndim > 1:
-            for d_1, d_2 in zip(dic["simulations"][i][-1], dic["observations"]):
-                miss_ens += ((d_1 - d_2[0]) / d_2[1]) ** 2
-                dic["cum"][i][coun].append(d_1)
-                sim_ens += d_1
-                coun += 1
         else:
-            miss_ens += (
-                (dic["simulations"][i][-1] - dic["observations"][0])
-                / dic["observations"][1]
-            ) ** 2
-            dic["cum"][i][0].append(dic["simulations"][i][-1])
-            sim_ens += dic["simulations"][i][-1]
-            coun += 1
-        dic["miss_ens"][i].append(miss_ens / (2.0 * coun))
-        dic["sim_ens"][i].append(sim_ens)
-        if os.path.exists(
-            f"output/simulations/realisation-{j}/iter-{i}/parameters.txt"
-        ):
-            dic["para"] = f"output/simulations/realisation-{j}/iter-{i}/parameters.txt"
-            dic["data"] = np.genfromtxt(dic["para"], delimiter=" ")
-            if dic["data"].ndim == 1:
-                dic["par_dis"][i].append(dic["data"][1])
-            else:
-                for k in range(len(dic["data"])):
-                    dic["par_dis"][i].append(dic["data"][k, 1])
+            ax.boxplot([ini_dist], tick_labels=["Initial"])
+            ax.set_title(f"Box plot of initial {state.para_names[k]} parameter")
+
+    save_figure(fig, cfg.path / "figures/parameterdistributions.png")
 
 
-def initialize_ert(dic):
-    """
-    Variables for the plotting method
+# =============================================================================
+# Best-simulation extraction (ensemble mode)
+# =============================================================================
 
-    Args:
-        dig (dict): Global dictionary
 
-    Returns:
-        None
+def extract_best_simulation(cfg: Config, state: EnsembleState):
+    """Extract best-fitting ensemble realization."""
+    sims = np.array(state.simulations[-1])
+    obs = state.observations
 
-    """
-    dic["n_e"] = len(next(os.walk("output/simulations"))[1])
-    dic["n_i"] = 1
-    dic["observations"] = np.genfromtxt("deck/obs.txt", delimiter=" ")
-    if dic["observations"].ndim == 1:
-        dic["no_obs"] = 1
+    if obs.ndim == 1:
+        diff = np.abs(sims[:, 0] - obs[0])
     else:
-        dic["no_obs"] = len(dic["observations"])
-    for i in range(dic["n_e"]):
-        dic["n_i"] = max(
-            dic["n_i"], len(next(os.walk(f"output/simulations/realisation-{i}"))[1])
+        diff = np.sum(np.abs(sims - obs[:, 0]), axis=1)
+
+    idx = int(np.argmin(diff))
+    best_id = state.idrealisation[-1][idx]
+
+    src = cfg.path / f"output/simulations/realisation-{best_id}/iter-{state.n_i - 1}"
+    dst = cfg.path / "figures/best_simulation"
+    copy_tree_contents(src, dst)
+
+    old_cwd = Path.cwd()
+    os.chdir(dst)
+    try:
+        run(["python3", str(cfg.path / "jobs/copyd.py")])
+        for job in cfg.jobs:
+            run(["python3", str(cfg.path / f"jobs/{job}.py")])
+        run(
+            [
+                "python3",
+                str(cfg.path / "jobs/data.py"),
+                "-t",
+                cfg.times,
+                "-m",
+                str(cfg.maps),
+            ]
         )
+        run(
+            [
+                "python3",
+                str(cfg.path / "jobs/metric.py"),
+                "-t",
+                cfg.times,
+                "-e",
+                cfg.run,
+                "-p",
+                str(cfg.external),
+                "-s",
+                str(cfg.min_saturation),
+                "-c",
+                str(cfg.min_concentration),
+            ]
+        )
+    finally:
+        os.chdir(old_cwd)
 
-    dic["par_dis"] = [[] for _ in range(dic["n_i"])]
-    dic["simulations"] = [[] for _ in range(dic["n_i"])]
-    dic["idrealisation"] = [[] for _ in range(dic["n_i"])]
-    dic["sim_ens"] = [[] for _ in range(dic["n_i"])]
-    dic["miss_ens"] = [[] for _ in range(dic["n_i"])]
-    dic["num_ens"] = [0 for _ in range(dic["n_i"])]
-    dic["cum"] = [[[] for _ in range(dic["no_obs"])] for _ in range(dic["n_i"])]
-
-
-def find_optimal(dic):
-    """Find the well locations and folder for the 'optimal' obtained solution"""
-    if not os.path.exists(f"{dic['p']}/figures/best_simulation"):
-        os.system(f"mkdir {dic['p']}/figures/best_simulation")
-    os.chdir(f"{dic['p']}/figures/best_simulation")
-    os.system(
-        f"cp {dic['p']}/everest_output/sim_output/"
-        + f"batch_{dic['ind_batch'][1]}/realization_0/evaluation_"
-        + f"{dic['ind_sim'][1]}/para.json ."
-    )
-    os.system(f"python3 {dic['p']}/jobs/copyd.py")
-    for job in dic["j"]:
-        os.system(f"python3 {dic['p']}/jobs/{str(job)}.py")
-    os.system(f"python3 {dic['p']}/jobs/data.py -t {dic['t']} -m {dic['m']}")
-    os.system(
-        f"python3 {dic['p']}/jobs/metric.py -t {dic['t']} -e {dic['r']} "
-        f"-p {dic['e']} -s {dic['s']} -c {dic['c']}"
-    )
-    os.system(f"python3 {dic['p']}/jobs/scale.py")
     print(
-        f"Best: {dic['p']}/everest_output/sim_output/batch_{dic['ind_batch'][1]}"
-        f"/realization_0/evaluation_{dic['ind_sim'][1]}"
+        f"Best: {cfg.path}/output/simulations/"
+        f"realisation-{best_id}/iter-{state.n_i - 1}"
     )
 
+    best_vals = state.simulations[-1][idx]
+    print(f"Values: {list(best_vals) if state.n_i > 1 else best_vals}")
 
-def plot_optimization_details(dic):
-    """Plot the number of failed and succeed simulations over steps"""
-    colors = ["g", "r", "k"]
-    names = [
-        f"Succeeded (no={np.sum(dic['s0'])})",
-        f"Failed (no={np.sum(dic['s1'])})",
-        f"Nomonotonic (no={np.sum(dic['s2'])})",
-    ]
+
+# =============================================================================
+# Optimization processing + extraction
+# =============================================================================
+
+
+def process_optimization(cfg: Config) -> OptimizationState:
+    """Process Everest optimization results."""
+    root = cfg.path / "everest_output/sim_output"
+    opt = OptimizationState()
+
+    improved = -np.inf
+    where = []
+
+    batches = sorted(root.iterdir(), key=lambda p: int(p.name.split("_")[1]))
+
+    for batch in batches:
+        batch_index = int(batch.name.split("_")[1])
+        evals = sorted(
+            (batch / "realization_0").iterdir(),
+            key=lambda p: int(p.name.split("_")[1]),
+        )
+
+        for ev in evals:
+            fval = np.genfromtxt(ev / "func")
+            opt.tot_eval += 1
+
+            if np.isnan(fval):
+                opt.x[1] += 1
+            elif fval == -1:
+                opt.x[2] += 1
+            else:
+                opt.x[0] += 1
+                if fval > improved:
+                    improved = float(fval)
+                    where.append((batch_index, int(ev.name.split("_")[1])))
+
+        opt.optimization.append(improved)
+
+        for i in range(3):
+            opt.s[i].append(opt.x[i])
+            opt.x[i] = 0
+
+    idx = int(np.nanargmax(opt.optimization))
+    opt.optimal_value = opt.optimization[idx]
+    opt.ind_batch, opt.ind_sim = where[idx]
+
+    return opt
+
+
+def plot_optimization(cfg: Config, opt: OptimizationState):
+    """Plot optimization progress."""
     fig, ax = plt.subplots()
-    allw = 0
-    for i in range(3):
-        allw += np.array(dic[f"s{i}"])
-    allw = np.array(allw)
-    indc = np.argsort(allw)
-    indc = range(len(allw))
-    ax.bar(range(1, len(allw) + 1), allw, color=colors[0], label=names[0])
-    for i in range(2):
-        allw -= np.array([dic[f"s{i}"][r] for r in indc])
-        if i == 0 and dic["x1"] == 0:
-            continue
-        ax.bar(range(1, len(allw) + 1), allw, color=colors[i + 1], label=names[i + 1])
-    ax.set_title(f"Details on failed and succeed simulations (Total={dic['tot_eval']})")
-    ax.set_ylabel(r"Occurence [\#]")
-    ax.set_xlabel(r"Step [\#]")
-    # ax.set_xlim([-1,1001])
-    if len(allw) + 1 < 20:
+
+    scale = 8.5 * 100
+    values = [-v * scale for v in opt.optimization]
+    steps = range(1, len(values) + 1)
+
+    if len(values) > 1:
+        ax.step(steps, values, lw=5, color="b")
+    else:
+        ax.plot(1, values[0], marker="*", ms=20, color="k")
+
+    ax.set_title("Optimization results")
+    ax.set_xlabel(r"Iteration [\#]")
+    ax.set_ylabel("Wasserstein distance [gr cm]")
+
+    if len(values) < 20:
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
     else:
-        ax.set_xticks(
-            np.linspace(
-                0,
-                len(allw),
-                11,
-            )
+        ax.set_xticks(np.linspace(0, len(values) + 1, 11))
+
+    save_figure(fig, cfg.path / "figures/optimization_results.png")
+
+
+def extract_optimal_solution(cfg: Config, opt: OptimizationState):
+    """Extract and postprocess optimal optimization result."""
+    dst = cfg.path / "figures/best_simulation"
+    ensure_dir(dst)
+
+    src = (
+        cfg.path
+        / "everest_output/sim_output"
+        / f"batch_{opt.ind_batch}"
+        / "realization_0"
+        / f"evaluation_{opt.ind_sim}"
+        / "para.json"
+    )
+
+    shutil.copy2(src, dst / "para.json")
+
+    old_cwd = Path.cwd()
+    os.chdir(dst)
+    try:
+        run(["python3", str(cfg.path / "jobs/copyd.py")])
+        for job in cfg.jobs:
+            run(["python3", str(cfg.path / f"jobs/{job}.py")])
+        run(
+            [
+                "python3",
+                str(cfg.path / "jobs/data.py"),
+                "-t",
+                cfg.times,
+                "-m",
+                str(cfg.maps),
+            ]
         )
+        run(
+            [
+                "python3",
+                str(cfg.path / "jobs/metric.py"),
+                "-t",
+                cfg.times,
+                "-e",
+                cfg.run,
+                "-p",
+                str(cfg.external),
+                "-s",
+                str(cfg.min_saturation),
+                "-c",
+                str(cfg.min_concentration),
+            ]
+        )
+        run(["python3", str(cfg.path / "jobs/scale.py")])
+    finally:
+        os.chdir(old_cwd)
+
+    print(
+        f"Best: {cfg.path}/everest_output/sim_output/"
+        f"batch_{opt.ind_batch}/realization_0/"
+        f"evaluation_{opt.ind_sim}"
+    )
+
+
+def plot_observable_distribution(cfg: Config, state: EnsembleState):
+    """Plot observable sum distributions."""
+    fig, ax = plt.subplots()
+    ax.boxplot(
+        [state.sim_ens[i] for i in range(state.n_i)],
+        positions=list(range(state.n_i)),
+    )
+    ax.set_xlabel(r"Iteration [\#]")
+    ax.set_ylabel("Wasserstein distance [gr cm]")
+    ax.set_title(r"$\sum_n^{N_{obs}} d^n_{i,j}$")
+    ax.set_xticks(range(state.n_i))
+
+    save_figure(fig, cfg.path / "figures/dist_observable.png")
+
+
+def plot_hm_missmatch(cfg: Config, state: EnsembleState):
+    """Plot ensemble-mean misfit per iteration."""
+    fig, ax = plt.subplots()
+
+    for i in range(state.n_i):
+        if not state.miss_ens[i]:
+            continue
+        mean_misfit = np.sum(state.miss_ens[i]) / len(state.miss_ens[i])
+        ax.plot(i, mean_misfit, marker="o", label=rf"$N_{{ens}}={state.num_ens[i]}$")
+
+    ax.set_title(
+        r"$O_i=\frac{1}{N_{ens}}\sum_{j=1}^{N_{ens}} O_{i,j}$, \#"
+        + f"HM parameters: {state.no_para}"
+    )
+    ax.set_xlabel(r"Iteration [\#]")
+    ax.set_ylabel("Misfit [-]")
+    ax.set_xticks(range(state.n_i))
     ax.legend()
-    # ax.set_xticks(range(len(allw)))
-    fig.savefig("figures/details.png", bbox_inches="tight", dpi=900)
+
+    save_figure(fig, cfg.path / "figures/hm_missmatch.png")
 
 
-def process_optimization_results(dic):
-    """Process the optimization results over steps (batches)"""
-    dic["tot_eval"], dic["optimal"], dic["optimization"], where = 0, [], [], []
-    improved = -np.inf
-    root = "everest_output/sim_output"
-    for n in range(len(os.listdir(root))):
-        for m in range(len(os.listdir(f"{root}/batch_{n}/realization_0"))):
-            file = root + f"/batch_{n}/realization_0/evaluation_{m}/func"
-            value = np.genfromtxt(file)
-            dic["tot_eval"] += 1
-            if str(value) == "nan":
-                dic["x1"] += 1
-            elif value == -1:
-                dic["x2"] += 1
-            else:
-                dic["x0"] += 1
-            if str(value) != "nan":
-                improved = max(improved, value)
-                dic["optimal"].append(value)
-                where.append([n, m])
-        for i in range(3):
-            dic[f"s{i}"].append(dic[f"x{i}"])
-            dic[f"x{i}"] = 0
-        dic["optimization"].append(improved)
-    ind = int(np.nanargmax(np.array(dic["optimal"])))
-    dic["optimal"] = dic["optimal"][ind]
-    dic["ind_batch"][1] = where[ind][0]
-    dic["ind_sim"][1] = where[ind][1]
+def plot_cumulative_misfit(cfg: Config, state: EnsembleState, tab20):
+    """Plot cumulative misfit contributions per observation."""
+    for i in range(state.n_i):
+        if not state.cumulative[i] or not state.cumulative[i][0]:
+            continue
 
+        fig, ax = plt.subplots()
 
-def plot_optimization_results(dic):
-    """Plot the optimization values over steps"""
-    fig, axis = plt.subplots()
-    if len(dic["optimization"]) > 1:
-        axis.step(
-            range(1, len(dic["optimization"]) + 1),
-            [-value * 8.5 * 100 for value in dic["optimization"]],
-            lw=5,
-            color="b",
+        allw = np.zeros(len(state.cumulative[i][0]))
+        for j in range(state.no_obs):
+            allw += np.array(state.cumulative[i][j])
+
+        indc = np.argsort(allw)
+        allw_sorted = np.sort(allw)
+
+        ax.axhline(
+            y=allw_sorted.mean() / state.no_obs,
+            color="black",
+            ls="--",
+            lw=1,
+            label=f"Total average {allw_sorted.mean() / state.no_obs:.2f}",
         )
-    else:
-        axis.plot(
-            1,
-            dic["optimization"][0] * 8.5 * 100,
-            marker="*",
-            ms=20,
-            color="k",
-        )
-    axis.set_title("Optimization results")
-    axis.set_ylabel("Objective value")
-    axis.set_xlabel(r"Step [\#]")
-    if len(dic["optimization"]) < 20:
-        axis.xaxis.set_major_locator(MaxNLocator(integer=True))
-    else:
-        axis.set_xticks(
-            np.linspace(
-                0,
-                len(dic["optimization"]) + 1,
-                11,
+
+        ax.bar(range(1, len(allw_sorted) + 1), allw_sorted, color=tab20.colors[0])
+
+        remainder = allw_sorted.copy()
+        for j in range(state.no_obs - 1):
+            vals = np.array([state.cumulative[i][j][r] for r in indc])
+            remainder -= vals
+            ax.bar(
+                range(1, len(remainder) + 1),
+                remainder,
+                color=tab20.colors[j + 1],
+                label=f"obs-{j+1}",
             )
-        )
-    fig.savefig("figures/optimization_results.png", bbox_inches="tight")
+
+        ax.set_title(f"Realization (iter-{i})")
+        ax.set_xlabel(r"Realisation [\#]")
+        ax.set_ylabel("Cumulative misfit [-]")
+        ax.legend()
+
+        save_figure(fig, cfg.path / f"figures/cumulative_misfit_ite-{i}.png")
 
 
-def load_parser():
-    """Argument options"""
-    parser = argparse.ArgumentParser(
-        description="Viusalization of optimization studies"
-        " using everest (differential_evolution). The figures"
-        " are saved in the figures folder."
-    )
-    parser.add_argument(
-        "-p",
-        "--path",
-        default=".",
-        help="Path to the opm simulations.",
-    )
-    parser.add_argument(
-        "-t",
-        "--times",
-        default="24",
-        help="Times in hours for the images.",
-    )
-    parser.add_argument(
-        "-j",
-        "--jobs",
-        default="equalreg,bcprop,satufunc,flow",
-        help="Jobs to run.",
-    )
-    parser.add_argument(
-        "-e",
-        "--external",
-        default="/home/AD.NORCERESEARCH.NO/dmar/ThirdParty",
-        help="Path to the fluidflower data",
-    )
-    parser.add_argument(
-        "-r",
-        "--run",
-        default="run2",
-        help="Experimental data to history match, valid options are run1 to run5 "
-        "('run2' by default).",
-    )
-    parser.add_argument(
-        "-s",
-        "--minimumsaturation",
-        default="1e-2",
-        help="The minimum saturation above which gaseous CO2 is considered for the segmentation.",
-    )
-    parser.add_argument(
-        "-c",
-        "--minimumconcentration",
-        default="1e-1",
-        help="The min conc above which CO2 is considered to be dissolved for the segmentation.",
-    )
-    parser.add_argument(
-        "-m",
-        "--maps",
-        default="/Users/dmar/Github/pofff/src/pofff/geology/cellmap.npy",
-        help="Path to the cell maps",
-    )
-    return vars(parser.parse_known_args()[0])
+def plot_optimization_details(cfg: Config, opt: OptimizationState):
+    """Plot optimization success statistics."""
+    colors = ["g", "r", "k"]
+    names = [
+        f"Succeeded (no={sum(opt.s[0])})",
+        f"Failed (no={sum(opt.s[1])})",
+        f"Nonmonotonic (no={sum(opt.s[2])})",
+    ]
+
+    fig, ax = plt.subplots()
+
+    n_steps = len(opt.s[0])
+    x = np.arange(1, n_steps + 1)
+
+    total = np.array(opt.s[0]) + np.array(opt.s[1]) + np.array(opt.s[2])
+    ax.bar(x, total, color=colors[0], label=names[0])
+
+    remainder = total.copy()
+    for i in range(2):
+        remainder -= np.array(opt.s[i])
+        if i == 0 and sum(opt.s[1]) == 0:
+            continue
+        ax.bar(x, remainder, color=colors[i + 1], label=names[i + 1])
+
+    ax.set_title(f"Details on failed and succeeded simulations (Total={opt.tot_eval})")
+    ax.set_xlabel(r"Iteration [\#]")
+    ax.set_ylabel(r"Occurrence [\#]")
+
+    if n_steps < 20:
+        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    else:
+        ax.set_xticks(np.linspace(1, n_steps, 11))
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+    ax.legend()
+    save_figure(fig, cfg.path / "figures/details.png", dpi=900)
+
+
+# =============================================================================
+# Main
+# =============================================================================
+
+
+def main():
+    """Entry point."""
+    cfg = parse_args()
+    tab20 = setup_matplotlib()
+
+    ensure_dir(cfg.path / "figures")
+
+    if (cfg.path / "everest_output").exists():
+        opt = process_optimization(cfg)
+        plot_optimization(cfg, opt)
+        plot_optimization_details(cfg, opt)
+        extract_optimal_solution(cfg, opt)
+    else:
+        state = initialize_ensemble(cfg)
+        for j in range(state.n_e):
+            for i in range(state.n_i):
+                read_realisation(cfg, state, i, j)
+
+        plot_simulation_ensemble(cfg, state, tab20)
+        plot_hm_missmatch(cfg, state)
+        plot_misfit(cfg, state)
+        plot_observable_distribution(cfg, state)
+        plot_parameter_distributions(cfg, state)
+        plot_cumulative_misfit(cfg, state, tab20)
+        extract_best_simulation(cfg, state)
 
 
 if __name__ == "__main__":
-    figures()
+    main()

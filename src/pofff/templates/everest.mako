@@ -6,9 +6,10 @@ controls:
     perturbation_magnitude: 0.01 # Not used for scipy/differential_evolution, but requiered by everest
     variables:
 % for para in dic["hm"]:
+<% ini_val, min_val, max_val, no_vals = dic["hm"][para][0], dic["hm"][para][1], dic["hm"][para][2], dic["hm"][para][3] %>\
       - name: ${para}
-        max: ${dic[para][3]}
-        initial_guess: ${round((dic[f"{para}"][0]-dic[f"{para}"][1])/((dic[f"{para}"][2]-dic[f"{para}"][1])/(1.0*dic[f"{para}"][3])))}
+        max: ${no_vals}
+        initial_guess: ${round((ini_val-min_val)/((max_val-min_val)/(1.0*no_vals)))}
 % endfor
 
 objective_functions:
@@ -18,12 +19,12 @@ optimization:
   algorithm: scipy/differential_evolution
   max_function_evaluations: ${dic["max_function_evaluations"]}
   min_realizations_success: ${dic["min_realizations_success"]}
-% if max_batch_num in dic:
+% if dic["max_batch_num"]:
   max_batch_num: ${dic["max_batch_num"]}
 % endif
   options:
-% for name in ["strategy", "maxiter", "popsize", "tol", "mutation", "recombination", "rng", "callback", "disp", "polish", "init", "atol", "updating", "workers", "constraints", "x0", "integratility", "vectorized"]:
-% if name in dic:     
+% for name in ["strategy", "maxiter", "popsize", "tol", "mutation", "recombination", "rng", "callback", "disp", "polish", "init", "atol", "updating", "workers", "constraints", "x0", "integrality", "vectorized"]:
+% if dic[name]:     
     ${name}: ${dic[name]}
 % endif
 % endfor
@@ -72,6 +73,6 @@ forward_model:
 
 environment:
   simulation_folder: sim_output
-% if dic["random_seed"] != 0:
-  random_seed: ${dic["random_seed"]}
+% if dic["rng"]:
+  random_seed: ${dic["rng"]}
 % endif

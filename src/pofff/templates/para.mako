@@ -1,3 +1,3 @@
 %for para in dic["hm"]:
-${para} ${dic[para.upper()][0]} ${dic[para.upper()][1]} ${dic[para.upper()][2]}
+${para} ${dic["hm"][para][0].upper()} ${dic["hm"][para][1]} ${dic["hm"][para][2]}
 %endfor

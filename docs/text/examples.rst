@@ -65,6 +65,7 @@ last iteration of the history matching in the pofff paper corresponding to `ever
     
     If you are running everest_iter_3.toml locally in your machine, then you might need to decrease the number of parallel runs (cores = 50 in line 39) and maximum function evaluations (max_function_evaluations = 200000) to your system capabilities.
 
+The possible parameters to hm are the 13 parameters for facie 1 to 6 (e.g., permx2, pen5, np6), in addition to consider isotropic permeability (e.g., perm3), and a constant to multiply the tickness (i.e., thicknessmult).
 For additional examples on how to set the history matching studies using ert or everest, 
 see/run the scripts in the `tests <https://github.com/OPM/pyopmspe11/blob/main/tests>`_ and `publication folder <https://github.com/OPM/pyopmspe11/blob/main/publication>`_.
 
@@ -72,7 +73,8 @@ see/run the scripts in the `tests <https://github.com/OPM/pyopmspe11/blob/main/t
     
     We refer to the documentation of `everest <https://everest.readthedocs.io/en/latest/configuration/reference.html>`_ and `ert <https://ert.readthedocs.io/en/latest/reference/configuration/keywords.html#>`_
     for the description of the different keywords. While via the toml configuration files in pofff we have added the most common keywords, then one could always 
-    add additional keywords to the generated (after execution of pofff) everest (everest.yml) and ert (ert.ert) configuration files, and after running the history matching directly using the everest/poff command line executables.
+    add additional keywords to the generated (after execution of pofff) everest (everest.yml) and ert (ert.ert) configuration files, and after running the history matching directly using the everest/ert command line executables.
+    Details on all supported (and format types) variables that can be assigned via toml configuration files can be found in `config.py <https://github.com/cssr-tools/pofff/blob/main/src/pofff/config/config.py>`_.
     After the runs, one can always use pofff to postprocess the data and generate the figures, running with the flag **-m none** (see the 
     `profiling.py <https://github.com/cssr-tools/pofff/blob/main/publication/sprofiling.py>`_ for an example of splitting the generation of the files, running of everest, and postprocessing).
     Please raise an issue for missing keywords in the toml configuration files that you would like to be added.

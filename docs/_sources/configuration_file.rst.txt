@@ -13,7 +13,7 @@ The first input parameter is:
     flow = "flow --newton-min-iterations=1 --enable-tuning=true --enable-opm-rst-file=true"
     
 If **flow** is not in your path, then write the full path to the executable, as well as adding mpirun
-if this is supported in your machine (e.g., flow = "mpirun -np 8 /Users/dmar/Github/opm/build/opm-simulators/bin/flow --newton-min-iterations=1").
+if this is supported in your machine (e.g., flow = "mpirun -np 8 /Users/dmar/Github/opm/build/opm-simulators/bin/flow \-\-newton-min-iterations=1").
 
 The next entries define the following parameters:
 
@@ -30,18 +30,18 @@ The next entries define the following parameters:
     temperature=[20, 20] # Temperature bottom and top rig [C]
     pressure=104900 # Pressure at the datum [Pa]           
     diffusion=[1e-9, 2e-8] # Diffusion (in liquid and gas) [m^2/s]
-    sources=[[0.9, 0.005, 0.3], [1.7, 0.005, 0.7]] # Source positions: x, y, and z coordinates [m], source 1 to 2
+    sources=[[0.9, 0.3], [1.7, 0.7]] # Source positions: x and z coordinates [m], source 1 to 2
 
     # Schedule: 1) injection time [s], 2) time step size to write results [s], 3) injection rate [kg/s] (source1), and 4) injection rate [kg/s] (source2)
     inj=[[900, 900, 3E-7, 0, '1e-2 3e-4 1e-20 1e-20 1.6 0.2 0.65 1.1']]
 
     # Facie Properties
-    facie1={"PERMX1"=50E3,"PERMZ1"=50E3,"PORO1"=0.37,"DISPERC1"=1E-1,"SWI1"=0.32,"SNI1"=0.3,"PEN1"=1500,"NKRW1"=2,"NKRN1"=2,"NPE1"=2,"THRE1"=5e-2,"NPNT1"=100}
-    facie2={"PERMX2"=100E3,"PERMZ2"=100E3,"PORO2"=0.38,"DISPERC2"=1E-1,"SWI2"=0.14,"SNI2"=0.3,"PEN2"=800,"NKRW2"=2,"NKRN2"=2,"NPE2"=2,"THRE2"=5e-2,"NPNT2"=100}
-    facie3={"PERMX3"=300E3,"PERMZ3"=300E3,"PORO3"=0.40,"DISPERC3"=1E-1,"SWI3"=0.12,"SNI3"=0.1,"PEN3"=200,"NKRW3"=2,"NKRN3"=2,"NPE3"=2,"THRE3"=5e-2,"NPNT3"=100}
-    facie4={"PERMX4"=800E3,"PERMZ4"=800E3,"PORO4"=0.39,"DISPERC4"=1E-1,"SWI4"=0.12,"SNI4"=0.1,"PEN4"=150,"NKRW4"=2,"NKRN4"=2,"NPE4"=2,"THRE4"=5e-2,"NPNT4"=100}
-    facie5={"PERMX5"=1500E3,"PERMZ5"=1500E3,"PORO5"=0.39,"DISPERC5"=1E-1,"SWI5"=0.12,"SNI5"=0.1,"PEN5"=100,"NKRW5"=2,"NKRN5"=2,"NPE5"=2,"THRE5"=5e-2,"NPNT5"=100}
-    facie6={"PERMX6"=3000E3,"PERMZ6"=3000E3,"PORO6"=0.42,"DISPERC6"=1E-1,"SWI6"=0,"SNI6"=0,"PEN6"=1,"NKRW6"=2,"NKRN6"=2,"NPE6"=2,"THRE6"=5e-2,"NPNT6"=100}
+    facie1={"permx1"=50e3,"permz1"=50e3,"poro1"=0.37,"disperc1"=1e-1,"swi1"=0.32,"sni1"=0.3,"pen1"=1500,"nkrw1"=2,"nkrn1"=2,"npe1"=2,"thre1"=5e-2,"npnt1"=100}
+    facie2={"permx2"=100e3,"permz2"=100e3,"poro2"=0.38,"disperc2"=1e-1,"swi2"=0.14,"sni2"=0.3,"pen2"=800,"nkrw2"=2,"nkrn2"=2,"npe2"=2,"thre2"=5e-2,"npnt2"=100}
+    facie3={"permx3"=300e3,"permz3"=300e3,"poro3"=0.40,"disperc3"=1e-1,"swi3"=0.12,"sni3"=0.1,"pen3"=200,"nkrw3"=2,"nkrn3"=2,"npe3"=2,"thre3"=5e-2,"npnt3"=100}
+    facie4={"permx4"=800e3,"permz4"=800e3,"poro4"=0.39,"disperc4"=1e-1,"swi4"=0.12,"sni4"=0.1,"pen4"=150,"nkrw4"=2,"nkrn4"=2,"npe4"=2,"thre4"=5e-2,"npnt4"=100}
+    facie5={"permx5"=1500e3,"permz5"=1500e3,"poro5"=0.39,"disperc5"=1e-1,"swi5"=0.12,"sni5"=0.1,"pen5"=100,"nkrw5"=2,"nkrn5"=2,"npe5"=2,"thre5"=5e-2,"npnt5"=100}
+    facie6={"permx6"=3000e3,"permz6"=3000e3,"poro6"=0.42,"disperc6"=1e-1,"swi6"=0,"sni6"=0,"pen6"=1,"nkrw6"=2,"nkrn6"=2,"npe6"=2,"thre6"=5e-2,"npnt6"=100}
 
     # Set the saturation functions
     krw="(max(0, (sw - swi) / (1 - swi))) ** nkrw"             #Wetting rel perm saturation function [-]

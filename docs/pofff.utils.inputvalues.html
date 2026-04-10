@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>pofff.utils.inputvalues module &mdash; pofff  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -86,30 +86,35 @@
              
   <section id="module-pofff.utils.inputvalues">
 <span id="pofff-utils-inputvalues-module"></span><h1>pofff.utils.inputvalues module<a class="headerlink" href="#module-pofff.utils.inputvalues" title="Link to this heading"></a></h1>
-<p>Utiliy functions to set the requiried input values by pofff.</p>
+<p>Utility functions to prepare and normalize input values for pofff.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.utils.inputvalues.handle_thickness_map">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">handle_thickness_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.inputvalues.handle_thickness_map" title="Link to this definition"></a></dt>
-<dd><p>Set the thickness map (y size)</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>dic (dict): Global dictionary</p>
-</dd>
-<dt>Returns:</dt><dd><p>dic (dict): Modified global dictionary</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.utils.inputvalues.build_config">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">build_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">pofff_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></span><a class="headerlink" href="#pofff.utils.inputvalues.build_config" title="Link to this definition"></a></dt>
+<dd><p>Build and return a fully initialized PofffConfig object.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="pofff.utils.inputvalues.process_input">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">process_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.inputvalues.process_input" title="Link to this definition"></a></dt>
-<dd><p>Process the configuration file</p>
-<dl>
-<dt>Args:</dt><dd><p>dic (dict): Global dictionary</p>
-<p>in_file (str): Name of the input text file</p>
-</dd>
-<dt>Returns:</dt><dd><p>dic (dict): Modified global dictionary</p>
-</dd>
-</dl>
+<dt class="sig sig-object py" id="pofff.utils.inputvalues.extract_facies">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">extract_facies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#pofff.utils.inputvalues.extract_facies" title="Link to this definition"></a></dt>
+<dd><p>Extract facies definitions and remove them from the main config dict.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.inputvalues.load_toml">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">load_toml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#pofff.utils.inputvalues.load_toml" title="Link to this definition"></a></dt>
+<dd><p>Load a TOML configuration file and return its content.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.inputvalues.postprocess_config">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">postprocess_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">toml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.inputvalues.postprocess_config" title="Link to this definition"></a></dt>
+<dd><p>Enrich configuration with derived values and runtime flags.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.inputvalues.process_tuning">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.inputvalues.</span></span><span class="sig-name descname"><span class="pre">process_tuning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.inputvalues.process_tuning" title="Link to this definition"></a></dt>
+<dd><p>Enable tuning mode and normalize injection specifications if requested.</p>
 </dd></dl>
 
 </section>

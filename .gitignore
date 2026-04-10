@@ -143,6 +143,9 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+# ruff
+.ruff_cache/
+
 # Pyre type checker
 .pyre/
 
@@ -176,7 +179,7 @@ playground
 project
 
 # Tests
-**/tests/output/*/
+test_outputs
 
 # Paper figures
 figure3

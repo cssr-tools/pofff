@@ -1,7 +1,8 @@
 black
-mypy<=1.18.2
-numpydoc<=1.9.0
-pylint<=4.0.3
-pytest-cov<=7.0.0
-sphinx<=8.2.3
-sphinx-rtd-theme<=3.0.2
+mypy
+pylint
+pytest-cov
+ruff
+sphinx
+sphinx-rtd-theme
+sphinxcontrib-video
