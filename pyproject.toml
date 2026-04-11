@@ -23,7 +23,7 @@ classifiers = [
 ]
 dependencies = [
     "alive-progress",
-    "ert<=21.0.6",
+    "ert<=21.0.7",
     "iterative_ensemble_smoother",
     "mako",
     "matplotlib",
@@ -36,7 +36,7 @@ dependencies = [
     "scipy",
     "shapely"
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 [project.scripts]
 pofff = "pofff.core.pofff:main"

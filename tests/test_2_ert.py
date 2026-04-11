@@ -27,5 +27,5 @@ def test_ert(tmp_path, monkeypatch):
         check=True,
     )
     base = tmp_path / "ert" / "figures"
-    assert (base / "hm_missmatch.png").is_file()
+    assert (base / "hm_mismatch.png").is_file()
     assert (base / "best_simulation" / "spatial_map_0.25h.csv").is_file()

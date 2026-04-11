@@ -31,7 +31,7 @@ cap="pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))"        #Capillary pressure s
 
 # Everest
 min_realizations_success = 0 # Minimum number of simulations that must have succeeded for the simulation to be regarded as a success
-max_function_evaluations = 2 # Maximum number of simulations
+max_function_evaluations = 20 # Maximum number of simulations
 rng = 7 # Set a specific seed for reproducibility; a value of 0 means no seed (rng for everest and random_seed for ert)
 cores = 8 # Maximum number of simulations running in parallel
 maxtime = 120 # Maximum runtime in seconds of a realization; a value of 0 means unlimited runtime

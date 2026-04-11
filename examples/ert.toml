@@ -30,7 +30,7 @@ krn="(max(0, (1 - sw - sni) / (1 - sni))) ** nkrn"         #Non-wetting rel perm
 cap="pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))"        #Capillary pressure saturation function [Pa]
 
 # Ert
-ertargs = "test_run" # Command line for Ert: gui, test_run, ensemble_experiment, ensemble_smoother, iterative_ensemble_smoother, and es_mda
+ertargs = "es_mda --weights 1" # Command line for Ert: gui, test_run, ensemble_experiment, ensemble_smoother, iterative_ensemble_smoother, and es_mda
 min_realizations_success = 0 # Minimum number of simulations that must have succeeded for the simulation to be regarded as a success.
 ensembles = 8 # Number of members in each ensemble
 random_seed = 7 # Set a specific seed for reproducibility; a value of 0 means no seed (rng for everest and random_seed for ert)
