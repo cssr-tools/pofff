@@ -5,7 +5,8 @@
 
 # pofff: An open-source image-based history-matching framework for the FluidFlower benchmark study using OPM Flow
 
-<img src="docs/text/figs/pofff.png" width="830" height="247">
+<center><img src="docs/text/figs/pofff+plopm_xco2l.gif" width="830" height="auto" /></center>
+<center><img src="docs/text/figs/pofff.png" width="830" height="auto"></center>
 
 This repository contains runscripts to simulate CO2 injection in the 
 [_fluidflower benchmark system_](https://fluidflower.w.uib.no) using the 

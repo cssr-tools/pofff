@@ -43,10 +43,6 @@ def calculateEMD(inFileName1, inFileName2):
     a_flat = a.flatten(order="F")
     b_flat = b.flatten(order="F")
 
-    # Cell centers of all cells - x and y coordinates.
-    cc_x = np.zeros((Nx, Ny), dtype=float).flatten("F")
-    cc_y = np.zeros((Nx, Ny), dtype=float).flatten("F")
-
     cc_x, cc_y = np.meshgrid(np.arange(Nx), np.arange(Ny), indexing="ij")
 
     cc_x_flat = cc_x.flatten("F") / Nx * 2.8 + 5e-3 * 280 / Nx

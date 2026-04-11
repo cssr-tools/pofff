@@ -296,7 +296,7 @@ def plot_misfit(cfg: Config, state: EnsembleState):
     ax.set_title(
         r"$O_{i,j}=\frac{1}{2N_{obs}}\sum_n^{N_{obs}}((d^{n}_{i,j}-d^{n})/\sigma_n)^2$"
     )
-    save_figure(fig, cfg.path / "figures/dist_missmatch.png")
+    save_figure(fig, cfg.path / "figures/dist_mismatch.png")
 
 
 def plot_parameter_distributions(cfg: Config, state: EnsembleState):
@@ -542,7 +542,7 @@ def plot_observable_distribution(cfg: Config, state: EnsembleState):
     save_figure(fig, cfg.path / "figures/dist_observable.png")
 
 
-def plot_hm_missmatch(cfg: Config, state: EnsembleState):
+def plot_hm_mismatch(cfg: Config, state: EnsembleState):
     """Plot ensemble-mean misfit per iteration."""
     fig, ax = plt.subplots()
 
@@ -561,7 +561,7 @@ def plot_hm_missmatch(cfg: Config, state: EnsembleState):
     ax.set_xticks(range(state.n_i))
     ax.legend()
 
-    save_figure(fig, cfg.path / "figures/hm_missmatch.png")
+    save_figure(fig, cfg.path / "figures/hm_mismatch.png")
 
 
 def plot_cumulative_misfit(cfg: Config, state: EnsembleState, tab20):
@@ -670,7 +670,7 @@ def main():
                 read_realisation(cfg, state, i, j)
 
         plot_simulation_ensemble(cfg, state, tab20)
-        plot_hm_missmatch(cfg, state)
+        plot_hm_mismatch(cfg, state)
         plot_misfit(cfg, state)
         plot_observable_distribution(cfg, state)
         plot_parameter_distributions(cfg, state)
