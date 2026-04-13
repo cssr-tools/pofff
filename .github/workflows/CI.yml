@@ -8,6 +8,9 @@ on:
    
 jobs:
   run-pofff-local:
+    permissions:
+      contents: read
+      pull-requests: write
     timeout-minutes: 30
     runs-on: ubuntu-latest
 

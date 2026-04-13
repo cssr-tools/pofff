@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Generate figures in the main paper in the Appendix"""
+"""Test FAIR data generation mode for benchmark visualization outputs."""
 
 import subprocess
 
