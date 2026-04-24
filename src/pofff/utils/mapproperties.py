@@ -1,6 +1,6 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
-# pylint: disable=R0914, E1102
+# pylint: disable=R0913, R0914, R0917, E1102
 
 """
 Utility functions for grid generation and spatial indexing
@@ -30,8 +30,8 @@ def grid_and_properties(cfg):
 
     # Corner-point grid handling
     if cfg.grid == "corner-point":
-        xyz = corner(cfg, points)
-        positions(cfg, polygons, xyz=xyz)
+        xyz, xcoord, zcoord = corner(cfg, points)
+        positions(cfg, polygons, xyz=xyz, xcoord=xcoord, zcoord=zcoord)
         return
 
     dims = np.asarray(cfg.dims, float)
@@ -139,8 +139,6 @@ def corner(cfg, points):
         xcoord, zcoord, cfg.nxz[1], cfg.z
     )
 
-    create_corner_point_grid(cfg, xcoord, zcoord)
-
     # Compute cell centroids
     xyz = np.zeros((cfg.nxz[0] * cfg.nxz[1], 3))
     stride = cfg.nxz[1] + 1
@@ -167,7 +165,7 @@ def corner(cfg, points):
             xyz[idx] = [cx, 0.0, cz]
             idx += 1
 
-    return xyz
+    return xyz, xcoord, zcoord
 
 
 # =============================================================================
@@ -251,7 +249,7 @@ def structured_handling_fluidflower(cfg, xcent, zcent, polygons):
 # =============================================================================
 
 
-def corner_point_handling_fluidflower(cfg, xyz, polygons):
+def corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord):
     """
     Assign facies, boxes, sensors, and wells for corner-point grids.
     """
@@ -291,18 +289,22 @@ def corner_point_handling_fluidflower(cfg, xyz, polygons):
     else:
         shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
+    create_corner_point_grid(cfg, xcoord, zcoord)
+
 
 # =============================================================================
 # DISPATCHER
 # =============================================================================
 
 
-def positions(cfg, polygons, xcent=None, zcent=None, xyz=None):
+def positions(
+    cfg, polygons, xcent=None, zcent=None, xyz=None, xcoord=None, zcoord=None
+):
     """
     Dispatch spatial indexing for either grid type.
     """
     if cfg.grid == "corner-point":
-        corner_point_handling_fluidflower(cfg, xyz, polygons)
+        corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord)
     else:
         structured_handling_fluidflower(cfg, xcent, zcent, polygons)
 
