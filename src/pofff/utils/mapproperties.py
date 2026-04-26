@@ -504,7 +504,7 @@ def refinement_z(xci, zci, ncz, znr):
         xcr.append(xci[b])
         zcr.append(zci[b])
         for i in range(ncz):
-            w = np.linspace(1 / znr[i], 1, znr[i])
+            w = np.arange(1.0 / znr[i], 1.0 + 1.0 / znr[i], 1.0 / znr[i])
             xcr.extend(xci[b + i] + (xci[b + i + 1] - xci[b + i]) * w)
             zcr.extend(zci[b + i] + (zci[b + i + 1] - zci[b + i]) * w)
 
