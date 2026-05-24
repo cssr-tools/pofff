@@ -56,7 +56,7 @@ jobs:
       
     - name: Run the tests
       run: |
-        pytest tests/ --cov=pofff --exitfirst --cov-report term-missing --basetemp=test_outputs
+        pytest --cov=pofff --exitfirst --cov-report term-missing --basetemp=test_outputs tests/
         
     - name: Build documentation
       run: |

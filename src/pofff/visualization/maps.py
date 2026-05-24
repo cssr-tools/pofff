@@ -3,9 +3,7 @@
 # https://github.com/fluidflower/general/blob/main/visualization/generate_segmented_images.py
 # pylint: disable=R0913, R0914, R0917
 
-"""
-Overlay simulated spatial maps with experimental contour boundaries.
-"""
+"""Overlay simulated spatial maps with experimental contour boundaries."""
 
 import argparse
 import shutil
@@ -15,9 +13,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import colors
 
-# -------------------------
-# Domain constants
-# -------------------------
 DX = 1.0e-2  # Grid spacing [m]
 DOMAIN_X = 2.8  # Domain length in x-direction [m]
 DOMAIN_Z = 1.2  # Domain height in z-direction [m]
@@ -26,16 +21,13 @@ NZ_TARGET = 120  # Target grid size in z
 
 
 def pngs(simulations, experiment, x, z, points, lines, t):
-    """
-    Plot segmented simulation map with experimental contours and geology.
-    """
+    """Plot segmented simulation map with experimental contours and geology."""
     cmap = colors.ListedColormap(
         ["#ffffff", "#f8a98c", "#faf7a1", "#df3a0c", "#B1B106"]
     )
 
     nz, nx = experiment.shape
 
-    # Overlay experimental boundaries on simulation labels
     for i in range(1, nx - 1):
         for j in range(1, nz - 1):
             if experiment[j, i] == 1 and any(
@@ -49,10 +41,8 @@ def pngs(simulations, experiment, x, z, points, lines, t):
             ):
                 simulations[j, i] = 4
 
-    # Render spatial map
     plt.pcolormesh(x, z, np.flip(simulations, axis=0), cmap=cmap)
 
-    # Draw geological line segments
     for line in lines:
         plt.plot(
             [points[line[0]][0], points[line[1]][0]],
@@ -68,14 +58,8 @@ def pngs(simulations, experiment, x, z, points, lines, t):
     plt.clf()
 
 
-# -------------------------
-# Vectorized segmentation
-# -------------------------
 def segment(filename, satmin, conmin):
-    """
-    Segment saturation and concentration fields into discrete classes.
-    """
-    # Structured grid
+    """Segment saturation and concentration fields into discrete classes."""
     xspace = np.arange(0, DOMAIN_X + 0.5 * DX, DX)
     zspace = np.arange(0, DOMAIN_Z + 0.5 * DX, DX)
     x, z = np.meshgrid(xspace, zspace)
@@ -83,22 +67,18 @@ def segment(filename, satmin, conmin):
     nx = xspace.size - 1
     nz = zspace.size - 1
 
-    # Detect optional CSV header
     with open(filename, encoding="utf8") as f:
         skip_header = 0 if f.readline()[0].isnumeric() else 1
 
     values = np.genfromtxt(filename, delimiter=",", skip_header=skip_header)
 
-    # Reshape flat arrays into grids (original layout preserved)
     saturation = values[:, 2].reshape(nz, nx)
     concentration = values[:, 3].reshape(nz, nx)
 
     segmented = np.zeros((NZ_TARGET, NX_TARGET), dtype=int)
 
-    # Alignment offset for legacy grid sizes
     offset = 3 if nx == 286 else 0
 
-    # Interior source indices
     i_src = np.arange(offset, nz)
     j_src = np.arange(offset, nx - offset)
 
@@ -107,11 +87,9 @@ def segment(filename, satmin, conmin):
     zi = NZ_TARGET - 1 + offset - ii
     xi = jj - offset
 
-    # Phase classification masks
     gas_mask = saturation[ii, jj] > satmin
     dissolved_mask = (concentration[ii, jj] > conmin) & (~gas_mask)
 
-    # Assign labels (gas overrides dissolved)
     segmented[zi[gas_mask], xi[gas_mask]] = 2
     segmented[zi[dissolved_mask], xi[dissolved_mask]] = 1
 
@@ -119,13 +97,10 @@ def segment(filename, satmin, conmin):
 
 
 def load_points(path):
-    """
-    Load geological points and line connectivity from .geo files.
-    """
+    """Load geological points and line connectivity from .geo files."""
     points = []
     lines = []
 
-    # Reference scaling factors
     h_ref = 1.5 / 1490
     l_ref = 2.8 / 2594
 
@@ -149,10 +124,8 @@ def load_points(path):
     return points, lines
 
 
-def maps():
-    """
-    Generate spatial overlay maps for selected times.
-    """
+def run_maps(argv=None):
+    """Generate spatial overlay maps for selected times."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Generate spatial overlay maps for selected times.",
@@ -163,9 +136,8 @@ def maps():
     parser.add_argument("-t", "--times", default="24,48,72,96,120")
     parser.add_argument("-l", "--location", default=".")
     parser.add_argument("-p", "--path", default=".")
-    args = parser.parse_args()
+    args = vars(parser.parse_known_args(argv)[0])
 
-    # Matplotlib styling
     matplotlib.rc("font", family="normal", weight="normal", size=12)
     plt.rcParams.update(
         {
@@ -175,21 +147,20 @@ def maps():
         }
     )
 
-    points, lines = load_points(args.path)
+    points, lines = load_points(args["path"])
 
-    for t in args.times.split(","):
+    for t in args["times"].split(","):
         simulations, x, z = segment(
-            f"{args.location}/spatial_map_{t}h.csv",
-            args.minimumsaturation,
-            args.minimumconcentration,
+            f"{args["location"]}/spatial_map_{t}h.csv",
+            args["minimumsaturation"],
+            args["minimumconcentration"],
         )
 
-        # Convert hours to seconds (zero-padded)
         name = str(int(float(t) * 3600)).zfill(6)
 
         experiment = np.loadtxt(
-            f"{args.path}/fluidflower/experiment/benchmarkdata/spatial_maps/"
-            f"{args.experiment}/segmentation_{name}s.csv",
+            f"{args["path"]}/fluidflower/experiment/benchmarkdata/spatial_maps/"
+            f"{args["experiment"]}/segmentation_{name}s.csv",
             dtype=int,
             delimiter=",",
         )[30:, :]
@@ -198,4 +169,4 @@ def maps():
 
 
 if __name__ == "__main__":
-    maps()
+    run_maps()

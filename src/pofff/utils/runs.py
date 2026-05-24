@@ -1,29 +1,27 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Utility functions for running simulations, processing data,
-and generating benchmark plots.
-"""
+"""Utility functions for running simulations, processing data,
+and generating benchmark plots."""
 
 from pathlib import Path
 import subprocess
 from typing import Sequence
 
 from pofff.config.config import PofffConfig
+from pofff.visualization.benchmark import run_benchmark
+from pofff.visualization.everert import run_everert
+from pofff.visualization.error_table import run_error_table
+from pofff.visualization.maps import run_maps
 
 
 def _run(cmd: Sequence[str]) -> None:
-    """
-    Execute a command and abort if it fails.
-    """
+    """Execute a command and abort if it fails."""
     subprocess.run(cmd, check=True)
 
 
 def flow(cfg: PofffConfig) -> None:
-    """
-    Run the OPM Flow simulator with configured options.
-    """
+    """Run the OPM Flow simulator with configured options."""
     _run(
         cfg.flow.split(" ")
         + [f"--output-dir={cfg.fol}", str(Path(cfg.fol) / f"{cfg.data}.DATA")]
@@ -31,9 +29,7 @@ def flow(cfg: PofffConfig) -> None:
 
 
 def data(cfg: PofffConfig) -> None:
-    """
-    Generate benchmark time-series and spatial data.
-    """
+    """Generate benchmark time-series and spatial data."""
     _run(
         [
             "python",
@@ -64,29 +60,23 @@ def data(cfg: PofffConfig) -> None:
 
 
 def benchmark(cfg: PofffConfig) -> None:
-    """
-    Generate benchmark figures and comparisons.
-    """
-    _run(
-        [
-            "python",
-            str(cfg.path / "visualization" / "maps.py"),
-            "-e",
-            cfg.experiment,
-            "-t",
-            cfg.times,
-            "-p",
-            str(cfg.path),
-            "-s",
-            cfg.msat,
-            "-c",
-            cfg.mcon,
-            "-l",
-            "." if cfg.mode != "fair" else cfg.location,
-        ]
-    )
+    """Generate benchmark figures and comparisons."""
+    args = [
+        "-e",
+        cfg.experiment,
+        "-t",
+        cfg.times,
+        "-p",
+        str(cfg.path),
+        "-s",
+        cfg.msat,
+        "-c",
+        cfg.mcon,
+        "-l",
+        "." if cfg.mode != "fair" else cfg.location,
+    ]
+    run_maps(args)
 
-    # Generate sparse values unless in fair mode
     if cfg.mode != "fair":
         _run(
             [
@@ -95,31 +85,26 @@ def benchmark(cfg: PofffConfig) -> None:
             ]
         )
 
-    # Generate benchmark plots
-    _run(
-        [
-            "python",
-            str(cfg.path / "visualization" / "benchmark.py"),
-            "-f",
-            cfg.figures,
-            "-p",
-            str(cfg.path),
-            "-s",
-            cfg.msat,
-            "-t",
-            cfg.times,
-            "-c",
-            cfg.mcon,
-            "-l",
-            cfg.location,
-            "-a",
-            str(int(cfg.mode != "fair")),
-            "-u",
-            cfg.use,
-        ]
-    )
+    args = [
+        "-f",
+        cfg.figures,
+        "-p",
+        str(cfg.path),
+        "-s",
+        cfg.msat,
+        "-t",
+        cfg.times,
+        "-c",
+        cfg.mcon,
+        "-l",
+        cfg.location,
+        "-a",
+        str(int(cfg.mode != "fair")),
+        "-u",
+        cfg.use,
+    ]
+    run_benchmark(args)
 
-    # Optional error table (requires full benchmark times)
     if cfg.figures == "all":
         if cfg.times != "24,48,72,96,120":
             print(
@@ -128,57 +113,45 @@ def benchmark(cfg: PofffConfig) -> None:
                 f"(current: -t {cfg.times})."
             )
         else:
-            _run(
-                [
-                    "python",
-                    str(cfg.path / "visualization" / "error_table.py"),
-                    "-p",
-                    str(cfg.path),
-                    "-s",
-                    cfg.msat,
-                    "-c",
-                    cfg.mcon,
-                    "-l",
-                    cfg.location,
-                    "-a",
-                    str(int(cfg.mode != "fair")),
-                ]
-            )
+            args = [
+                "-p",
+                str(cfg.path),
+                "-s",
+                cfg.msat,
+                "-c",
+                cfg.mcon,
+                "-l",
+                cfg.location,
+                "-a",
+                str(int(cfg.mode != "fair")),
+            ]
+            run_error_table(args)
 
 
 def everest() -> None:
-    """
-    Run Everest optimization and skip interactive prompts.
-    """
+    """Run Everest optimization and skip interactive prompts."""
     _run(["everest", "run", "everest.yml", "--skip-prompt"])
 
 
 def ert(cfg: PofffConfig) -> None:
-    """
-    Run ERT with configured arguments.
-    """
+    """Run ERT with configured arguments."""
     _run(["ert", *(cfg.ertargs or "").split(), "ert.txt"])
 
 
 def postprocess(cfg: PofffConfig) -> None:
-    """
-    Postprocess ERT and Everest simulation results.
-    """
-    _run(
-        [
-            "python",
-            str(cfg.path / "visualization" / "everert.py"),
-            "-e",
-            str(cfg.path),
-            "-s",
-            cfg.msat,
-            "-c",
-            cfg.mcon,
-            "-r",
-            cfg.experiment,
-            "-t",
-            cfg.times,
-            "-m",
-            str(Path(cfg.deck) / "cellmap.npy"),
-        ]
-    )
+    """Postprocess ERT and Everest simulation results."""
+    args = [
+        "-e",
+        str(cfg.path),
+        "-s",
+        cfg.msat,
+        "-c",
+        cfg.mcon,
+        "-r",
+        cfg.experiment,
+        "-t",
+        cfg.times,
+        "-m",
+        str(Path(cfg.deck) / "cellmap.npy"),
+    ]
+    run_everert(args)

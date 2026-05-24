@@ -5,8 +5,10 @@
 
 import subprocess
 
+EPS = 2e-2
 
-def test_fair(tmp_path, monkeypatch):
+
+def test_i_fair(tmp_path, monkeypatch):
     """Towards FAIR data https://www.nature.com/articles/sdata201618"""
     monkeypatch.chdir(tmp_path)
     subprocess.run(
@@ -25,4 +27,12 @@ def test_fair(tmp_path, monkeypatch):
     assert (
         base / "zoom_means_segmented_snapshots_satmin-0.01_conmin-0.05.png"
     ).is_file()
-    assert (base / "error_table_satmin-0.01_conmin-0.05.csv").is_file()
+    name = base / "error_table_satmin-0.01_conmin-0.05.csv"
+    with open(name, "r", encoding="utf8") as f:
+        lines = f.readlines()
+    assert len(lines) == 23
+    values = lines[2].split(",")
+    assert abs(float(values[8]) - 18.32) < EPS
+    values = lines[13].split(",")
+    assert abs(float(values[7]) - 31.61) < EPS
+    assert abs(float(values[8]) - 28.32) < EPS

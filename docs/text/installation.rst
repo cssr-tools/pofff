@@ -3,9 +3,8 @@ Installation
 ============
 
 The following steps work installing the dependencies in Linux via apt-get or in macOS using brew or macports.
-While using package managers such as Anaconda, Miniforge, or Mamba might work, these are not tested. We will
-update the documentation when Python 3.14 is supported (e.g., the ert Python package is not yet available
-via pip install in Python 3.14).
+While using package managers such as Anaconda, Miniforge, or Mamba might work, these are not tested. The
+supported Python versions are 3.12 to 3.14.
 
 `ResInsight <https://resinsight.org>`_ and `plopm <https://github.com/cssr-tools/plopm>`_ can be used for the visualization of the results.
 
@@ -36,7 +35,7 @@ To install the **pofff** executable from the development version:
 
     pip install git+https://github.com/cssr-tools/pofff.git
 
-If you are interested in a specific version (e.g., v2025.10) or in modifying the source code, then you can clone the repository and 
+If you are interested in a specific version (e.g., v2026.04) or in modifying the source code, then you can clone the repository and 
 install the Python requirements in a virtual environment with the following commands:
 
 .. code-block:: console
@@ -45,8 +44,8 @@ install the Python requirements in a virtual environment with the following comm
     git clone https://github.com/cssr-tools/pofff.git
     # Get inside the folder
     cd pofff
-    # For a specific version (e.g., v2025.10), or skip this step (i.e., edge version)
-    git checkout v2025.10
+    # For a specific version (e.g., v2026.04), or skip this step (i.e., edge version)
+    git checkout v2026.04
     # Create virtual environment (to specific Python, python3.12 -m venv vpofff)
     python3 -m venv vpofff
     # Activate virtual environment
@@ -76,7 +75,7 @@ OPM Flow
 --------
 You also need to install:
 
-* OPM Flow (https://opm-project.org, Release 2025.10 or current master branches)
+* OPM Flow (https://opm-project.org, Release 2026.04 or current master branches)
 
 Binary packages
 +++++++++++++++

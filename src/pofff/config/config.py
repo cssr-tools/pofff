@@ -126,11 +126,11 @@ class PofffConfig:
     # ------------------------------------------------------------------
     # OPM input arrays
     # ------------------------------------------------------------------
-    facies: list = field(default_factory=list)
-    fluxnum: list = field(default_factory=list)
-    fipnum: list = field(default_factory=list)
-    porv: list = field(default_factory=list)
-    multpv: Optional[list] = field(default_factory=list)
+    facies: list[int] = field(default_factory=list)
+    fluxnum: list[str] = field(default_factory=list)
+    fipnum: list[str] = field(default_factory=list)
+    porv: list[str] = field(default_factory=list)
+    multpv: list[str] = field(default_factory=list)
     dx: Optional[list] = field(default_factory=list)
     dz: Optional[list] = field(default_factory=list)
 

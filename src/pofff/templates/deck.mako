@@ -4,7 +4,7 @@
 RUNSPEC
 ----------------------------------------------------------------------------
 DIMENS 
-${dic['nxz'][0]} 1 ${dic['nxz'][1]} /
+${nxz[0]} 1 ${nxz[1]} /
 
 EQLDIMS
 /
@@ -29,54 +29,54 @@ GRID
 ----------------------------------------------------------------------------
 INIT
 
-% if dic["grid"] == 'corner-point':
+% if grid == 'corner-point':
 INCLUDE
-'${dic['deck']}/GRID.INC' /
-% elif dic["grid"] == 'tensor':
+'${deck}/GRID.INC' /
+% elif grid == 'tensor':
 INCLUDE
-'${dic['deck']}/DX.INC' /
+'${deck}/DX.INC' /
 
 DY 
-${dic['nxz'][0]*dic['nxz'][1]}*${dic['dims'][1]} /
+${nxz[0]*nxz[1]}*${dims[1]} /
 
 INCLUDE
 DZ.INC /
 
 TOPS
-${dic['nxz'][0]}*0 /
+${nxz[0]}*0 /
 % else:
 DX 
-${dic['nxz'][0]*dic['nxz'][1]}*${dic['dims'][0] / dic['nxz'][0]} /
+${nxz[0]*nxz[1]}*${dims[0] / nxz[0]} /
 
 DY 
-${dic['nxz'][0]*dic['nxz'][1]}*${dic['dims'][1]} /
+${nxz[0]*nxz[1]}*${dims[1]} /
 
 DZ 
-${dic['nxz'][0]*dic['nxz'][1]}*${dic['dims'][2] / dic['nxz'][1]} /
+${nxz[0]*nxz[1]}*${dims[2] / nxz[1]} /
 
 TOPS
-${dic['nxz'][0]}*0 /
+${nxz[0]}*0 /
 % endif
 
 INCLUDE
-'${dic['deck']}/FLUXNUM.INC' /
+'${deck}/FLUXNUM.INC' /
 
 DISPERC
-${dic['nxz'][0]*dic['nxz'][1]}*0 /
+${nxz[0]*nxz[1]}*0 /
 
 INCLUDE
 EQUALREG.INC /
 
 BCCON 
-1 1 ${dic['nxz'][0]} 1 1 1 1 Z- /
+1 1 ${nxz[0]} 1 1 1 1 Z- /
 /
-% if dic["multpv"]:
+% if multpv:
 % for name in ["MULTPV", "MULTX", "MULTX-", "MULTZ", "MULTZ-"]:
 INCLUDE
-'${dic['deck']}/${name}.INC' /
+'${deck}/${name}.INC' /
 % endfor
 % endif
-% if "thicknessmult" in dic["hm"]:
+% if "thicknessmult" in hm:
 ----------------------------------------------------------------------------
 EDIT
 ----------------------------------------------------------------------------
@@ -88,13 +88,13 @@ PROPS
 ----------------------------------------------------------------------------
 INCLUDE
 TABLES.INC /
-% if (dic["diffusion"][0] + dic["diffusion"][1]) > 0:
+% if (diffusion[0] + diffusion[1]) > 0:
 
 DIFFAWAT
-${dic["diffusion"][0]} ${dic["diffusion"][0]} /
+${diffusion[0]} ${diffusion[0]} /
 
 DIFFAGAS
-${dic["diffusion"][1]} ${dic["diffusion"][1]} /
+${diffusion[1]} ${diffusion[1]} /
 % endif
 
 THCO2MIX
@@ -107,19 +107,19 @@ FLUXNUM SATNUM /
 /
 
 INCLUDE
-'${dic['deck']}/FIPNUM.INC' /
+'${deck}/FIPNUM.INC' /
 ----------------------------------------------------------------------------
 SOLUTION
 ----------------------------------------------------------------------------
 EQUIL
-0 ${dic['pressure']/1.e5} 0 0 0 0 1 1 0 /
+0 ${pressure/1.e5} 0 0 0 0 1 1 0 /
 
 RPTRST
 BASIC=2 DEN PCGW RSWSAT /
 
 RTEMPVD
-0   ${dic["temperature"][1]}
-${dic['dims'][2]} ${dic["temperature"][0]} /
+0   ${temperature[1]}
+${dims[2]} ${temperature[0]} /
 ----------------------------------------------------------------------------
 SUMMARY
 ----------------------------------------------------------------------------
@@ -142,7 +142,7 @@ WGIR
 WGIT
 /
 BWPR
-% for sensor in dic["sensor_ik"]: 
+% for sensor in sensor_ik: 
 ${sensor[0]+1} 1 ${sensor[1]+1} /
 % endfor
 /
@@ -154,20 +154,20 @@ BASIC=2 DEN PCGW RSWSAT /
 
 INCLUDE
 BCPROP.INC /
-% for j in range(len(dic['inj'])):
+% for j in range(len(inj)):
 
-% if dic["tuning"]:
+% if tuning:
 TUNING
-${dic['inj'][j][4]+" " if len(dic['inj'][j])>4 else ""}/
-${dic['inj'][j][5]+" " if len(dic['inj'][j])>5 else ""}/
-${dic['inj'][j][6]+" " if len(dic['inj'][j])>6 else ""}/
+${inj[j][4]+" " if len(inj[j])>4 else ""}/
+${inj[j][5]+" " if len(inj[j])>5 else ""}/
+${inj[j][6]+" " if len(inj[j])>6 else ""}/
 % endif
 SOURCE
-% for i in range(len(dic['source_ik'])):
-${dic['source_ik'][i][0]} 1 ${dic['source_ik'][i][1]} GAS ${f"{dic['inj'][j][2+i] * 86400:E}"} /
+% for i in range(len(source_ik)):
+${source_ik[i][0]} 1 ${source_ik[i][1]} GAS ${f"{inj[j][2+i] * 86400:E}"} /
 % endfor
 /
 TSTEP
-<% no_steps = round(dic['inj'][j][0]/dic['inj'][j][1])%>\
-${f"{no_steps}*" if no_steps > 1 else ""}${dic['inj'][j][1] / 86400.} /
+<% no_steps = round(inj[j][0]/inj[j][1])%>\
+${f"{no_steps}*" if no_steps > 1 else ""}${inj[j][1] / 86400.} /
 % endfor

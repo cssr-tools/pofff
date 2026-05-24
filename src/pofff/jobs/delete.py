@@ -2,14 +2,11 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Script to delete large files
-"""
+"""Script to delete large files"""
 
 from pathlib import Path
 import sys
 
-# Exit early if sentinel file exists
 if Path("NOMONOTONIC").exists():
     sys.exit(0)
 
@@ -24,6 +21,7 @@ suffixes = {
     "INIT",
     "csv",
     "DATA",
+    "ESMRY",
 }
 
 cwd = Path(".")

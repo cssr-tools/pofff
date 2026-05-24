@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 
 
-def test_grid(tmp_path, monkeypatch):
+def test_b_grid(tmp_path, monkeypatch):
     """See examples/tensor.toml and examples/cartesian.toml"""
     repo_root = Path(__file__).parents[1]
     monkeypatch.chdir(tmp_path)

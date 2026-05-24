@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 
 
-def test_benchmark(tmp_path, monkeypatch):
+def test_h_benchmark(tmp_path, monkeypatch):
     """See examples/single.toml"""
     repo_root = Path(__file__).parents[1]
     config = repo_root / "examples" / "single.toml"

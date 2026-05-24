@@ -2,46 +2,35 @@
 # SPDX-License-Identifier: GPL-3.0
 # pylint: disable=R0913, R0914, R0917, E1102
 
-"""
-Utility functions for grid generation and spatial indexing
-in geological FluidFlower-style models.
-"""
+"""Utility functions for grid generation and spatial indexing
+in geological FluidFlower-style models."""
 
+import sys
 import csv
 import shutil
 from pathlib import Path
+from contextlib import nullcontext
 import numpy as np
+from numpy.typing import NDArray
 from shapely.geometry import Point, Polygon
 from alive_progress import alive_bar
 
 from pofff.utils.writefile import create_corner_point_grid
-
-# =============================================================================
-# GRID DISPATCH
-# =============================================================================
+from pofff.config.config import PofffConfig
 
 
-def grid_and_properties(cfg):
-    """
-    Dispatch grid generation and spatial property assignment
-    based on the selected grid type.
-    """
+def grid_and_properties(cfg: PofffConfig) -> None:
+    """Dispatch grid generation and spatial property assignment
+    based on the selected grid type."""
     polygons, points = getpolygons(cfg)
-
-    # Corner-point grid handling
     if cfg.grid == "corner-point":
         xyz, xcoord, zcoord = corner(cfg, points)
         positions(cfg, polygons, xyz=xyz, xcoord=xcoord, zcoord=zcoord)
         return
-
     dims = np.asarray(cfg.dims, float)
-
-    # Cartesian grid
     if cfg.grid == "cartesian":
         xvert = np.linspace(0, dims[0], cfg.nxz[0] + 1)
         zvert = np.linspace(0, dims[2], cfg.nxz[1] + 1)
-
-    # Tensor grid
     else:
 
         def tensor(parts, dim):
@@ -62,40 +51,26 @@ def grid_and_properties(cfg):
         xvert = tensor(cfg.x, dims[0])
         zvert = tensor(cfg.z, dims[2])
         cfg.nxz = [len(xvert) - 1, len(zvert) - 1]
-
-    # Cell centers
     xcent = 0.5 * (xvert[:-1] + xvert[1:])
     zcent = 0.5 * (zvert[:-1] + zvert[1:])
-
-    # Cell sizes
     setattr(cfg, "dx", xvert[1:] - xvert[:-1])
     setattr(cfg, "dz", zvert[1:] - zvert[:-1])
-
     positions(cfg, polygons, xcent=xcent, zcent=zcent)
-
-    # Tensor grid expansion (OPM-compatible)
     if cfg.grid == "tensor":
         cfg.dx = list(map(str, xvert[1:] - xvert[:-1]))
         dz = list(map(str, zvert[1:] - zvert[:-1]))
-
         cfg.dz = [dz[0]] * cfg.nxz[0]
         for i in range(cfg.nxz[1] - 1):
             cfg.dx.extend(cfg.dx[-cfg.nxz[0] :])
             cfg.dz.extend([dz[i + 1]] * cfg.nxz[0])
 
 
-# =============================================================================
-# CORNER-POINT GEOMETRY
-# =============================================================================
-
-
-def corner(cfg, points):
-    """
-    Build corner-point grid coordinates and compute cell centroids.
-    """
+def corner(
+    cfg: PofffConfig,
+    points: list[list[float]],
+) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
+    """Build corner-point grid coordinates and compute cell centroids."""
     horizonts = get_lines(cfg, points)
-
-    # Horizontal grid lines in x
     xvert = np.concatenate(
         [
             np.linspace(
@@ -108,46 +83,44 @@ def corner(cfg, points):
         ]
         + [np.array([cfg.dims[0]])]
     )
-
-    xcoord, zcoord = [], []
-
-    # Interpolate z-coordinates along horizons
+    xcoor, zcoor = [], []
     for x in xvert:
         for layer in horizonts:
             xs = np.array([p[0] for p in layer])
             zs = np.array([p[1] for p in layer])
             i = np.argmin(np.abs(xs - x))
-
-            if xs[i] < x:
+            if i == 0:
+                z = zs[0] + (zs[1] - zs[0]) / (xs[1] - xs[0]) * (x - xs[0])
+            elif i == len(xs) - 1:
+                z = zs[i - 1] + (zs[i] - zs[i - 1]) / (xs[i] - xs[i - 1]) * (
+                    x - xs[i - 1]
+                )
+            elif xs[i] < x:
                 z = zs[i] + (zs[i + 1] - zs[i]) / (xs[i + 1] - xs[i]) * (x - xs[i])
             else:
                 z = zs[i - 1] + (zs[i] - zs[i - 1]) / (xs[i] - xs[i - 1]) * (
                     x - xs[i - 1]
                 )
-
-            xcoord.append(x)
-            zcoord.append(z)
-
-    xcoord, zcoord = np.asarray(xcoord), np.asarray(zcoord)
+            xcoor.append(x)
+            zcoor.append(z)
+    xcoord, zcoord = np.asarray(xcoor), np.asarray(zcoor)
 
     stride = len(cfg.z) + 1
     cfg.nxz[0] = len(xcoord) // stride - 1
     cfg.nxz[1] = stride - 1
 
-    # Vertical refinement
     xcoord, zcoord, cfg.nxz[0], cfg.nxz[1] = refinement_z(
-        xcoord, zcoord, cfg.nxz[1], cfg.z
+        xcoord, zcoord, cfg.nxz[1], np.array(cfg.z)
     )
 
-    # Compute cell centroids
     xyz = np.zeros((cfg.nxz[0] * cfg.nxz[1], 3))
     stride = cfg.nxz[1] + 1
     idx = 0
 
     for k in range(cfg.nxz[1]):
-        for i in range(cfg.nxz[0]):
-            n = i * stride + k
-            m = (i + 1) * stride + k
+        for o in range(cfg.nxz[0]):
+            n = o * stride + k
+            m = (o + 1) * stride + k
 
             x = np.array([xcoord[n], xcoord[m], xcoord[m + 1], xcoord[n + 1]])
             z = np.array([zcoord[n], zcoord[m], zcoord[m + 1], zcoord[n + 1]])
@@ -159,7 +132,6 @@ def corner(cfg, points):
                 cx = np.sum((x + np.roll(x, -1)) * a) / (6 * area)
                 cz = np.sum((z + np.roll(z, -1)) * a) / (6 * area)
             else:
-                # Fallback for degenerate cells
                 cx, cz = np.mean(x), np.mean(z)
 
             xyz[idx] = [cx, 0.0, cz]
@@ -168,15 +140,8 @@ def corner(cfg, points):
     return xyz, xcoord, zcoord
 
 
-# =============================================================================
-# STRUCTURED POSITION HANDLING
-# =============================================================================
-
-
-def handle_thickness_map(cfg):
-    """
-    Load and normalize thickness map and corresponding multipliers.
-    """
+def handle_thickness_map(cfg: PofffConfig) -> tuple[float, NDArray, NDArray, NDArray]:
+    """Load and normalize thickness map and corresponding multipliers."""
     geology = cfg.path / "geology"
 
     if cfg.thickness == "final":
@@ -201,10 +166,13 @@ def handle_thickness_map(cfg):
     )
 
 
-def structured_handling_fluidflower(cfg, xcent, zcent, polygons):
-    """
-    Assign facies, boxes, sensors, and wells on structured grids.
-    """
+def structured_handling_fluidflower(
+    cfg: PofffConfig,
+    xcent: NDArray[np.float64],
+    zcent: NDArray[np.float64],
+    polygons: list[Polygon],
+) -> None:
+    """Assign facies, boxes, sensors, and wells on structured grids."""
     nx, nz = cfg.nxz
     x = np.tile(xcent, nz)
     z = np.repeat(zcent, nx)
@@ -216,10 +184,15 @@ def structured_handling_fluidflower(cfg, xcent, zcent, polygons):
         cfg.dims[1], xth, zth, mult = handle_thickness_map(cfg)
     else:
         cfg.dims[1] = float(cfg.thickness)
-
-    with alive_bar(len(x)) as bar_animation:
+    show_progress = sys.stdout.isatty()
+    if show_progress:
+        bar_ctx = alive_bar(len(x), bar="fish")
+    else:
+        bar_ctx = nullcontext()
+    with bar_ctx as bar_animation:
         for i, (xi, zi) in enumerate(zip(x, z)):
-            bar_animation()
+            if show_progress:
+                bar_animation()
             pt = Point(xi, zi)
             for j, poly in enumerate(polygons):
                 if poly.contains(pt):
@@ -244,15 +217,14 @@ def structured_handling_fluidflower(cfg, xcent, zcent, polygons):
         shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
 
-# =============================================================================
-# CORNER-POINT POSITION HANDLING
-# =============================================================================
-
-
-def corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord):
-    """
-    Assign facies, boxes, sensors, and wells for corner-point grids.
-    """
+def corner_point_handling_fluidflower(
+    cfg: PofffConfig,
+    xyz: NDArray[np.float64],
+    polygons: list[Polygon],
+    xcoord: NDArray[np.float64],
+    zcoord: NDArray[np.float64],
+) -> None:
+    """Assign facies, boxes, sensors, and wells for corner-point grids."""
     x = xyz[:, 0]
     ztop = cfg.dims[2] - xyz[:, 2]
 
@@ -262,10 +234,15 @@ def corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord):
         cfg.dims[1] = float(cfg.thickness)
 
     flux = np.full(len(x), -1)
-
-    with alive_bar(len(x)) as bar_animation:
+    show_progress = sys.stdout.isatty()
+    if show_progress:
+        bar_ctx = alive_bar(len(x), bar="fish")
+    else:
+        bar_ctx = nullcontext()
+    with bar_ctx as bar_animation:
         for i, (xi, zi) in enumerate(zip(x, ztop)):
-            bar_animation()
+            if show_progress:
+                bar_animation()
             pt = Point(xi, cfg.dims[2] - zi)
             for j, poly in enumerate(polygons):
                 if poly.contains(pt):
@@ -292,32 +269,31 @@ def corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord):
     create_corner_point_grid(cfg, xcoord, zcoord)
 
 
-# =============================================================================
-# DISPATCHER
-# =============================================================================
-
-
 def positions(
-    cfg, polygons, xcent=None, zcent=None, xyz=None, xcoord=None, zcoord=None
-):
-    """
-    Dispatch spatial indexing for either grid type.
-    """
+    cfg: PofffConfig,
+    polygons: list[Polygon],
+    xcent: NDArray[np.float64] | None = None,
+    zcent: NDArray[np.float64] | None = None,
+    xyz: NDArray[np.float64] | None = None,
+    xcoord: NDArray[np.float64] | None = None,
+    zcoord: NDArray[np.float64] | None = None,
+) -> None:
+    """Dispatch spatial indexing for either grid type."""
     if cfg.grid == "corner-point":
+        assert xyz is not None
+        assert xcoord is not None
+        assert zcoord is not None
         corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord)
     else:
+        assert xcent is not None
+        assert zcent is not None
         structured_handling_fluidflower(cfg, xcent, zcent, polygons)
 
 
-# =============================================================================
-# SENSOR AND WELL HELPERS
-# =============================================================================
-
-
-def sensors_structured(cfg, xcent, zcent):
-    """
-    Determine structured-grid sensor indices.
-    """
+def sensors_structured(
+    cfg: PofffConfig, xcent: NDArray[np.float64], zcent: NDArray[np.float64]
+) -> tuple[int, int]:
+    """Determine structured-grid sensor indices."""
     sx1, sz1 = cfg.sensors[0]
     sx2, sz2 = cfg.sensors[1]
     dimz = cfg.dims[2]
@@ -340,10 +316,10 @@ def sensors_structured(cfg, xcent, zcent):
     return i1, i2
 
 
-def wells_structured(cfg, xcent, zcent):
-    """
-    Determine structured-grid well indices.
-    """
+def wells_structured(
+    cfg: PofffConfig, xcent: NDArray[np.float64], zcent: NDArray[np.float64]
+) -> None:
+    """Determine structured-grid well indices."""
     for i, w in enumerate(cfg.sources):
         cfg.source_ik[i] = [
             int(np.argmin(np.abs(xcent - w[0]))) + 1,
@@ -351,10 +327,10 @@ def wells_structured(cfg, xcent, zcent):
         ]
 
 
-def sensors_corner_point(cfg, x, ztop):
-    """
-    Determine corner-point sensor indices.
-    """
+def sensors_corner_point(
+    cfg: PofffConfig, x: NDArray[np.float64], ztop: NDArray[np.float64]
+) -> tuple[int, int]:
+    """Determine corner-point sensor indices."""
     coords = np.column_stack((x, ztop))
     sensors = np.array(cfg.sensors)
     d = ((coords[:, None] - sensors) ** 2).sum(axis=2)
@@ -368,50 +344,50 @@ def sensors_corner_point(cfg, x, ztop):
     return s1, s2
 
 
-def wells_corner_point(cfg, x, ztop):
-    """
-    Determine corner-point well indices.
-    """
+def wells_corner_point(
+    cfg: PofffConfig, x: NDArray[np.float64], ztop: NDArray[np.float64]
+) -> None:
+    """Determine corner-point well indices."""
     coords = np.column_stack((x, ztop))
     wells = np.array(cfg.sources)
     d = ((coords[:, None] - wells) ** 2).sum(axis=2)
 
     for i in range(2):
         idx = np.argmin(d[:, i])
-        cfg.source_ik[i] = [idx % cfg.nxz[0] + 1, idx // cfg.nxz[0] + 1]
+        cfg.source_ik[i] = [
+            int(idx % cfg.nxz[0] + 1),
+            int(idx // cfg.nxz[0] + 1),
+        ]
 
 
-# =============================================================================
-# UTILITIES
-# =============================================================================
-
-
-def classify_boxes(cfg, x, z, flux):
-    """
-    Assign box-specific FIP numbers based on spatial regions.
-    """
-    x, z, flux = map(np.asarray, (x, z, flux))
+def classify_boxes(
+    cfg: PofffConfig,
+    x: NDArray[np.float64],
+    z: NDArray[np.float64],
+    flux: list[str],
+) -> list[str]:
+    """Assign box-specific FIP numbers based on spatial regions."""
+    x, z, flux0 = map(np.asarray, (x, z, flux))
     fip = np.full(len(x), "1", dtype=object)
 
     def box(b, a, b2):
         m = (x >= b[0][0]) & (x <= b[1][0]) & (z >= b[0][1]) & (z <= b[1][1])
         sel = m & (fip == "1")
-        fip[sel & (flux == "1")] = a
-        fip[sel & (flux != "1")] = b2
+        fip[sel & (flux0 == "1")] = a
+        fip[sel & (flux0 != "1")] = b2
 
-    # Priority order preserved
     box(cfg.boxb, "6", "3")
     box(cfg.boxc, "12", "4")
     box(cfg.boxa, "5", "2")
 
-    fip[(flux == "1") & (fip == "1")] = "7"
+    fip[(flux0 == "1") & (fip == "1")] = "7"
     return fip.tolist()
 
 
-def get_cellmaps(cfg, simxcent, simzcent):
-    """
-    Construct mapping from structured grid to reference grid.
-    """
+def get_cellmaps(
+    cfg: PofffConfig, simxcent: NDArray[np.float64], simzcent: NDArray[np.float64]
+) -> None:
+    """Construct mapping from structured grid to reference grid."""
     refx = np.arange(0, 2.8 + 5.0e-3, 1.0e-2)
     refz = np.arange(0, 1.2 + 5.0e-3, 1.0e-2)
     refx = 0.5 * (refx[1:] + refx[:-1])
@@ -425,16 +401,9 @@ def get_cellmaps(cfg, simxcent, simzcent):
     np.save(Path(cfg.deck) / "cellmap.npy", np.argmin(d, axis=0))
 
 
-# =============================================================================
-# GEOMETRY INPUT
-# =============================================================================
-
-
-def get_lines(cfg, points):
-    """
-    Read geological horizon lines.
-    """
-    horizonts = []
+def get_lines(cfg: PofffConfig, points: list[list[float]]) -> list[list[list[float]]]:
+    """Read geological horizon lines."""
+    horizonts: list[list[list[float]]] = []
     with open(cfg.path / "geology/horizonts.geo", encoding="utf8") as file:
         for r in csv.reader(file, delimiter=" "):
             if r[0].startswith("Line"):
@@ -446,10 +415,8 @@ def get_lines(cfg, points):
     return horizonts[::-1]
 
 
-def getpolygons(cfg):
-    """
-    Read geological polygons and facies definitions.
-    """
+def getpolygons(cfg: PofffConfig) -> tuple[list[Polygon], list[list[float]]]:
+    """Read geological polygons and facies definitions."""
     polygons, points, lines, curves, facie = [], [], [], [], 0
     h_ref, l_ref = 1.5 / 1490, 2.8 / 2594
 
@@ -489,11 +456,13 @@ def getpolygons(cfg):
     return polygons, points
 
 
-def refinement_z(xci, zci, ncz, znr):
-    """
-    Refine grid vertically according to znr refinement factors.
-    """
-    xci, zci = np.asarray(xci), np.asarray(zci)
+def refinement_z(
+    xci: NDArray[np.float64],
+    zci: NDArray[np.float64],
+    ncz: int,
+    znr: NDArray[np.float64],
+) -> tuple[NDArray[np.float64], NDArray[np.float64], int, int]:
+    """Refine grid vertically according to znr refinement factors."""
     stride = ncz + 1
     ncols = len(xci) // stride
 
@@ -508,8 +477,7 @@ def refinement_z(xci, zci, ncz, znr):
             xcr.extend(xci[b + i] + (xci[b + i + 1] - xci[b + i]) * w)
             zcr.extend(zci[b + i] + (zci[b + i + 1] - zci[b + i]) * w)
 
-    xcr, zcr = np.asarray(xcr), np.asarray(zcr)
     ncx_new = ncols - 1
     ncz_new = np.where(zcr == zcr[-1])[0][0]
 
-    return xcr.tolist(), zcr.tolist(), ncx_new, ncz_new
+    return np.asarray(xcr), np.asarray(zcr), ncx_new, ncz_new

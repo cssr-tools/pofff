@@ -5,8 +5,5 @@
 import os
 import sys
 
-% if dic['monotonic']:
-if os.path.exists("NOMONOTONIC"):
-    sys.exit()
-% endif
-os.system("cp ${dic['deck']}/*.DATA .")
+${monotonic_block}
+os.system("cp ${deck}/*.DATA .")
