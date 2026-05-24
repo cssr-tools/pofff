@@ -354,8 +354,10 @@ def render_flow(cfg: PofffConfig) -> None:
     if cfg.delete:
         delete_block = "\n".join(
             [
-                '    for suff in ["INC", "EGRID", "DBG", "PRT", "SMSPEC", "UNRST", '
-                '"UNSMRY", "INIT", "ESMRY", "DATA"]:',
+                (
+                    '    for suff in ["INC", "EGRID", "DBG", "PRT", "SMSPEC", "UNRST", '
+                    '"UNSMRY", "INIT", "ESMRY", "DATA"]:'
+                ),
                 '        os.system(f"rm -rf *.{suff}")',
                 '    for pref in ["thickness_eval","metr_eval","safu_eval","poro_eval"]:',
                 '        os.system(f"rm -rf {pref}.*")',

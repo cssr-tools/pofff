@@ -23,17 +23,17 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = [
-    "alive-progress<=3.3.0",
+    "alive-progress",
     "ert==21.1.5",
-    "mako<=1.3.12",
-    "matplotlib<=3.10.9",
-    "opencv-python<=4.13.0.92",
-    "opm<=2026.4",
-    "pyarrow<=24.0.0",
-    "pot<=0.9.6.post1",
-    "rtree<=1.4.1",
-    "scipy<=1.17.1",
-    "shapely<=2.1.2"
+    "mako",
+    "matplotlib",
+    "opencv-python",
+    "opm",
+    "pyarrow",
+    "pot",
+    "rtree",
+    "scipy",
+    "shapely"
 ]
 requires-python = ">=3.12"
 

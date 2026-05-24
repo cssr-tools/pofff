@@ -28,7 +28,7 @@ The `publication <https://github.com/cssr-tools/pofff/blob/main/publication>`_ f
 
     pofff -i results.toml -o YOURS -m single -t 24,48,72,96,120 -f all
 
-generates the figures in the paper in addition to the new simulation labeled as the name of the outpur folder ("YOURS" in this case), e.g., for the compare_all_time_series.png:
+generates the figures in the paper in addition to the new simulation labeled as the name of the output folder ("YOURS" in this case), e.g., for the compare_all_time_series.png:
 
 .. figure:: figs/compare_all_time_series.png
 
