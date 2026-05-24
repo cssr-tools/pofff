@@ -2,10 +2,8 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Postprocess Everest (ERT) ensemble and optimization studies.
-Generates diagnostics, plots, and extracts best simulations.
-"""
+"""Postprocess Everest (ERT) ensemble and optimization studies.
+Generates diagnostics, plots, and extracts best simulations."""
 
 from __future__ import annotations
 
@@ -23,10 +21,6 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MaxNLocator
-
-# =============================================================================
-# Configuration & state containers
-# =============================================================================
 
 
 @dataclass
@@ -52,7 +46,6 @@ class EnsembleState:
     n_i: int
     no_obs: int
     no_para: int
-
     simulations: List[List[list]] = field(default_factory=list)
     sim_ens: List[List[float]] = field(default_factory=list)
     miss_ens: List[List[float]] = field(default_factory=list)
@@ -60,7 +53,6 @@ class EnsembleState:
     idrealisation: List[List[int]] = field(default_factory=list)
     num_ens: List[int] = field(default_factory=list)
     cumulative: List[List[List[float]]] = field(default_factory=list)
-
     para_file: Path | None = None
     para_names: List[str] = field(default_factory=list)
 
@@ -74,14 +66,8 @@ class OptimizationState:
     ind_batch: int = 0
     ind_sim: int = 0
     tot_eval: int = 0
-
     s: List[List[int]] = field(default_factory=lambda: [[], [], []])
     x: List[int] = field(default_factory=lambda: [0, 0, 0])
-
-
-# =============================================================================
-# Utilities
-# =============================================================================
 
 
 def run(cmd: List[str]) -> None:
@@ -111,12 +97,7 @@ def copy_tree_contents(src: Path, dst: Path):
             shutil.copy2(item, target)
 
 
-# =============================================================================
-# Argument parsing & matplotlib
-# =============================================================================
-
-
-def parse_args() -> Config:
+def parse_args(argv) -> Config:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -131,17 +112,17 @@ def parse_args() -> Config:
     parser.add_argument("-c", "--minimumconcentration", default="1e-1")
     parser.add_argument("-m", "--maps", default="cellmap.npy")
 
-    a = parser.parse_args()
+    a = vars(parser.parse_known_args(argv)[0])
 
     return Config(
-        path=Path(a.path).resolve(),
-        times=a.times,
-        jobs=[j.strip() for j in a.jobs.split(",")],
-        external=Path(a.external),
-        run=a.run,
-        maps=Path(a.maps),
-        min_saturation=float(a.minimumsaturation),
-        min_concentration=float(a.minimumconcentration),
+        path=Path(a["path"]).resolve(),
+        times=a["times"],
+        jobs=[j.strip() for j in a["jobs"].split(",")],
+        external=Path(a["external"]),
+        run=a["run"],
+        maps=Path(a["maps"]),
+        min_saturation=float(a["minimumsaturation"]),
+        min_concentration=float(a["minimumconcentration"]),
     )
 
 
@@ -156,11 +137,6 @@ def setup_matplotlib():
         }
     )
     return matplotlib.colormaps["tab20"]
-
-
-# =============================================================================
-# Ensemble reading
-# =============================================================================
 
 
 def initialize_ensemble(cfg: Config) -> EnsembleState:
@@ -224,11 +200,6 @@ def read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
         state.no_para = data.ndim
         for row in data:
             state.par_dis[i].append(row[1])
-
-
-# =============================================================================
-# Plotting
-# =============================================================================
 
 
 def plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
@@ -328,11 +299,6 @@ def plot_parameter_distributions(cfg: Config, state: EnsembleState):
     save_figure(fig, cfg.path / "figures/parameterdistributions.png")
 
 
-# =============================================================================
-# Best-simulation extraction (ensemble mode)
-# =============================================================================
-
-
 def extract_best_simulation(cfg: Config, state: EnsembleState):
     """Extract best-fitting ensemble realization."""
     sims = np.array(state.simulations[-1])
@@ -392,11 +358,6 @@ def extract_best_simulation(cfg: Config, state: EnsembleState):
 
     best_vals = state.simulations[-1][idx]
     print(f"Values: {list(best_vals) if state.n_i > 1 else best_vals}")
-
-
-# =============================================================================
-# Optimization processing + extraction
-# =============================================================================
 
 
 def process_optimization(cfg: Config) -> OptimizationState:
@@ -646,14 +607,9 @@ def plot_optimization_details(cfg: Config, opt: OptimizationState):
     save_figure(fig, cfg.path / "figures/details.png", dpi=900)
 
 
-# =============================================================================
-# Main
-# =============================================================================
-
-
-def main():
+def run_everert(argv=None):
     """Entry point."""
-    cfg = parse_args()
+    cfg = parse_args(argv)
     tab20 = setup_matplotlib()
 
     ensure_dir(cfg.path / "figures")
@@ -679,4 +635,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_everert()

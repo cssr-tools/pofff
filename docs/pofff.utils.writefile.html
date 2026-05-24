@@ -89,27 +89,81 @@
 <p>Utility functions to write OPM/pofff files and variables.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.utils.writefile.compact_format">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">compact_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.writefile.compact_format" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">compact_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#pofff.utils.writefile.compact_format" title="Link to this definition"></a></dt>
 <dd><p>Encode values using Eclipse-style n*value compaction.
 Uses NumPy for efficient run-length encoding.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.utils.writefile.create_corner_point_grid">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">create_corner_point_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zcoord</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.writefile.create_corner_point_grid" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">create_corner_point_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">xcoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">_ScalarT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zcoord</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">_ScalarT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.create_corner_point_grid" title="Link to this definition"></a></dt>
 <dd><p>Write COORD and ZCORN sections for a corner-point grid.
 Output is bit-identical to the original implementation.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_bcprop">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_bcprop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_bcprop" title="Link to this definition"></a></dt>
+<dd><p>Generate bcprop.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_copyd">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_copyd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_copyd" title="Link to this definition"></a></dt>
+<dd><p>Generate copyd.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_equalreg">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_equalreg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_equalreg" title="Link to this definition"></a></dt>
+<dd><p>Generate equalreg.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_ert">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_ert" title="Link to this definition"></a></dt>
+<dd><p>Generate ert.txt</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_everest">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_everest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_everest" title="Link to this definition"></a></dt>
+<dd><p>Generate everest.yml</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_flow">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_flow" title="Link to this definition"></a></dt>
+<dd><p>Generate flow.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_monotonic">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_monotonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_monotonic" title="Link to this definition"></a></dt>
+<dd><p>Generate monotonic.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_satufunc">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_satufunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_satufunc" title="Link to this definition"></a></dt>
+<dd><p>Generate satufunc.py</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pofff.utils.writefile.render_scale">
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">render_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.render_scale" title="Link to this definition"></a></dt>
+<dd><p>Generate scale.py</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="pofff.utils.writefile.write_files">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">write_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.writefile.write_files" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">write_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.write_files" title="Link to this definition"></a></dt>
 <dd><p>Generate all OPM, ERT, and Everest files using mako templates.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pofff.utils.writefile.write_keywords">
-<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">write_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pofff.utils.writefile.write_keywords" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pofff.utils.writefile.</span></span><span class="sig-name descname"><span class="pre">write_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pofff.config.config.html#pofff.config.config.PofffConfig" title="pofff.config.config.PofffConfig"><span class="pre">PofffConfig</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pofff.utils.writefile.write_keywords" title="Link to this definition"></a></dt>
 <dd><p>Write OPM keyword include files (FIPNUM, FLUXNUM, DX, DZ, etc.).</p>
 </dd></dl>
 

@@ -1,17 +1,14 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Utility functions to prepare and normalize input values for pofff.
-"""
+"""Utility functions to prepare and normalize input values for pofff."""
 
 import tomllib
 from pathlib import Path
 import numpy as np
 
-from pofff.config.config import PofffConfig
+from pofff.config.config import CliConfig, PofffConfig
 
-# Parameter keys defining facies-specific properties
 FACIES_KEYS = {
     "poro",
     "perm",
@@ -31,20 +28,14 @@ FACIES_KEYS = {
 
 
 def load_toml(filename: str) -> dict:
-    """
-    Load a TOML configuration file and return its content.
-    """
+    """Load a TOML configuration file and return its content."""
     with open(filename, "rb") as f:
         toml = tomllib.load(f)
     return toml
 
 
 def postprocess_config(cfg: PofffConfig, toml: dict) -> None:
-    """
-    Enrich configuration with derived values and runtime flags.
-    """
-
-    # Default parameters for facies 7
+    """Enrich configuration with derived values and runtime flags."""
     cfg.para.update(
         {
             "permx7": 0,
@@ -62,51 +53,34 @@ def postprocess_config(cfg: PofffConfig, toml: dict) -> None:
         }
     )
 
-    # Grid dimensions (total number of cells)
     cfg.nxz = [int(np.sum(cfg.x)), int(np.sum(cfg.z))]
-
-    # Unit conversions and identifiers
     cfg.diffusion = 86400 * np.array(cfg.diffusion)  # Convert to m²/day
     cfg.data = cfg.fol.name.upper()
-
-    # Process tuning-related options
     process_tuning(cfg)
-
-    # Detect whether custom cell maps are required
     cfg.hascellmaps = (
         cfg.x != [140]
         or cfg.z != [7, 5, 5, 5, 5, 5, 5, 8, 10, 9, 5]
         or cfg.grid != "corner-point"
     )
-
-    # Enable ERT / everest mode if applicable
     cfg.everert = cfg.cores is not None and cfg.mode != "single"
     if cfg.everert:
-        # Collect facies parameters for history matching
         for i in range(1, 8):
             for name in FACIES_KEYS:
                 key = f"{name}{i}"
                 if key in toml:
                     cfg.hm[key] = toml[key]
-
-        # Optional thickness multiplier
         if "thicknessmult" in toml:
             cfg.hm["thicknessmult"] = toml["thicknessmult"]
 
 
 def process_tuning(cfg: PofffConfig) -> None:
-    """
-    Enable tuning mode and normalize injection specifications if requested.
-    """
+    """Enable tuning and normalize injection specifications if requested."""
     for token in cfg.flow.split():
         if "--enable-tuning" not in token:
             continue
         if token[16:] not in {"true", "True", "1"}:
             continue
-
         cfg.tuning = True
-
-        # Normalize injection definitions with '/' syntax
         for i, inj in enumerate(cfg.inj):
             if len(inj) != 5:
                 continue
@@ -119,16 +93,11 @@ def process_tuning(cfg: PofffConfig) -> None:
 
 
 def extract_facies(data: dict) -> dict:
-    """
-    Extract facies definitions and remove them from the main config dict.
-    """
+    """Extract definitions and remove them from the main config dict."""
     facies = {k: data.pop(k) for k in list(data) if k.startswith("facie")}
-
-    # Remove facies-related scalar parameters
     for i in range(1, 8):
         for name in FACIES_KEYS:
             data.pop(f"{name}{i}", None)
-
     data.pop("thicknessmult", None)
     return facies
 
@@ -136,22 +105,26 @@ def extract_facies(data: dict) -> dict:
 def build_config(
     *,
     pofff_path: Path,
-    cli: dict,
+    cli: CliConfig,
     toml: dict,
 ) -> PofffConfig:
-    """
-    Build and return a fully initialized PofffConfig object.
-    """
+    """Build and return a fully initialized PofffConfig object."""
     facies = extract_facies(toml)
-
     cfg = PofffConfig(
         path=pofff_path,
+        fol=cli.fol,
+        deck=cli.deck,
+        jobs=cli.jobs,
+        experiment=cli.experiment,
+        times=cli.times,
+        msat=cli.msat,
+        mcon=cli.mcon,
+        mode=cli.mode,
+        figures=cli.figures,
+        location=cli.location,
+        use=cli.use,
         **toml,
-        **cli,
     )
-
-    # Merge facies-specific parameters into cfg.para
     for values in facies.values():
         cfg.para.update(values)
-
     return cfg

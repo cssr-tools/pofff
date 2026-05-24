@@ -2,9 +2,7 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Generate benchmark-format figures and comparisons.
-"""
+"""Generate benchmark-format figures and comparisons."""
 
 import argparse
 import shutil
@@ -16,22 +14,16 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 
-def postprocessing():
-    """
-    Main entry point for generating benchmark figures.
-    """
-    cfg = load_parser()
+def run_benchmark(argv=None):
+    """Main entry point for generating benchmark figures."""
+    cfg = load_parser(argv)
 
-    # Normalize and enrich configuration
     cfg["s"] = cfg["minimumsaturation"]
     cfg["c"] = cfg["minimumconcentration"]
     cfg["p"] = Path(cfg["path"]) / "fluidflower"
     cfg["u"] = bool(int(cfg["use"]))
     cfg["f"] = cfg["figures"].strip()
 
-    # ------------------------------------------------------------------
-    # Matplotlib configuration
-    # ------------------------------------------------------------------
     matplotlib.rc("font", family="monospace", weight="normal", size=14)
 
     plt.rcParams.update(
@@ -51,18 +43,13 @@ def postprocessing():
 
 
 def benchmark(cfg):
-    """
-    Run figure generation and benchmark comparisons.
-    """
+    """Run figure generation and benchmark comparisons."""
 
     def run(cmd):
         """Execute external command with logging."""
         print("Running:", " ".join(map(str, cmd)))
         subprocess.run(cmd, check=True)
 
-    # ------------------------------------------------------------------
-    # Time-series comparison
-    # ------------------------------------------------------------------
     run(
         [
             "python3",
@@ -76,9 +63,6 @@ def benchmark(cfg):
         ]
     )
 
-    # ------------------------------------------------------------------
-    # Sparse data comparison
-    # ------------------------------------------------------------------
     if Path("sparse_data.csv").exists():
         run(
             [
@@ -93,11 +77,7 @@ def benchmark(cfg):
             ]
         )
 
-    # ------------------------------------------------------------------
-    # Wasserstein distance and derived metrics
-    # ------------------------------------------------------------------
     if cfg["f"] == "all":
-        # Wasserstein plots require fixed benchmark times
         if cfg["times"] != "24,48,72,96,120":
             print(
                 "ERROR: Wasserstein distance figures require times "
@@ -105,7 +85,6 @@ def benchmark(cfg):
             )
             sys.exit(1)
 
-        # Select simplified or full computation
         if float(cfg["s"]) == 0.01 and float(cfg["c"]) in (0.05, 0.1) and cfg["u"]:
             run(
                 [
@@ -142,7 +121,6 @@ def benchmark(cfg):
                 ]
             )
 
-        # Compute mean distances from segmented results
         run(
             [
                 "python3",
@@ -157,10 +135,8 @@ def benchmark(cfg):
         )
 
 
-def load_parser():
-    """
-    Define and parse command-line arguments.
-    """
+def load_parser(argv):
+    """Define and parse command-line arguments."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Manage the generation of benchmark figures.",
@@ -180,8 +156,8 @@ def load_parser():
         help="Use precomputed Wasserstein distances (1=yes, 0=no)",
     )
 
-    return vars(parser.parse_known_args()[0])
+    return vars(parser.parse_known_args(argv)[0])
 
 
 if __name__ == "__main__":
-    postprocessing()
+    run_benchmark()

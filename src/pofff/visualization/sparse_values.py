@@ -2,48 +2,36 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Generate sparse benchmark values from a time series CSV.
-"""
+"""Generate sparse benchmark values from a time series CSV."""
 
 import sys
 from pathlib import Path
 import numpy as np
 
-# Time conversion constants
 SECONDS_PER_HOUR = 3600
 SECONDS_PER_DAY = 86400
 REQUIRED_TIME = 3 * SECONDS_PER_DAY  # 72 hours total
 
 
-def postprocessing(
+def main(
     timeseries_file: str = "time_series.csv",
     output_file: str = "sparse_data.csv",
 ) -> None:
-    """
-    Read a time series CSV, extract benchmark values,
-    and write them in sparse CSV format.
-    """
+    """Read a time series CSV, extract benchmark values,
+    and write them in sparse CSV format."""
 
-    # Abort if input file is missing
     if not Path(timeseries_file).exists():
         print(f"ERROR: File not found: {timeseries_file}")
         sys.exit(1)
 
-    # Load numeric data, skipping the CSV header
     values = np.genfromtxt(timeseries_file, delimiter=",", skip_header=1)
 
-    # Validate data shape
     if values.ndim != 2 or values.shape[0] == 0:
         print("ERROR: time_series.csv contains no valid data")
         sys.exit(1)
 
-    # Extract time column (seconds)
     time = values[:, 0]
 
-    # ------------------------------------------------------------------
-    # Check that simulation duration is at least 72 hours
-    # ------------------------------------------------------------------
     if time[-1] < REQUIRED_TIME:
         sim_hours = time[-1] / SECONDS_PER_HOUR
         print(
@@ -52,41 +40,25 @@ def postprocessing(
         )
         sys.exit(0)
 
-    # Find index corresponding to exactly 72 hours
     try:
         idx_72h = np.where(time == REQUIRED_TIME)[0][0]
     except IndexError:
         print("ERROR: No data point exactly at 72 hours (259200 s)")
         sys.exit(1)
 
-    # ------------------------------------------------------------------
-    # Compute sparse benchmark values
-    # ------------------------------------------------------------------
     sparse = {}
 
-    # Maximum values from specific columns
     sparse["sparse1a"] = np.max(values[:, 1])
     sparse["sparse1b"] = np.max(values[:, 2])
-
-    # Time at which column 3 reaches its maximum
     sparse["sparse2"] = time[np.argmax(values[:, 3])]
-
-    # Values at exactly 72 hours
     sparse["sparse3a"] = values[idx_72h, 3]
     sparse["sparse3c"] = values[idx_72h, 5]
     sparse["sparse3d"] = values[idx_72h, 6]
     sparse["sparse4c"] = values[idx_72h, 9]
-
-    # First time where column 11 reaches threshold
     mask = values[:, 11] >= 1.65
     sparse["sparse5"] = time[mask][0] if np.any(mask) else 0.0
-
-    # Final value of column 6
     sparse["sparse6"] = values[-1, 6]
 
-    # ------------------------------------------------------------------
-    # Write sparse results to output CSV
-    # ------------------------------------------------------------------
     with open(output_file, "w", encoding="utf8") as f:
         f.write("dx,p10_mean,p50_mean,p90_mean,p10_dev,p50_dev,p90_dev\n")
         f.write(f"1a,0,{sparse['sparse1a']},0,0,0,0\n")
@@ -105,4 +77,4 @@ def postprocessing(
 
 
 if __name__ == "__main__":
-    postprocessing()
+    main()

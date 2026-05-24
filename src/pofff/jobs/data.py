@@ -2,9 +2,7 @@
 # SPDX-FileCopyrightText: 2023-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""
-Write benchmark time-series and spatial (dense) data from OPM simulations.
-"""
+"""Write benchmark time-series and spatial (dense) data from OPM simulations."""
 
 from __future__ import annotations
 
@@ -16,123 +14,91 @@ from dataclasses import dataclass, field
 
 import numpy as np
 from scipy.interpolate import interp1d
+from numpy.typing import NDArray
 
 from opm.io.ecl import EclFile as OpmFile
 from opm.io.ecl import EGrid as OpmGrid
 from opm.io.ecl import ERst as OpmRestart
 from opm.io.ecl import ESmry as OpmSummary
 
-# =============================================================================
-# Constants
-# =============================================================================
-
 SECONDS_IN_DAY = 86400.0
-
 GAS_DEN_REF = 1.86843
 WAT_DEN_REF = 998.108
-
 KMOL_TO_KG = 44.0
-
 FIP_BOXC = (4, 12, 17, 18)
 FIP_DISS_A = (2, 4, 5, 8)
 FIP_SEAL_A = (5, 8)
 FIP_DISS_B = (3, 6)
 FIP_SEAL_B = (6,)
 
-ArrayLike = Union[float, np.ndarray]
-
-# =============================================================================
-# Data containers
-# =============================================================================
+ArrayLike = Union[float, NDArray]
 
 
 @dataclass
 class SimulationContext:
-    """
-    Simulation-wide state, file handles, and grid information.
-    """
+    """Simulation-wide state, file handles, and grid information."""
 
-    resolution: np.ndarray
-    dense_t: np.ndarray
+    resolution: NDArray
+    dense_t: NDArray
     maps: Path
-
     where: Path = Path(".")
     sparse_t: float = 600.0
-    dims: np.ndarray = field(default_factory=lambda: np.array([2.8, 1.0, 1.2]))
-
+    dims: NDArray = field(default_factory=lambda: np.array([2.8, 1.0, 1.2]))
     sim: Optional[Path] = None
-
     unrst: Optional[OpmRestart] = None
     ini: Optional[OpmFile] = None
     egrid: Optional[OpmGrid] = None
     smspec: Optional[OpmSummary] = None
-
     times: list[float] = field(default_factory=list)
-    times_summary: Optional[np.ndarray] = None
+    times_summary: Optional[NDArray] = None
     time_initial: float = 0.0
-
-    porv: Optional[np.ndarray] = None
-    actind: Optional[np.ndarray] = None
+    porv: Optional[NDArray] = None
+    actind: Optional[NDArray] = None
     gxyz: Optional[tuple[int, int, int]] = None
     norst: Optional[int] = None
 
     @property
-    def nxz(self) -> np.ndarray:
+    def nxz(self) -> NDArray:
         """Alias for resolution to preserve original naming."""
         return self.resolution
 
 
 @dataclass
 class SparseResults:
-    """
-    Container for sparse (time-series) benchmark quantities.
-    """
+    """Container for sparse (time-series) benchmark quantities."""
 
     ctx: SimulationContext
-
-    times_data: np.ndarray = field(init=False)
-
-    fipnum: np.ndarray = field(init=False)
-    dx: np.ndarray = field(init=False)
-    dz: np.ndarray = field(init=False)
-
-    pop1: np.ndarray = field(init=False)
-    pop2: np.ndarray = field(init=False)
-    moba: np.ndarray = field(init=False)
-    imma: np.ndarray = field(init=False)
-    dissa: np.ndarray = field(init=False)
-    seala: np.ndarray = field(init=False)
-    mobb: np.ndarray = field(init=False)
-    immb: np.ndarray = field(init=False)
-    dissb: np.ndarray = field(init=False)
-    sealb: np.ndarray = field(init=False)
-    sealt: np.ndarray = field(init=False)
-
+    times_data: NDArray = field(init=False)
+    fipnum: NDArray = field(init=False)
+    dx: NDArray = field(init=False)
+    dz: NDArray = field(init=False)
+    pop1: NDArray = field(init=False)
+    pop2: NDArray = field(init=False)
+    moba: NDArray = field(init=False)
+    imma: NDArray = field(init=False)
+    dissa: NDArray = field(init=False)
+    seala: NDArray = field(init=False)
+    mobb: NDArray = field(init=False)
+    immb: NDArray = field(init=False)
+    dissb: NDArray = field(init=False)
+    sealb: NDArray = field(init=False)
+    sealt: NDArray = field(init=False)
     m_c_series: list[float] = field(default_factory=list)
-    m_c: Optional[np.ndarray] = None
+    m_c: Optional[NDArray] = None
 
     def __post_init__(self) -> None:
         assert self.ctx.ini
         assert self.ctx.times
-
         self.times_data = np.arange(
             0.0, self.ctx.times[-1] + self.ctx.sparse_t, self.ctx.sparse_t
         )
-
         self.fipnum = np.asarray(self.ctx.ini["FIPNUM"])
         self.dx = np.asarray(self.ctx.ini["DX"])
         self.dz = np.asarray(self.ctx.ini["DZ"])
 
 
-# =============================================================================
-# Main
-# =============================================================================
-
-
-def main() -> None:
-    """
-    Entry point for benchmark postprocessing.
-    """
+def main(argv=None) -> None:
+    """Entry point for benchmark postprocessing."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Benchmark postprocessing",
@@ -140,26 +106,21 @@ def main() -> None:
     parser.add_argument("-r", "--resolution", default="280,120")
     parser.add_argument("-t", "--time", default="24,48,72,96,120")
     parser.add_argument("-m", "--maps", default="cellmap.npy")
-    args, _ = parser.parse_known_args()
+    args = vars(parser.parse_known_args(argv)[0])
 
     if Path("NOMONOTONIC").exists():
         sys.exit(1)
 
     ctx = SimulationContext(
-        resolution=np.fromstring(args.resolution, sep=",", dtype=int),
-        dense_t=np.fromstring(args.time, sep=",") * 3600.0,
-        maps=Path(args.maps),
+        resolution=np.fromstring(args["resolution"], sep=",", dtype=int),
+        dense_t=np.fromstring(args["time"], sep=",") * 3600.0,
+        maps=Path(args["maps"]),
     )
 
     ctx.sim = find_simulation_base(ctx.where)
     read_opm(ctx)
     sparse_data(ctx)
     dense_data(ctx)
-
-
-# =============================================================================
-# Utilities
-# =============================================================================
 
 
 def find_simulation_base(path: Path) -> Path:
@@ -170,17 +131,9 @@ def find_simulation_base(path: Path) -> Path:
     raise FileNotFoundError("No .UNRST file found")
 
 
-# =============================================================================
-# Reading OPM data
-# =============================================================================
-
-
 def read_opm(ctx: SimulationContext) -> None:
-    """
-    Load OPM restart, grid, and summary data.
-    """
+    """Load OPM restart, grid, and summary data."""
     assert ctx.sim
-
     ctx.unrst = OpmRestart(f"{ctx.sim}.UNRST")
 
     t0: Optional[float] = None
@@ -208,15 +161,8 @@ def read_opm(ctx: SimulationContext) -> None:
     ctx.norst = len(ctx.unrst.report_steps)
 
 
-# =============================================================================
-# Sparse data
-# =============================================================================
-
-
 def sparse_data(ctx: SimulationContext) -> None:
-    """
-    Compute and write sparse time-series benchmark data.
-    """
+    """Compute and write sparse time-series benchmark data."""
     res = SparseResults(ctx)
 
     create_from_summary(ctx, res)
@@ -226,9 +172,7 @@ def sparse_data(ctx: SimulationContext) -> None:
 
 
 def create_from_summary(ctx: SimulationContext, res: SparseResults) -> None:
-    """
-    Extract sparse quantities from OPM summary vectors.
-    """
+    """Extract sparse quantities from OPM summary vectors."""
     assert ctx.smspec
     smry = ctx.smspec
 
@@ -243,7 +187,7 @@ def create_from_summary(ctx: SimulationContext, res: SparseResults) -> None:
     res.pop1 = np.r_[initial_pressure(8), smry[bwpr[0]] * 1e5]
     res.pop2 = np.r_[initial_pressure(9), smry[bwpr[1]] * 1e5]
 
-    def sum_smry(exprs) -> np.ndarray:
+    def sum_smry(exprs) -> NDArray:
         return sum(smry[e] for e in exprs) * KMOL_TO_KG
 
     res.moba = sum_smry(f"RGKDM:{i}" for i in FIP_DISS_A)
@@ -270,9 +214,7 @@ def create_from_summary(ctx: SimulationContext, res: SparseResults) -> None:
 
 
 def compute_m_c(ctx: SimulationContext, res: SparseResults) -> None:
-    """
-    Compute mass-center migration metric.
-    """
+    """Compute mass-center migration metric."""
     assert ctx.unrst
     assert ctx.gxyz
     assert ctx.norst
@@ -298,9 +240,7 @@ def compute_m_c(ctx: SimulationContext, res: SparseResults) -> None:
 
 
 def interpolate_sparse(ctx: SimulationContext, res: SparseResults) -> None:
-    """
-    Interpolate sparse quantities onto uniform time grid.
-    """
+    """Interpolate sparse quantities onto uniform time grid."""
     assert ctx.times_summary is not None
 
     res.m_c = interp1d(
@@ -329,9 +269,7 @@ def interpolate_sparse(ctx: SimulationContext, res: SparseResults) -> None:
 
 
 def write_sparse_data(res: SparseResults) -> None:
-    """
-    Write sparse time-series values to CSV.
-    """
+    """Write sparse time-series values to CSV."""
     assert res.m_c is not None
 
     header = (
@@ -353,15 +291,8 @@ def write_sparse_data(res: SparseResults) -> None:
     Path("time_series.csv").write_text("\n".join(lines), encoding="utf-8")
 
 
-# =============================================================================
-# Dense data
-# =============================================================================
-
-
 def dense_data(ctx: SimulationContext) -> None:
-    """
-    Write spatial maps for selected dense output times.
-    """
+    """Write spatial maps for selected dense output times."""
     assert ctx.unrst
     assert ctx.porv is not None
     assert ctx.actind is not None
@@ -397,9 +328,7 @@ def dense_data(ctx: SimulationContext) -> None:
 
 
 def write_dense_data(ctx: SimulationContext, refxz, sgas, cco2, hours) -> None:
-    """
-    Write single spatial map CSV.
-    """
+    """Write single spatial map CSV."""
     nx, nz = ctx.nxz
     lines = ["x,z,saturation,concentration"]
 
@@ -410,10 +339,6 @@ def write_dense_data(ctx: SimulationContext, refxz, sgas, cco2, hours) -> None:
 
     (ctx.where / f"spatial_map_{hours}h.csv").write_text("\n".join(lines))
 
-
-# =============================================================================
-# Entry point
-# =============================================================================
 
 if __name__ == "__main__":
     main()
