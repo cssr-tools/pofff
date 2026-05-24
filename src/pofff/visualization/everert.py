@@ -197,7 +197,7 @@ def read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
     if para.exists():
         state.para_file = para
         data = np.atleast_2d(np.genfromtxt(para))
-        state.no_para = data.ndim
+        state.no_para = data.shape[0]
         for row in data:
             state.par_dis[i].append(row[1])
 
@@ -249,7 +249,7 @@ def plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
             label="Observation",
         )
 
-    ax.set_xlabel(r"Obsservable [\#]")
+    ax.set_xlabel(r"Observable [\#]")
     ax.set_ylabel("Wasserstein distance [gr cm]")
     ax.set_ylim(bottom=0)
     ax.set_xticks(x)

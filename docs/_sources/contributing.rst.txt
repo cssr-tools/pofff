@@ -53,4 +53,4 @@ Seek support
 #.  The preferred approach to seek support is to raise an Issue as described in the previous lines
 #.  We will try to answer as soon as possible, but also any user is more than welcome to answer
 
-- An alternative approach is to send an email to any of the `mantainers <https://github.com/cssr-tools/pofff/blob/main/pyproject.toml>`_.
+- An alternative approach is to send an email to any of the `maintainers <https://github.com/cssr-tools/pofff/blob/main/pyproject.toml>`_.
