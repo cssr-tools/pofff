@@ -24,7 +24,7 @@ classifiers = [
 ]
 dependencies = [
     "alive-progress",
-    "ert==21.1.5",
+    "ert==23.0.1",
     "mako",
     "matplotlib",
     "opencv-python",
