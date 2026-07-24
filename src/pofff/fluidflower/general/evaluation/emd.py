@@ -8,8 +8,9 @@ Test script for the Earth movers distance to measure differences in distribution
 """
 
 import argparse
-import ot
+
 import numpy as np
+import ot
 from PIL import Image
 
 

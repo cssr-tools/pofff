@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2023-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
@@ -10,9 +9,11 @@ Defines structured configuration objects used across the codebase:
 - PofffConfig: unified runtime and TOML-based configuration
 """
 
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Iterable, Sequence, Tuple, Optional, Union
+from typing import Any
+
 import numpy as np
 
 
@@ -66,13 +67,13 @@ class PofffConfig:
     grid: str = "corner-point"
     thickness: str = "final"
     mult_thickness: float = 1.0
-    x: List[int] = field(default_factory=list)
-    z: List[int] = field(default_factory=list)
-    temperature: List[float] = field(default_factory=lambda: [20, 20])
+    x: list[int] = field(default_factory=list)
+    z: list[int] = field(default_factory=list)
+    temperature: list[float] = field(default_factory=lambda: [20, 20])
     pressure: float = 0.0
     diffusion: np.ndarray = field(default_factory=lambda: np.array([1e-9, 2e-8]))
-    sources: List[List[float]] = field(default_factory=lambda: [[0, 0], [0, 0]])
-    inj: List[List[Any]] = field(default_factory=lambda: [[]])
+    sources: list[list[float]] = field(default_factory=lambda: [[0, 0], [0, 0]])
+    inj: list[list[Any]] = field(default_factory=lambda: [[]])
     krw: str = "(max(0, (sw - swi) / (1 - swi))) ** nkrw"
     krn: str = "(max(0, (1 - sw - sni) / (1 - sni))) ** nkrn"
     cap: str = "pen * ((sw-swi) / (1-swi)) ** (-(1.0 / npen))"
@@ -80,48 +81,48 @@ class PofffConfig:
     # ------------------------------------------------------------------
     # TOML configuration (ERT / everest runtime)
     # ------------------------------------------------------------------
-    cores: Optional[int] = None
-    maxtime: Optional[float] = None
-    delete: Optional[bool] = None
+    cores: int | None = None
+    maxtime: float | None = None
+    delete: bool | None = None
 
     # ------------------------------------------------------------------
     # TOML configuration (ERT)
     # ------------------------------------------------------------------
-    ertargs: Optional[str] = None
-    ensembles: Optional[int] = None
-    enkf_alpha: Optional[float] = None
-    errors: Optional[np.ndarray] = None
-    random_seed: Optional[int] = None  # Used by scipy differential evolution
+    ertargs: str | None = None
+    ensembles: int | None = None
+    enkf_alpha: float | None = None
+    errors: np.ndarray | None = None
+    random_seed: int | None = None  # Used by scipy differential evolution
 
     # ------------------------------------------------------------------
     # TOML configuration (everest)
     # ------------------------------------------------------------------
-    min_realizations_success: Optional[int] = None
-    max_function_evaluations: Optional[int] = None
-    max_batch_num: Optional[int] = None
+    min_realizations_success: int | None = None
+    max_function_evaluations: int | None = None
+    max_batch_num: int | None = None
 
     # ------------------------------------------------------------------
     # TOML differential evolution parameters (via everest)
     # ------------------------------------------------------------------
-    args: Optional[Tuple[Any, ...]] = None
-    strategy: Optional[str] = None
-    maxiter: Optional[int] = None
-    popsize: Optional[int] = None
-    tol: Optional[float] = None
-    mutation: Optional[Union[float, Tuple[float, float]]] = None
-    recombination: Optional[float] = None
-    rng: Optional[Any] = None
-    callback: Optional[Callable] = None
-    disp: Optional[bool] = None
-    polish: Optional[bool] = None
-    init: Optional[str] = None
-    atol: Optional[float] = None
-    updating: Optional[str] = None
-    workers: Optional[int] = None
-    constraints: Optional[Iterable[Any]] = None
-    x0: Optional[Sequence[float]] = None
-    integrality: Optional[Sequence[bool]] = None
-    vectorized: Optional[bool] = None
+    args: tuple[Any, ...] | None = None
+    strategy: str | None = None
+    maxiter: int | None = None
+    popsize: int | None = None
+    tol: float | None = None
+    mutation: float | tuple[float, float] | None = None
+    recombination: float | None = None
+    rng: Any | None = None
+    callback: Callable | None = None
+    disp: bool | None = None
+    polish: bool | None = None
+    init: str | None = None
+    atol: float | None = None
+    updating: str | None = None
+    workers: int | None = None
+    constraints: Iterable[Any] | None = None
+    x0: Sequence[float] | None = None
+    integrality: Sequence[bool] | None = None
+    vectorized: bool | None = None
 
     # ------------------------------------------------------------------
     # OPM input arrays
@@ -131,28 +132,28 @@ class PofffConfig:
     fipnum: list[str] = field(default_factory=list)
     porv: list[str] = field(default_factory=list)
     multpv: list[str] = field(default_factory=list)
-    dx: Optional[list] = field(default_factory=list)
-    dz: Optional[list] = field(default_factory=list)
+    dx: list | None = field(default_factory=list)
+    dz: list | None = field(default_factory=list)
 
     # ------------------------------------------------------------------
     # FluidFlower geometry and observation setup
     # ------------------------------------------------------------------
-    dims: List[float] = field(default_factory=lambda: [2.8, 0.019, 1.2])
-    sensors: List[List[float]] = field(default_factory=lambda: [[1.5, 0.5], [1.7, 1.1]])
-    sensor_ik: List[List[int]] = field(default_factory=lambda: [[0, 0], [0, 0]])
-    source_ik: List[List[int]] = field(default_factory=lambda: [[0, 0], [0, 0]])
-    boxa: List[List[float]] = field(default_factory=lambda: [[1.1, 0.0], [2.8, 0.6]])
-    boxb: List[List[float]] = field(default_factory=lambda: [[0.0, 0.6], [1.1, 1.2]])
-    boxc: List[List[float]] = field(default_factory=lambda: [[1.1, 0.1], [2.6, 0.4]])
+    dims: list[float] = field(default_factory=lambda: [2.8, 0.019, 1.2])
+    sensors: list[list[float]] = field(default_factory=lambda: [[1.5, 0.5], [1.7, 1.1]])
+    sensor_ik: list[list[int]] = field(default_factory=lambda: [[0, 0], [0, 0]])
+    source_ik: list[list[int]] = field(default_factory=lambda: [[0, 0], [0, 0]])
+    boxa: list[list[float]] = field(default_factory=lambda: [[1.1, 0.0], [2.8, 0.6]])
+    boxb: list[list[float]] = field(default_factory=lambda: [[0.0, 0.6], [1.1, 1.2]])
+    boxc: list[list[float]] = field(default_factory=lambda: [[1.1, 0.1], [2.6, 0.4]])
 
     # ------------------------------------------------------------------
     # Miscellaneous runtime flags and metadata
     # ------------------------------------------------------------------
-    hm: Dict[str, Any] = field(default_factory=dict)
+    hm: dict[str, Any] = field(default_factory=dict)
     monotonic: bool = False
     hascellmaps: bool = False
     everert: bool = False
     tuning: bool = False
-    para: Dict[str, Any] = field(default_factory=dict)
-    nxz: List[int] = field(default_factory=lambda: [0, 0])
-    data: Optional[str] = None
+    para: dict[str, Any] = field(default_factory=dict)
+    nxz: list[int] = field(default_factory=lambda: [0, 0])
+    data: str | None = None

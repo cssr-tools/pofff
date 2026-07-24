@@ -3,8 +3,8 @@
 
 """Test the ert functionality via the configuration file"""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 
 def test_b_grid(tmp_path, monkeypatch):

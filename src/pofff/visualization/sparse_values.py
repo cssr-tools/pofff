@@ -6,6 +6,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 SECONDS_PER_HOUR = 3600

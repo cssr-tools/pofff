@@ -6,8 +6,9 @@
 """Quantify errors between simulation results and experimental data
 and summarize them in a comparison table."""
 
-import os
 import argparse
+import os
+
 import numpy as np
 
 NUM_EXPERIMENTS = 5  # Number of experimental realizations

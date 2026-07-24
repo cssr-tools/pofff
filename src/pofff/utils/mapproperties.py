@@ -5,18 +5,19 @@
 """Utility functions for grid generation and spatial indexing
 in geological FluidFlower-style models."""
 
-import sys
 import csv
 import shutil
-from pathlib import Path
+import sys
 from contextlib import nullcontext
+from pathlib import Path
+
 import numpy as np
+from alive_progress import alive_bar
 from numpy.typing import NDArray
 from shapely.geometry import Point, Polygon
-from alive_progress import alive_bar
 
-from pofff.utils.writefile import create_corner_point_grid
 from pofff.config.config import PofffConfig
+from pofff.utils.writefile import create_corner_point_grid
 
 
 def grid_and_properties(cfg: PofffConfig) -> None:
@@ -53,8 +54,8 @@ def grid_and_properties(cfg: PofffConfig) -> None:
         cfg.nxz = [len(xvert) - 1, len(zvert) - 1]
     xcent = 0.5 * (xvert[:-1] + xvert[1:])
     zcent = 0.5 * (zvert[:-1] + zvert[1:])
-    setattr(cfg, "dx", xvert[1:] - xvert[:-1])
-    setattr(cfg, "dz", zvert[1:] - zvert[:-1])
+    cfg.dx = list(xvert[1:] - xvert[:-1])
+    cfg.dz = list(zvert[1:] - zvert[:-1])
     positions(cfg, polygons, xcent=xcent, zcent=zcent)
     if cfg.grid == "tensor":
         cfg.dx = list(map(str, xvert[1:] - xvert[:-1]))

@@ -4,8 +4,8 @@
 
 """Script to delete large files"""
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 if Path("NOMONOTONIC").exists():
     sys.exit(0)

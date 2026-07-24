@@ -7,12 +7,13 @@
 Generate the Wasserstein distance plots.
 """
 
+import argparse
 import os
 import shutil
-import argparse
-import numpy as np
-import matplotlib.pyplot as plt
+
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -329,7 +330,7 @@ fig.savefig(
 )
 
 for k, hour, ki, kj in zip(
-    range(0, 5), [24, 48, 72, 96, 120], [0, 0, 0, 1, 1], [0, 1, 2, 0, 1]
+    range(5), [24, 48, 72, 96, 120], [0, 0, 0, 1, 1], [0, 1, 2, 0, 1]
 ):
     # axs[ki][kj].set_xlim((0, 120))
     axs[ki][kj].set_xlim((0, 80))

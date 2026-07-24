@@ -5,6 +5,7 @@
 
 import tomllib
 from pathlib import Path
+
 import numpy as np
 
 from pofff.config.config import CliConfig, PofffConfig

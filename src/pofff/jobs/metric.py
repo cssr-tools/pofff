@@ -8,9 +8,10 @@ between simulated and experimental segmentations."""
 import argparse
 import os
 import sys
+
 import numpy as np
-from numpy.typing import NDArray
 import ot
+from numpy.typing import NDArray
 from PIL import Image
 
 

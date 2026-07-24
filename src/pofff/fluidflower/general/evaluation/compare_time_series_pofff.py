@@ -7,13 +7,14 @@
 Generate the time series figures.
 """
 
+import argparse
 import os
 import shutil
-import argparse
 from operator import methodcaller
-import numpy as np
+
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy import interpolate
 
 

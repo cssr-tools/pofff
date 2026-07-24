@@ -6,11 +6,12 @@
 """Overlay simulated spatial maps with experimental contour boundaries."""
 
 import argparse
-import shutil
 import csv
-import numpy as np
+import shutil
+
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib import colors
 
 DX = 1.0e-2  # Grid spacing [m]

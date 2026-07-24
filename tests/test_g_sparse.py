@@ -3,8 +3,8 @@
 
 """Test the sparse data generation"""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from pofff.visualization.sparse_values import main
 

@@ -7,16 +7,16 @@ Table 7 and Figure 12 in the pofff paper:
 Profiling workflow wall-time and OPM Flow simulation statistics.
 """
 
-from pathlib import Path
 import shutil
 import subprocess
 import time
+from pathlib import Path
 
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from opm.io.ecl import ESmry as OpmSummary
+import numpy as np
 from mako.template import Template
+from opm.io.ecl import ESmry as OpmSummary
 
 # -----------------------------------------------------------------------------
 # Configuration

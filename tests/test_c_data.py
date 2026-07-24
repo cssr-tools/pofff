@@ -3,8 +3,8 @@
 
 """Test the functionality of the data generation"""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from pofff.jobs.data import main
 

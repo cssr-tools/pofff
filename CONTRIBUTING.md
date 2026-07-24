@@ -14,7 +14,7 @@ Contributions are more than welcome using the fork and pull request approach ðŸ™
 1. Work on your own fork of the main repo
 1. In the main repo execute:
     1. **pip install -r dev-requirements.txt** (this installs the [_dev-requirements.txt_](https://github.com/cssr-tools/pofff/blob/main/dev-requirements.txt))
-    1. **black --target-version py312 src/ tests/ publication/** (this formats the code)
+    1. **black --target-version py314 src/ tests/ publication/** (this formats the code)
     1. **pylint src/ tests/ publication/** (this analyses the code, and might rise issues that need to be fixed before the pull request)
     1. **ruff check src/ tests/ publication/** (this also analyses the code, and might rise issues that need to be fixed before the pull request)
     1. **mypy --ignore-missing-imports src/ tests/ publication/** (this is a static checker, and might rise issues that need to be fixed before the pull request)
