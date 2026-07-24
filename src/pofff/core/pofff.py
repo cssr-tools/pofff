@@ -3,16 +3,16 @@
 
 """Main entry script for pofff."""
 
+import argparse
 import os
 import shutil
-import argparse
 from pathlib import Path
 
 from pofff.config.config import CliConfig, PofffConfig
-from pofff.utils.inputvalues import load_toml, build_config, postprocess_config
-from pofff.utils.runs import flow, data, benchmark, everest, ert, postprocess
-from pofff.utils.writefile import write_files
+from pofff.utils.inputvalues import build_config, load_toml, postprocess_config
 from pofff.utils.mapproperties import grid_and_properties
+from pofff.utils.runs import benchmark, data, ert, everest, flow, postprocess
+from pofff.utils.writefile import write_files
 
 
 def main() -> None:

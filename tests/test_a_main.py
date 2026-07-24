@@ -3,11 +3,12 @@
 
 """Test the configuration files"""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
+
 import numpy as np
-from opm.io.ecl import EGrid as OpmGrid
 from opm.io.ecl import EclFile as OpmFile
+from opm.io.ecl import EGrid as OpmGrid
 
 from pofff.core.pofff import main
 

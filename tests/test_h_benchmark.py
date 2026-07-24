@@ -3,8 +3,8 @@
 
 """Test the single functionality and plotting for the benchmark"""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 
 def test_h_benchmark(tmp_path, monkeypatch):

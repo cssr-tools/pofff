@@ -5,12 +5,13 @@
 
 """Generate the sparse data figure"""
 
+import argparse
 import os
 import shutil
-import argparse
-import numpy as np
-import matplotlib.pyplot as plt
+
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def visualizeRow(means, stddevs, expData, ax, colors, groups, withlegend):

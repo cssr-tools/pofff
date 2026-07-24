@@ -15,11 +15,10 @@ import shutil
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
 
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.ticker import MaxNLocator
 
 
@@ -29,7 +28,7 @@ class Config:
 
     path: Path
     times: str
-    jobs: List[str]
+    jobs: list[str]
     external: Path
     run: str
     maps: Path
@@ -46,31 +45,31 @@ class EnsembleState:
     n_i: int
     no_obs: int
     no_para: int
-    simulations: List[List[list]] = field(default_factory=list)
-    sim_ens: List[List[float]] = field(default_factory=list)
-    miss_ens: List[List[float]] = field(default_factory=list)
-    par_dis: List[List[float]] = field(default_factory=list)
-    idrealisation: List[List[int]] = field(default_factory=list)
-    num_ens: List[int] = field(default_factory=list)
-    cumulative: List[List[List[float]]] = field(default_factory=list)
+    simulations: list[list[list]] = field(default_factory=list)
+    sim_ens: list[list[float]] = field(default_factory=list)
+    miss_ens: list[list[float]] = field(default_factory=list)
+    par_dis: list[list[float]] = field(default_factory=list)
+    idrealisation: list[list[int]] = field(default_factory=list)
+    num_ens: list[int] = field(default_factory=list)
+    cumulative: list[list[list[float]]] = field(default_factory=list)
     para_file: Path | None = None
-    para_names: List[str] = field(default_factory=list)
+    para_names: list[str] = field(default_factory=list)
 
 
 @dataclass
 class OptimizationState:
     """Tracks optimization progress and outcomes."""
 
-    optimization: List[float] = field(default_factory=list)
+    optimization: list[float] = field(default_factory=list)
     optimal_value: float = -np.inf
     ind_batch: int = 0
     ind_sim: int = 0
     tot_eval: int = 0
-    s: List[List[int]] = field(default_factory=lambda: [[], [], []])
-    x: List[int] = field(default_factory=lambda: [0, 0, 0])
+    s: list[list[int]] = field(default_factory=lambda: [[], [], []])
+    x: list[int] = field(default_factory=lambda: [0, 0, 0])
 
 
-def run(cmd: List[str]) -> None:
+def run(cmd: list[str]) -> None:
     """Execute external command and abort on failure."""
     subprocess.run(cmd, check=True)
 

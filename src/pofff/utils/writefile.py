@@ -6,8 +6,10 @@
 
 import os
 import subprocess
-from mako.template import Template
+from itertools import pairwise
+
 import numpy as np
+from mako.template import Template
 from numpy.typing import NDArray
 
 from pofff.config.config import PofffConfig
@@ -186,7 +188,7 @@ def render_monotonic(cfg: PofffConfig) -> None:
     inc_lines = []
     for name in inc_names:
         keys = [f"{name}{i}" for i in range(1, 8) if f"{name}{i}" in cfg.hm]
-        for prev, cur in zip(keys, keys[1:]):
+        for prev, cur in pairwise(keys):
             inc_lines.append(
                 f"if coef['{prev}'] < coef['{cur}']:\n" f"    nomonotonic = True"
             )
@@ -194,7 +196,7 @@ def render_monotonic(cfg: PofffConfig) -> None:
     dec_lines = []
     for name in dec_names:
         keys = [f"{name}{i}" for i in reversed(range(1, 8)) if f"{name}{i}" in cfg.hm]
-        for prev, cur in zip(keys, keys[1:]):
+        for prev, cur in pairwise(keys):
             dec_lines.append(
                 f"if coef['{prev}'] < coef['{cur}']:\n" f"    nomonotonic = True"
             )
@@ -352,16 +354,12 @@ def render_flow(cfg: PofffConfig) -> None:
 
     delete_block = ""
     if cfg.delete:
-        delete_block = "\n".join(
-            [
-                (
-                    '    for suff in ["INC", "EGRID", "DBG", "PRT", "SMSPEC", "UNRST", '
-                    '"UNSMRY", "INIT", "ESMRY", "DATA"]:'
-                ),
-                '        os.system(f"rm -rf *.{suff}")',
-                '    for pref in ["thickness_eval","metr_eval","safu_eval","poro_eval"]:',
-                '        os.system(f"rm -rf {pref}.*")',
-            ]
+        delete_block = (
+            '    for suff in ["INC", "EGRID", "DBG", "PRT", "SMSPEC", "UNRST", '
+            '"UNSMRY", "INIT", "ESMRY", "DATA"]:\n'
+            '        os.system(f"rm -rf *.{suff}")\n'
+            '    for pref in ["thickness_eval","metr_eval","safu_eval","poro_eval"]:\n'
+            '        os.system(f"rm -rf {pref}.*")'
         )
 
     tmpl = Template(filename=f"{cfg.path}/templates/flow.mako")
@@ -601,15 +599,10 @@ def render_everest(cfg: PofffConfig) -> None:
 
     install_jobs_block = (
         (
-            "\n".join(
-                [
-                    "  - name: scale",
-                    "    executable: jobs/scale.py",
-                    "  - name: monotonic",
-                    "    executable: jobs/monotonic.py",
-                ]
-            )
-            + "\n"
+            "  - name: scale\n"
+            "    executable: jobs/scale.py\n"
+            "  - name: monotonic\n"
+            "    executable: jobs/monotonic.py\n"
         )
         if cfg.monotonic
         else ""
@@ -630,7 +623,7 @@ def render_everest(cfg: PofffConfig) -> None:
     )
 
     forward_block = (
-        (("\n".join(["  - scale", "  - monotonic"]) + "\n") if cfg.monotonic else "")
+        ("  - scale\n  - monotonic\n" if cfg.monotonic else "")
         + "\n".join(
             [
                 "  - copyd",

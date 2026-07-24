@@ -6,11 +6,11 @@ Reproduce Table 9 in the pofff paper:
 Accuracy vs wall-time trade-offs for CNV solver tolerances.
 """
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
-from opm.io.ecl import ESmry as OpmSummary
 from mako.template import Template
+from opm.io.ecl import ESmry as OpmSummary
 
 # -----------------------------------------------------------------------------
 # Configuration

@@ -3,8 +3,8 @@
 
 """Test the functionality of the metric evaluations"""
 
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from pofff.jobs.metric import main
 

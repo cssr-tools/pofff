@@ -8,18 +8,16 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
-from typing import Optional, Union
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
-from scipy.interpolate import interp1d
 from numpy.typing import NDArray
-
 from opm.io.ecl import EclFile as OpmFile
 from opm.io.ecl import EGrid as OpmGrid
 from opm.io.ecl import ERst as OpmRestart
 from opm.io.ecl import ESmry as OpmSummary
+from scipy.interpolate import interp1d
 
 SECONDS_IN_DAY = 86400.0
 GAS_DEN_REF = 1.86843
@@ -31,7 +29,7 @@ FIP_SEAL_A = (5, 8)
 FIP_DISS_B = (3, 6)
 FIP_SEAL_B = (6,)
 
-ArrayLike = Union[float, NDArray]
+ArrayLike = float | NDArray
 
 
 @dataclass
@@ -44,18 +42,18 @@ class SimulationContext:
     where: Path = Path(".")
     sparse_t: float = 600.0
     dims: NDArray = field(default_factory=lambda: np.array([2.8, 1.0, 1.2]))
-    sim: Optional[Path] = None
-    unrst: Optional[OpmRestart] = None
-    ini: Optional[OpmFile] = None
-    egrid: Optional[OpmGrid] = None
-    smspec: Optional[OpmSummary] = None
+    sim: Path | None = None
+    unrst: OpmRestart | None = None
+    ini: OpmFile | None = None
+    egrid: OpmGrid | None = None
+    smspec: OpmSummary | None = None
     times: list[float] = field(default_factory=list)
-    times_summary: Optional[NDArray] = None
+    times_summary: NDArray | None = None
     time_initial: float = 0.0
-    porv: Optional[NDArray] = None
-    actind: Optional[NDArray] = None
-    gxyz: Optional[tuple[int, int, int]] = None
-    norst: Optional[int] = None
+    porv: NDArray | None = None
+    actind: NDArray | None = None
+    gxyz: tuple[int, int, int] | None = None
+    norst: int | None = None
 
     @property
     def nxz(self) -> NDArray:
@@ -84,7 +82,7 @@ class SparseResults:
     sealb: NDArray = field(init=False)
     sealt: NDArray = field(init=False)
     m_c_series: list[float] = field(default_factory=list)
-    m_c: Optional[NDArray] = None
+    m_c: NDArray | None = None
 
     def __post_init__(self) -> None:
         assert self.ctx.ini
@@ -136,7 +134,7 @@ def read_opm(ctx: SimulationContext) -> None:
     assert ctx.sim
     ctx.unrst = OpmRestart(f"{ctx.sim}.UNRST")
 
-    t0: Optional[float] = None
+    t0: float | None = None
     for i in range(len(ctx.unrst.report_steps)):
         t = SECONDS_IN_DAY * float(ctx.unrst["DOUBHEAD", i][0])
 
@@ -175,8 +173,9 @@ def create_from_summary(ctx: SimulationContext, res: SparseResults) -> None:
     """Extract sparse quantities from OPM summary vectors."""
     assert ctx.smspec
     smry = ctx.smspec
+    smry_keys = smry.keys()
 
-    bwpr = sorted(k for k in smry.keys() if k.startswith("BWPR") and "," in k)[:2]
+    bwpr = sorted(k for k in smry_keys if k.startswith("BWPR") and "," in k)[:2]
 
     def initial_pressure(fip: int) -> float:
         assert ctx.unrst

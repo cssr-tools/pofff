@@ -4,6 +4,7 @@
 """Table 8 in the pofff paper"""
 
 import subprocess
+
 from mako.template import Template
 
 mytemplate = Template(filename="appendixc.mako")

@@ -4,14 +4,14 @@
 """Utility functions for running simulations, processing data,
 and generating benchmark plots."""
 
-from pathlib import Path
 import subprocess
-from typing import Sequence
+from collections.abc import Sequence
+from pathlib import Path
 
 from pofff.config.config import PofffConfig
 from pofff.visualization.benchmark import run_benchmark
-from pofff.visualization.everert import run_everert
 from pofff.visualization.error_table import run_error_table
+from pofff.visualization.everert import run_everert
 from pofff.visualization.maps import run_maps
 
 

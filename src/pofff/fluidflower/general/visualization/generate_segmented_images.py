@@ -9,6 +9,7 @@ lines based on the experimental data.
 """
 
 import argparse
+
 import numpy as np
 from PIL import Image
 
@@ -19,8 +20,8 @@ def generateImages(
     "Generate images"
     modImage = Image.new("RGBA", (280, 120))
     modPixels = modImage.load()
-    for i in range(0, modImage.size[0]):
-        for j in range(0, modImage.size[1]):
+    for i in range(modImage.size[0]):
+        for j in range(modImage.size[1]):
             if modelResult[j, i] == 1:
                 modPixels[i, j] = (0, 255, 0)
             elif modelResult[j, i] == 2:
@@ -36,8 +37,8 @@ def generateImages(
 
     expImage = Image.new("RGBA", (280, 120))
     expPixels = expImage.load()
-    for i in range(0, expImage.size[0]):
-        for j in range(0, expImage.size[1]):
+    for i in range(expImage.size[0]):
+        for j in range(expImage.size[1]):
             if experimentalData[j, i] == 1:
                 expPixels[i, j] = (0, 255, 0)
             elif experimentalData[j, i] == 2:

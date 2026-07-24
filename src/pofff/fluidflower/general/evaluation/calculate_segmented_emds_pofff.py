@@ -7,11 +7,13 @@
 Script to calculate Wasserstein distances between segmented data.
 """
 
+import argparse
 import os
 import os.path
-import argparse
+
 import numpy as np
 from PIL import Image
+
 import pofff.fluidflower.general.visualization.generate_segmented_images as seg
 from pofff.fluidflower.general.evaluation import emd
 
@@ -20,8 +22,8 @@ def calculateEMD(modelResult, experimentalData):
     """Calculate Wasserstein distance"""
     modImage = Image.new("L", (280, 120))
     modPixels = modImage.load()
-    for i in range(0, modImage.size[0]):
-        for j in range(0, modImage.size[1]):
+    for i in range(modImage.size[0]):
+        for j in range(modImage.size[1]):
             if modelResult[j, i] == 1:
                 modPixels[i, j] = 128
             elif modelResult[j, i] == 2:
@@ -33,8 +35,8 @@ def calculateEMD(modelResult, experimentalData):
 
     expImage = Image.new("L", (280, 120))
     expPixels = expImage.load()
-    for i in range(0, expImage.size[0]):
-        for j in range(0, expImage.size[1]):
+    for i in range(expImage.size[0]):
+        for j in range(expImage.size[1]):
             if experimentalData[j, i] == 1:
                 expPixels[i, j] = 128
             elif experimentalData[j, i] == 2:
