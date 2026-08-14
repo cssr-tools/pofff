@@ -46,7 +46,7 @@ pip install --upgrade pip setuptools wheel
 pip install -e .
 # For contributions/testing/linting, install the dev-requirements
 pip install -r dev-requirements.txt
-``` 
+```
 
 See the [_installation_](https://cssr-tools.github.io/pofff/installation.html) for further details on building OPM Flow from the master branches in Linux, Windows (via [_WSL_](https://learn.microsoft.com/en-us/windows/wsl/)), and macOS.
 

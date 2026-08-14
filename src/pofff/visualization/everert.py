@@ -369,10 +369,15 @@ def process_optimization(cfg: Config) -> OptimizationState:
 
     batches = sorted(root.iterdir(), key=lambda p: int(p.name.split("_")[1]))
 
+    if (root / "batch_0/realization-0").is_dir():
+        realization = "realization-0"
+    else:
+        realization = "realization_0"
+
     for batch in batches:
         batch_index = int(batch.name.split("_")[1])
         evals = sorted(
-            (batch / "realization_0").iterdir(),
+            (batch / realization).iterdir(),
             key=lambda p: int(p.name.split("_")[1]),
         )
 
@@ -433,11 +438,16 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
     dst = cfg.path / "figures/best_simulation"
     ensure_dir(dst)
 
+    if (cfg.path / "everest_output/sim_output/batch_0/realization-0").is_dir():
+        realization = "realization-0"
+    else:
+        realization = "realization_0"
+
     src = (
         cfg.path
         / "everest_output/sim_output"
         / f"batch_{opt.ind_batch}"
-        / "realization_0"
+        / realization
         / f"evaluation_{opt.ind_sim}"
         / "para.json"
     )
@@ -480,9 +490,14 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
     finally:
         os.chdir(old_cwd)
 
+    if (cfg.path / "everest_output/sim_output/batch_0/realization-0").is_dir():
+        realization = "realization-0"
+    else:
+        realization = "realization_0"
+
     print(
         f"Best: {cfg.path}/everest_output/sim_output/"
-        f"batch_{opt.ind_batch}/realization_0/"
+        f"batch_{opt.ind_batch}/{realization}/"
         f"evaluation_{opt.ind_sim}"
     )
 

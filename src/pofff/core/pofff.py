@@ -1,9 +1,11 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
+# pylint: disable=R0912
 
 """Main entry script for pofff."""
 
 import argparse
+import math
 import os
 import shutil
 from pathlib import Path
@@ -15,9 +17,10 @@ from pofff.utils.runs import benchmark, data, ert, everest, flow, postprocess
 from pofff.utils.writefile import write_files
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
     """Main pofff execution routine."""
-    args = parse_args()
+    args = parse_args(argv)
+    check_cmdargs(args)
     pofff_path = Path(__file__).resolve().parents[1]
 
     cli = cli_config(args, pofff_path=pofff_path)
@@ -157,7 +160,7 @@ def generate_figures(cfg: PofffConfig) -> None:
     benchmark(cfg)
 
 
-def parse_args():
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Define and parse command-line arguments."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -235,4 +238,106 @@ def parse_args():
         help="Use precomputed Wasserstein distances if available "
         "(set to '0' to recompute)",
     )
-    return parser.parse_known_args()[0]
+    return parser.parse_args(argv)
+
+
+def check_cmdargs(cmdargs: argparse.Namespace) -> None:
+    """Validate command-line arguments and incompatible operations.
+
+    The checks cover input and output paths, evaluation times, saturation and
+    concentration thresholds, options ignored by specialized workflows, and
+    combinations that do not result in any operation.
+
+    Parameters
+    ----------
+    cmdargs
+        Parsed arguments returned by :func:`parse_args`.
+
+    Raises
+    ------
+    SystemExit
+        If an argument is invalid or an incompatible combination is requested.
+    """
+    if not cmdargs.output:
+        print("\nInvalid value for '-o', the output directory cannot be empty.\n")
+        raise SystemExit(1)
+    mode = cmdargs.mode
+    if mode not in {"fair", "none"}:
+        if not cmdargs.input:
+            print("\nInvalid value for '-i', the input file cannot be empty.\n")
+            raise SystemExit(1)
+        if not cmdargs.input.lower().endswith(".toml"):
+            print(
+                f"\nInvalid extension for input file '-i {cmdargs.input}', "
+                "the valid extension is .toml.\n"
+            )
+            raise SystemExit(1)
+    times = cmdargs.times
+    try:
+        time_values = [float(value.strip()) for value in times.split(",")]
+    except ValueError:
+        time_values = []
+    if not time_values or any(
+        not math.isfinite(value) or value <= 0 for value in time_values
+    ):
+        print(
+            f"\nInvalid value '-t {times}', expected positive finite numbers "
+            "separated by commas, e.g., '-t 24,48,72'.\n"
+        )
+        raise SystemExit(1)
+    minimum_saturation = cmdargs.minimumsaturation
+    try:
+        minimum_saturation_value = float(minimum_saturation)
+    except ValueError:
+        minimum_saturation_value = float("nan")
+    if (
+        not math.isfinite(minimum_saturation_value)
+        or minimum_saturation_value < 0
+        or minimum_saturation_value > 1
+    ):
+        print(
+            f"\nInvalid value '-s {minimum_saturation}', expected a finite "
+            "number between 0 and 1.\n"
+        )
+        raise SystemExit(1)
+    minimum_concentration = cmdargs.minimumconcentration
+    try:
+        minimum_concentration_value = float(minimum_concentration)
+    except ValueError:
+        minimum_concentration_value = float("nan")
+    valid_concentrations = [5e-2, 1e-1]
+    if (
+        not math.isfinite(minimum_concentration_value)
+        or minimum_concentration_value not in valid_concentrations
+    ):
+        print(
+            f"\nInvalid value '-c {minimum_concentration}', valid values are "
+            "'5e-2' and '1e-1'.\n"
+        )
+        raise SystemExit(1)
+    if mode == "fair":
+        ignored_options = {
+            "-i": ("input", "input.toml"),
+            "-f": ("figures", "basic"),
+            "-t": ("times", "0.25"),
+            "-e": ("experiment", "C2"),
+        }
+        invalid_options = [
+            option
+            for option, (name, default) in ignored_options.items()
+            if getattr(cmdargs, name) != default
+        ]
+        if invalid_options:
+            print(
+                "\nInvalid option for '-m fair'; this workflow uses its own "
+                "input data, figure mode, evaluation times, and experiment. "
+                f"Invalid options: {', '.join(invalid_options)}.\n"
+            )
+            raise SystemExit(1)
+    if mode == "files" and cmdargs.figures == "all":
+        print(
+            "\nInvalid combination, '-f all' cannot be used with '-m files' "
+            "because this mode only generates input files. Use '-f none' or "
+            "omit the '-f' option.\n"
+        )
+        raise SystemExit(1)

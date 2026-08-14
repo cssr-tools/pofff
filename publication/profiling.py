@@ -57,12 +57,17 @@ def collect_simulation_times(root: Path) -> list:
     """Collect TCPU times from successful OPM Flow runs."""
     times: list[float] = []
 
+    if (root / "batch_0/realization-0").is_dir():
+        realization = "realization-0"
+    else:
+        realization = "realization_0"
+
     for batch in sorted(root.iterdir()):
-        realization = batch / "realization_0"
-        if not realization.exists():
+        realization_num = batch / realization
+        if not realization_num.exists():
             continue
 
-        for evaluation in sorted(realization.iterdir()):
+        for evaluation in sorted(realization_num.iterdir()):
             if (evaluation / "OK").exists():
                 summary = OpmSummary(str(evaluation / "APPENDIXC.SMSPEC"))
                 times.append(summary["TCPU"][-1])
@@ -104,7 +109,7 @@ def main() -> None:
 
         # --- Optimization -----------------------------------------------------
         t0 = time.perf_counter()
-        run(["everest", "run", "everest.yml"], cwd=WORKDIR)
+        run(["everest", "run", "everest.yml", "--skip-prompt"], cwd=WORKDIR)
         t1 = time.perf_counter()
         optimization = t1 - t0
 
@@ -188,7 +193,7 @@ def main() -> None:
     axis.set_xlabel("Number of cores")
     axis.set_xticks(NCORES[::-1])
     axis.set_yticks(total_times[::-1])
-    axis.set_ylim(1500, 30000)
+    # axis.set_ylim(1500, 30000)
 
     fig.savefig(PROFILING_DIR / "figure12.png")
 
