@@ -13,6 +13,7 @@ from pofff.visualization.benchmark import run_benchmark
 from pofff.visualization.error_table import run_error_table
 from pofff.visualization.everert import run_everert
 from pofff.visualization.maps import run_maps
+from pofff.visualization.sparse_values import main as sparse_values
 
 
 def _run(cmd: Sequence[str]) -> None:
@@ -77,13 +78,7 @@ def benchmark(cfg: PofffConfig) -> None:
     ]
     run_maps(args)
 
-    if cfg.mode != "fair":
-        _run(
-            [
-                "python",
-                str(cfg.path / "visualization" / "sparse_values.py"),
-            ]
-        )
+    sparse_values(timeseries_file=f"{cfg.location}/time_series.csv")
 
     args = [
         "-f",

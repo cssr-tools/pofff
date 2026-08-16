@@ -2,7 +2,6 @@ controls:
   - name: para
     type: generic_control
     min: 0
-    control_type: integer
     perturbation_magnitude: 0.01 # Not used for scipy/differential_evolution, but requiered by everest
     variables:
 ${variables_block}

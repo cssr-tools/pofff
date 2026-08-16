@@ -21,7 +21,7 @@ def test_a_main(tmp_path, monkeypatch):
     input_config = repo_root / "examples" / "input.toml"
     shutil.copy(input_config, tmp_path / "input.toml")
     monkeypatch.chdir(tmp_path)
-    main()
+    main([])
     for name in [
         "compare_all_time_series.png",
         "map_0.25h.png",
