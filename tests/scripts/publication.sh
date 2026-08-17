@@ -82,50 +82,52 @@ cp $WHR/publication/appendixc.mako .
 python3 accuracy.py
 cd $WHR
 
-files=(
-    "test_outputs/publication/figure3/_figure3a.png"
-    "test_outputs/publication/figure3/_figure3b.png"
-    "test_outputs/publication/figure4/_figure4ish.png"
-    "test_outputs/publication/figures5d-f/_figure5d.png"
-    "test_outputs/publication/figures5d-f/_figure5e.png"
-    "test_outputs/publication/figures5d-f/_figure5f.png"
-    "test_outputs/publication/figures10d-f/_figure10d.png"
-    "test_outputs/publication/figures10d-f/_figure10e.png"
-    "test_outputs/publication/figures10d-f/_figure10f.png"
-    "test_outputs/publication/table4_figures5-8/output/zoom_means_segmented_snapshots_satmin-0.01_conmin-0.1.png"
-    "test_outputs/publication/table4_figures5-8/output/compare_all_time_series.png"
-    "test_outputs/publication/table4_figures5-8/output/map_24h.png"
-    "test_outputs/publication/table4_figures5-8/output/map_72h.png"
-    "test_outputs/publication/table4_figures5-8/output/map_120h.png"
-    "test_outputs/publication/table4_figures5-8/output/error_table_satmin-0.01_conmin-0.1.csv"
-    "test_outputs/publication/table4_figures5-8/output/sparse_data.csv"
-    "test_outputs/publication/table5_figures10-11/output/zoom_means_segmented_snapshots_satmin-0.01_conmin-0.05.png"
-    "test_outputs/publication/table5_figures10-11/output/map_24h.png"
-    "test_outputs/publication/table5_figures10-11/output/map_72h.png"
-    "test_outputs/publication/table5_figures10-11/output/map_120h.png"
-    "test_outputs/publication/table5_figures10-11/output/error_table_satmin-0.01_conmin-0.05.csv"
-    "test_outputs/publication/table5_figures10-11/output/sparse_data.csv"
-    "test_outputs/publication/table7_figure12/profiling/profiling_ncpu_16.txt"
-    "test_outputs/publication/table7_figure12/profiling/figure12.png"
-    "test_outputs/publication/table8/sensitivity/table8.txt"
-    "test_outputs/publication/table9/accuracy/accuracy-time-trade-offs.txt"
-)
+files="
+test_outputs/publication/figure3/_figure3a.png
+test_outputs/publication/figure3/_figure3b.png
+test_outputs/publication/figure4/_figure4ish.png
+test_outputs/publication/figures5d-f/_figure5d.png
+test_outputs/publication/figures5d-f/_figure5e.png
+test_outputs/publication/figures5d-f/_figure5f.png
+test_outputs/publication/figures10d-f/_figure10d.png
+test_outputs/publication/figures10d-f/_figure10e.png
+test_outputs/publication/figures10d-f/_figure10f.png
+test_outputs/publication/table4_figures5-8/output/zoom_means_segmented_snapshots_satmin-0.01_conmin-0.1.png
+test_outputs/publication/table4_figures5-8/output/compare_all_time_series.png
+test_outputs/publication/table4_figures5-8/output/map_24h.png
+test_outputs/publication/table4_figures5-8/output/map_72h.png
+test_outputs/publication/table4_figures5-8/output/map_120h.png
+test_outputs/publication/table4_figures5-8/output/error_table_satmin-0.01_conmin-0.1.csv
+test_outputs/publication/table4_figures5-8/output/sparse_data.csv
+test_outputs/publication/table5_figures10-11/output/zoom_means_segmented_snapshots_satmin-0.01_conmin-0.05.png
+test_outputs/publication/table5_figures10-11/output/map_24h.png
+test_outputs/publication/table5_figures10-11/output/map_72h.png
+test_outputs/publication/table5_figures10-11/output/map_120h.png
+test_outputs/publication/table5_figures10-11/output/error_table_satmin-0.01_conmin-0.05.csv
+test_outputs/publication/table5_figures10-11/output/sparse_data.csv
+test_outputs/publication/table7_figure12/profiling/profiling_ncpu_16.txt
+test_outputs/publication/table7_figure12/profiling/figure12.png
+test_outputs/publication/table8/sensitivity/table8.txt
+test_outputs/publication/table9/accuracy/accuracy-time-trade-offs.txt
+"
 
 missing_file="test_outputs/missing_publication_files.txt"
 missing=0
 
 rm -f "$missing_file"
 
-for f in "${files[@]}"; do
-    if [[ ! -f "$f" ]]; then
+for f in $files; do
+    if [ ! -f "$f" ]; then
         echo "$f" >> "$missing_file"
-        ((missing++))
+        missing=$((missing + 1))
     fi
 done
 
-if (( missing == 0 )); then
+if [ "$missing" -eq 0 ]; then
     echo "All figures and files exist."
+    return 0
 else
     echo "$missing figure(s) or file(s) missing."
     echo "See $missing_file"
+    return 1
 fi
