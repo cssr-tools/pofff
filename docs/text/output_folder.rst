@@ -1,6 +1,5 @@
-*************
 Output folder
-*************
+=============
 
 ==========
 Single run
@@ -42,3 +41,6 @@ in the `ert.toml <https://github.com/cssr-tools/pofff/blob/main/examples/ert.tom
 
 The best_simulation folder contains the closest simulation to the observations, and generates the tables
 and pngs figures as in the single run folder.
+
+
+The generated OPM input, ERT and Everest configurations, job scripts, CSV data, and best-simulation files can be inspected and, where appropriate, edited and rerun. Use the commands in :doc:`examples` to reproduce additional output layouts.

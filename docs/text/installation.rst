@@ -1,4 +1,3 @@
-============
 Installation
 ============
 
@@ -146,3 +145,19 @@ You can check if the installation of OPM Flow succeded by typing in the terminal
 Source build in macOS
 +++++++++++++++++++++
 See `this repository <https://github.com/daavid00/OPM-Flow_macOS>`_ dedicated to build OPM Flow from source in the latest macOS (GitHub actions), and tested with **pycopm**, another repository in cssr-tools.
+
+
+Verification
+------------
+
+.. code-block:: console
+
+   pofff --help
+   flow --help
+   ert --help
+   everest --help
+
+Next steps
+----------
+
+Continue with :doc:`tutorial` or review :doc:`configuration_file`.

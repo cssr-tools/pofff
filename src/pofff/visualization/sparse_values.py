@@ -2,12 +2,22 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Generate sparse benchmark values from a time series CSV."""
+"""Generate FluidFlower sparse benchmark values from time-series data.
 
-import sys
+The module validates the input duration, extracts maxima, event times, and
+72-hour quantities from the benchmark columns, and writes the standard sparse
+CSV layout."""
+
 from pathlib import Path
 
 import numpy as np
+
+from pofff.utils.terminal import (
+    cli_correct_value,
+    cli_error_value,
+    pofff_error,
+    pofff_info,
+)
 
 SECONDS_PER_HOUR = 3600
 SECONDS_PER_DAY = 86400
@@ -18,34 +28,40 @@ def main(
     timeseries_file: str = "time_series.csv",
     output_file: str = "sparse_data.csv",
 ) -> None:
-    """Read a time series CSV, extract benchmark values,
-    and write them in sparse CSV format."""
+    """Read a time series CSV, extract benchmark values.
+
+    The selected file-generation, simulation, data, history-matching, and
+    plotting stages are executed in dependency order.
+
+    Parameters
+    ----------
+    timeseries_file : str, optional
+        Time-series CSV containing the benchmark quantities.
+    output_file : str, optional
+        Sparse benchmark CSV to create."""
 
     if not Path(timeseries_file).exists():
-        print(f"ERROR: File not found: {timeseries_file}")
-        sys.exit(1)
+        pofff_error(f"file {cli_error_value(timeseries_file)} was not found.")
 
     values = np.genfromtxt(timeseries_file, delimiter=",", skip_header=1)
 
     if values.ndim != 2 or values.shape[0] == 0:
-        print("ERROR: time_series.csv contains no valid data")
-        sys.exit(1)
+        pofff_error(f"file {cli_error_value(timeseries_file)} contains no valid data.")
 
     time = values[:, 0]
 
     if time[-1] < REQUIRED_TIME:
         sim_hours = time[-1] / SECONDS_PER_HOUR
-        print(
-            "The box quantities in the benchmark figures require at least "
-            f"72 hours of simulation (current simulation: {sim_hours:.2f} h)"
+        pofff_info(
+            "the box quantities require at least 72 hours of simulation; "
+            f"the current simulation contains {sim_hours:.2f} h."
         )
-        sys.exit(0)
+        return
 
     try:
         idx_72h = np.where(time == REQUIRED_TIME)[0][0]
     except IndexError:
-        print("ERROR: No data point exactly at 72 hours (259200 s)")
-        sys.exit(1)
+        pofff_error(f"missing data at {cli_correct_value('72 hours (259200 s)')}.")
 
     sparse = {}
 

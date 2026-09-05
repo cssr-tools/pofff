@@ -3,13 +3,18 @@
 # https://github.com/fluidflower/general/blob/main/evaluation/compare_sparse_data.py
 # pylint: disable=R0914,R0915,C0103
 
-"""Quantify errors between simulation results and experimental data
-and summarize them in a comparison table."""
+"""Compare simulation and experimental FluidFlower benchmark metrics.
+
+The module loads sparse quantities and segmented Wasserstein distances, computes
+relative errors for participating groups, ranks the reported metrics, and writes
+a formatted comparison table for the selected segmentation thresholds."""
 
 import argparse
 import os
 
 import numpy as np
+
+from pofff.utils.terminal import pofff_info
 
 NUM_EXPERIMENTS = 5  # Number of experimental realizations
 NUM_MEASURABLES = 13  # Number of reported sparse quantities
@@ -18,8 +23,13 @@ DISTANCE_SCALE = 850.0  # Scaling factor for Wasserstein distances
 LANL_INDEX = 5  # Index of LANL (excluded in distance stats)
 
 
-def parse_arguments(argv):
-    """Parse command-line arguments controlling paths and thresholds."""
+def _parse_arguments(argv):
+    """Parse command-line arguments controlling paths and thresholds.
+
+    Parameters
+    ----------
+    argv : object
+        Arguments to parse instead of the process command line."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="This script compares the data "
@@ -52,11 +62,16 @@ def parse_arguments(argv):
         "-a", "--add", default="1", help="Whether to add the local result to plots."
     )
 
-    return vars(parser.parse_known_args(argv)[0])
+    return vars(parser.parse_args(argv))
 
 
-def load_sparse_csv(filename):
-    """Load a sparse CSV file, automatically handling optional headers."""
+def _load_sparse_csv(filename):
+    """Load a sparse CSV file, automatically handling optional headers.
+
+    Parameters
+    ----------
+    filename : object
+        Path to the input file."""
     skip_header = 0
     with open(filename, "r", encoding="utf8") as f:
         # Detect header line by first character
@@ -72,9 +87,13 @@ def load_sparse_csv(filename):
 
 
 def run_error_table(argv=None):
-    """Compute error metrics and Wasserstein distances
-    and write a formatted comparison table to disk."""
-    cmdargs = parse_arguments(argv)
+    """Compute and write the benchmark error comparison table.
+
+    Parameters
+    ----------
+    argv : object, optional
+        Arguments to parse instead of the process command line."""
+    cmdargs = _parse_arguments(argv)
 
     path = cmdargs["path"] + "/fluidflower/"
 
@@ -121,8 +140,8 @@ def run_error_table(argv=None):
     stddevs = np.zeros((NUM_MEASURABLES, numGroups))
 
     for i, fileName in zip(range(numGroups), fileNames):
-        print(f"Processing {fileName}.")
-        data = load_sparse_csv(fileName)
+        pofff_info(f"processing {fileName}.")
+        data = _load_sparse_csv(fileName)
         means[:, i] = data[:, 2]
         stddevs[:, i] = data[:, 5]
 

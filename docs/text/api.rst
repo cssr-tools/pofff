@@ -1,17 +1,16 @@
-=================
 pofff Python API
-=================
+================
 
-The main script for the **pofff** executable is located in the core folder. The data from the
-FluidFlower benchmark is located in the fluidflower forlder, which is downloaded and modified
-from https://github.com/fluidflower. The geology folder contains the geometry to generate the
-corner-point grid. The different jobs called by ERT and everest are located in the jobs folder.
-The templeates folder contains mako files to generate the input decks. The utils folder has
-scripts to comunicate all parts in the framework. Finally, the visualization folder hosts
-scripts to postprocess the data.
+The top-level executable coordinates configuration, grid and property generation, file writing, simulation, history matching, data processing, and visualization. ``fluidflower`` contains benchmark data, ``geology`` contains corner-point geometry, ``jobs`` contains ERT and Everest jobs, ``templates`` contains Mako inputs, ``utils`` connects the workflows, and ``visualization`` contains benchmark postprocessing.
 
 .. figure:: figs/content.png
+   :alt: Files and directories in the pofff package
 
    Files in the pofff package.
 
-.. include:: modules.rst
+API files are regenerated under ``docs/text/api`` before each build.
+
+.. toctree::
+   :maxdepth: 2
+
+   api/modules

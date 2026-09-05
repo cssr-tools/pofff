@@ -1,14 +1,18 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Utility functions for running simulations, processing data,
-and generating benchmark plots."""
+"""Execute simulation, data, history-matching, and plotting workflows.
+
+The functions run OPM Flow and the maintained data scripts, launch ERT or
+Everest, postprocess ensemble results, and coordinate benchmark maps, sparse
+values, Wasserstein comparisons, and error tables."""
 
 import subprocess
 from collections.abc import Sequence
 from pathlib import Path
 
 from pofff.config.config import PofffConfig
+from pofff.utils.terminal import cli_correct_value, cli_error_value, pofff_error
 from pofff.visualization.benchmark import run_benchmark
 from pofff.visualization.error_table import run_error_table
 from pofff.visualization.everert import run_everert
@@ -17,12 +21,32 @@ from pofff.visualization.sparse_values import main as sparse_values
 
 
 def _run(cmd: Sequence[str]) -> None:
-    """Execute a command and abort if it fails."""
+    """Execute a command and abort if it fails.
+
+    Parameters
+    ----------
+    cmd : Sequence[str]
+        Command and arguments to execute without a shell.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If the command exits with a nonzero status."""
     subprocess.run(cmd, check=True)
 
 
 def flow(cfg: PofffConfig) -> None:
-    """Run the OPM Flow simulator with configured options."""
+    """Run the OPM Flow simulator with configured options.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If OPM Flow exits with a nonzero status."""
     _run(
         cfg.flow.split(" ")
         + [f"--output-dir={cfg.fol}", str(Path(cfg.fol) / f"{cfg.data}.DATA")]
@@ -30,7 +54,17 @@ def flow(cfg: PofffConfig) -> None:
 
 
 def data(cfg: PofffConfig) -> None:
-    """Generate benchmark time-series and spatial data."""
+    """Generate benchmark time-series and spatial data.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If a data or metric script exits with a nonzero status."""
     _run(
         [
             "python",
@@ -61,7 +95,12 @@ def data(cfg: PofffConfig) -> None:
 
 
 def benchmark(cfg: PofffConfig) -> None:
-    """Generate benchmark figures and comparisons."""
+    """Generate benchmark figures and comparisons.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     args = [
         "-e",
         cfg.experiment,
@@ -102,10 +141,10 @@ def benchmark(cfg: PofffConfig) -> None:
 
     if cfg.figures == "all":
         if cfg.times != "24,48,72,96,120":
-            print(
-                "The error table requires a 120-hour simulation.\n"
-                "Please run with -t '24,48,72,96,120' "
-                f"(current: -t {cfg.times})."
+            pofff_error(
+                "the error table requires a 120-hour simulation, no "
+                f"{cli_error_value(f'-t {cfg.times}')} but "
+                f"{cli_correct_value('-t 24,48,72,96,120')}."
             )
         else:
             args = [
@@ -124,17 +163,37 @@ def benchmark(cfg: PofffConfig) -> None:
 
 
 def everest() -> None:
-    """Run Everest optimization and skip interactive prompts."""
+    """Run Everest optimization and skip interactive prompts.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If Everest exits with a nonzero status."""
     _run(["everest", "run", "everest.yml", "--skip-prompt"])
 
 
 def ert(cfg: PofffConfig) -> None:
-    """Run ERT with configured arguments."""
+    """Run ERT with configured arguments.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If ERT exits with a nonzero status."""
     _run(["ert", *(cfg.ertargs or "").split(), "ert.txt"])
 
 
 def postprocess(cfg: PofffConfig) -> None:
-    """Postprocess ERT and Everest simulation results."""
+    """Postprocess ERT and Everest simulation results.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     args = [
         "-e",
         str(cfg.path),

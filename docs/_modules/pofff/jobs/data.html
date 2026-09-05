@@ -1,0 +1,1244 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pofff.jobs.data &#8212; pofff  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=530fd138" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pofff/jobs/data';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-09-05"/>
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="pofff  documentation - Home"/>
+    <img src="../../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="pofff  documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../publication.html">
+    Reproducing the publication
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../related.html">
+    Related projects
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../publication.html">
+    Reproducing the publication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../related.html">
+    Related projects
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pofff.jobs.data</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pofff.jobs.data</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># SPDX-FileCopyrightText: 2023-2026 NORCE Research AS</span>
+<span class="c1"># SPDX-License-Identifier: GPL-3.0</span>
+<span class="c1"># pylint: disable=R0914</span>
+
+<span class="sd">"""Generate FluidFlower benchmark data from OPM Flow results.</span>
+
+<span class="sd">The job locates the current simulation, reads restart, grid, initialization, and</span>
+<span class="sd">summary files through the OPM Python bindings, calculates sparse benchmark time</span>
+<span class="sd">series, maps saturation and dissolved CO2 to the reporting grid, and writes CSV</span>
+<span class="sd">files at the requested evaluation times."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NDArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opm.io.ecl</span><span class="w"> </span><span class="kn">import</span> <span class="n">EclFile</span> <span class="k">as</span> <span class="n">OpmFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opm.io.ecl</span><span class="w"> </span><span class="kn">import</span> <span class="n">EGrid</span> <span class="k">as</span> <span class="n">OpmGrid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opm.io.ecl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ERst</span> <span class="k">as</span> <span class="n">OpmRestart</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">opm.io.ecl</span><span class="w"> </span><span class="kn">import</span> <span class="n">ESmry</span> <span class="k">as</span> <span class="n">OpmSummary</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.interpolate</span><span class="w"> </span><span class="kn">import</span> <span class="n">interp1d</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pofff.utils.terminal</span><span class="w"> </span><span class="kn">import</span> <span class="n">cli_error_value</span><span class="p">,</span> <span class="n">pofff_error</span>
+
+<span class="n">SECONDS_IN_DAY</span> <span class="o">=</span> <span class="mf">86400.0</span>
+<span class="n">GAS_DEN_REF</span> <span class="o">=</span> <span class="mf">1.86843</span>
+<span class="n">WAT_DEN_REF</span> <span class="o">=</span> <span class="mf">998.108</span>
+<span class="n">KMOL_TO_KG</span> <span class="o">=</span> <span class="mf">44.0</span>
+<span class="n">FIP_BOXC</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+<span class="n">FIP_DISS_A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">FIP_SEAL_A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">FIP_DISS_B</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">FIP_SEAL_B</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,)</span>
+
+<span class="n">ArrayLike</span> <span class="o">=</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">NDArray</span>
+
+
+<div class="viewcode-block" id="SimulationContext">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data.SimulationContext">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimulationContext</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Store simulation files, time grids, and OPM grid metadata.</span>
+
+<span class="sd">    The object is initialized from command-line selections. OPM handles, report</span>
+<span class="sd">    times, active-cell indices, pore volumes, and grid dimensions are populated</span>
+<span class="sd">    after the current simulation base name is located.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    resolution</span>
+<span class="sd">        Numbers of benchmark reporting cells in x and z order.</span>
+<span class="sd">    dense_t</span>
+<span class="sd">        Requested dense-output times in seconds.</span>
+<span class="sd">    maps</span>
+<span class="sd">        Path to the NumPy mapping from reporting cells to simulation cells.</span>
+<span class="sd">    where</span>
+<span class="sd">        Directory containing simulation files and receiving generated CSV data.</span>
+<span class="sd">    sparse_t</span>
+<span class="sd">        Uniform sparse-output interval in seconds.</span>
+<span class="sd">    dims</span>
+<span class="sd">        FluidFlower dimensions in x, y, and z order, in metres.</span>
+<span class="sd">    sim</span>
+<span class="sd">        Simulation base path without an OPM file extension.</span>
+<span class="sd">    unrst</span>
+<span class="sd">        Open OPM restart result, or ``None`` before results are loaded.</span>
+<span class="sd">    ini</span>
+<span class="sd">        Open OPM initialization result, or ``None`` before results are loaded.</span>
+<span class="sd">    egrid</span>
+<span class="sd">        Open OPM grid result, or ``None`` before results are loaded.</span>
+<span class="sd">    smspec</span>
+<span class="sd">        Open OPM summary result, or ``None`` before results are loaded.</span>
+<span class="sd">    times</span>
+<span class="sd">        Restart times relative to the start of CO2 injection, in seconds.</span>
+<span class="sd">    times_summary</span>
+<span class="sd">        Summary times relative to the start of CO2 injection, in seconds.</span>
+<span class="sd">    time_initial</span>
+<span class="sd">        Absolute simulator time at the start of CO2 injection, in seconds.</span>
+<span class="sd">    porv</span>
+<span class="sd">        Pore volumes in global cell order.</span>
+<span class="sd">    actind</span>
+<span class="sd">        Global indices of cells with positive pore volume.</span>
+<span class="sd">    gxyz</span>
+<span class="sd">        Simulation-grid dimensions in x, y, and z order.</span>
+<span class="sd">    norst</span>
+<span class="sd">        Number of restart report steps."""</span>
+
+    <span class="n">resolution</span><span class="p">:</span> <span class="n">NDArray</span>
+    <span class="n">dense_t</span><span class="p">:</span> <span class="n">NDArray</span>
+    <span class="n">maps</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">where</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
+    <span class="n">sparse_t</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">600.0</span>
+    <span class="n">dims</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">]))</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">unrst</span><span class="p">:</span> <span class="n">OpmRestart</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ini</span><span class="p">:</span> <span class="n">OpmFile</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">egrid</span><span class="p">:</span> <span class="n">OpmGrid</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">smspec</span><span class="p">:</span> <span class="n">OpmSummary</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">times</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">times_summary</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">time_initial</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">porv</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">actind</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">gxyz</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">norst</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="SparseResults">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data.SparseResults">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SparseResults</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Store sparse FluidFlower quantities before writing the time series.</span>
+
+<span class="sd">    The state is initialized by :func:`_initialize_sparse_results` with the uniform</span>
+<span class="sd">    time grid, region identifiers, and cell dimensions. Pressure, mobile, immobile,</span>
+<span class="sd">    dissolved, seal, and migration quantities are then populated from OPM summary</span>
+<span class="sd">    and restart results and interpolated to ``times_data``.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx</span>
+<span class="sd">        Shared simulation context and OPM file handles.</span>
+<span class="sd">    times_data</span>
+<span class="sd">        Uniform sparse-output times in seconds.</span>
+<span class="sd">    fipnum</span>
+<span class="sd">        FIPNUM values in global cell order.</span>
+<span class="sd">    dx, dz</span>
+<span class="sd">        Cell dimensions in x and z order, in metres.</span>
+<span class="sd">    pop1, pop2</span>
+<span class="sd">        Pressure time series at the two observation points, in pascals.</span>
+<span class="sd">    moba, imma, dissa, seala</span>
+<span class="sd">        Mobile, immobile, dissolved, and seal CO2 masses in box A, in kilograms.</span>
+<span class="sd">    mobb, immb, dissb, sealb</span>
+<span class="sd">        Mobile, immobile, dissolved, and seal CO2 masses in box B, in kilograms.</span>
+<span class="sd">    sealt</span>
+<span class="sd">        Total CO2 mass in the seal regions, in kilograms.</span>
+<span class="sd">    m_c_series</span>
+<span class="sd">        Mass-center migration values calculated at restart times.</span>
+<span class="sd">    m_c</span>
+<span class="sd">        Mass-center migration values interpolated to ``times_data``, in metres."""</span>
+
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span>
+    <span class="n">times_data</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">fipnum</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">dx</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">dz</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">pop1</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">pop2</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">moba</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">imma</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">dissa</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">seala</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">mobb</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">immb</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">dissb</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">sealb</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">sealt</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">m_c_series</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">m_c</span><span class="p">:</span> <span class="n">NDArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Generate sparse time-series and dense spatial benchmark data.</span>
+
+<span class="sd">    Parse reporting-grid settings, locate the OPM simulation, load its results, and</span>
+<span class="sd">    write the benchmark time-series and spatial-map CSV files.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    argv : list[str] | None, optional</span>
+<span class="sd">        Arguments to parse instead of ``sys.argv[1:]``."""</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Benchmark postprocessing"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--resolution"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"280,120"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--time"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"24,48,72,96,120"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--maps"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"cellmap.npy"</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"NOMONOTONIC"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">ctx</span> <span class="o">=</span> <span class="n">SimulationContext</span><span class="p">(</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"resolution"</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+        <span class="n">dense_t</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"time"</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span> <span class="o">*</span> <span class="mf">3600.0</span><span class="p">,</span>
+        <span class="n">maps</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">"maps"</span><span class="p">]),</span>
+    <span class="p">)</span>
+
+    <span class="n">ctx</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">_find_simulation_base</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">where</span><span class="p">)</span>
+    <span class="n">_read_opm_results</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">_write_sparse_outputs</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+    <span class="n">_write_dense_outputs</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_find_simulation_base">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._find_simulation_base">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_simulation_base</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Locate the simulation base name from an OPM restart file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : Path</span>
+<span class="sd">        Directory to search for a ``.UNRST`` file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Path</span>
+<span class="sd">        Restart-file path without its extension.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SystemExit</span>
+<span class="sd">        If the directory contains no ``.UNRST`` result."""</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s2">".UNRST"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">f</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="n">pofff_error</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"no </span><span class="si">{</span><span class="n">cli_error_value</span><span class="p">(</span><span class="s1">'.UNRST'</span><span class="p">)</span><span class="si">}</span><span class="s2"> simulation result was found in "</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cli_error_value</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span><span class="si">}</span><span class="s2">."</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_read_opm_results">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._read_opm_results">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_opm_results</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Load OPM restart, initialization, grid, and summary results.</span>
+
+<span class="sd">    Populate OPM handles, injection-relative times, pore volumes, active-cell</span>
+<span class="sd">    indices, and grid dimensions on ``ctx``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Mutable simulation context with an initialized simulation base path."""</span>
+    <span class="k">assert</span> <span class="n">ctx</span><span class="o">.</span><span class="n">sim</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span> <span class="o">=</span> <span class="n">OpmRestart</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">sim</span><span class="si">}</span><span class="s2">.UNRST"</span><span class="p">)</span>
+
+    <span class="n">t0</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span><span class="o">.</span><span class="n">report_steps</span><span class="p">)):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">SECONDS_IN_DAY</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"DOUBHEAD"</span><span class="p">,</span> <span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">t0</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"RSW"</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">SECONDS_IN_DAY</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"DOUBHEAD"</span><span class="p">,</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">t0</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span>
+
+    <span class="n">ctx</span><span class="o">.</span><span class="n">time_initial</span> <span class="o">=</span> <span class="n">t0</span> <span class="ow">or</span> <span class="mf">0.0</span>
+
+    <span class="n">ini</span> <span class="o">=</span> <span class="n">OpmFile</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">sim</span><span class="si">}</span><span class="s2">.INIT"</span><span class="p">)</span>
+    <span class="n">egrid</span> <span class="o">=</span> <span class="n">OpmGrid</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">sim</span><span class="si">}</span><span class="s2">.EGRID"</span><span class="p">)</span>
+    <span class="n">smspec</span> <span class="o">=</span> <span class="n">OpmSummary</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ctx</span><span class="o">.</span><span class="n">sim</span><span class="si">}</span><span class="s2">.SMSPEC"</span><span class="p">)</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">ini</span> <span class="o">=</span> <span class="n">ini</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">egrid</span> <span class="o">=</span> <span class="n">egrid</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">smspec</span> <span class="o">=</span> <span class="n">smspec</span>
+
+    <span class="n">porv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ini</span><span class="p">[</span><span class="s2">"PORV"</span><span class="p">])</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">porv</span> <span class="o">=</span> <span class="n">porv</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">actind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">porv</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">ctx</span><span class="o">.</span><span class="n">times_summary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">smspec</span><span class="p">[</span><span class="s2">"TIME"</span><span class="p">]</span> <span class="o">*</span> <span class="n">SECONDS_IN_DAY</span><span class="p">]</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">gxyz</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">egrid</span><span class="o">.</span><span class="n">dimension</span><span class="p">)</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">norst</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span><span class="o">.</span><span class="n">report_steps</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_initialize_sparse_results">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._initialize_sparse_results">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_initialize_sparse_results</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparseResults</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize sparse time coordinates and OPM cell-property arrays.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Loaded simulation context with initialization data and restart times.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    SparseResults</span>
+<span class="sd">        Sparse state initialized with times, FIPNUM, DX, and DZ arrays.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SystemExit</span>
+<span class="sd">        If initialization data or restart times are unavailable."""</span>
+    <span class="n">ini</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">ini</span>
+    <span class="k">if</span> <span class="n">ini</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pofff_error</span><span class="p">(</span><span class="s2">"OPM initialization data are unavailable for sparse processing."</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="p">:</span>
+        <span class="n">pofff_error</span><span class="p">(</span><span class="s2">"no restart times are available for sparse processing."</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">SparseResults</span><span class="p">(</span>
+        <span class="n">ctx</span><span class="o">=</span><span class="n">ctx</span><span class="p">,</span>
+        <span class="n">times_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">ctx</span><span class="o">.</span><span class="n">sparse_t</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">sparse_t</span><span class="p">),</span>
+        <span class="n">fipnum</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ini</span><span class="p">[</span><span class="s2">"FIPNUM"</span><span class="p">]),</span>
+        <span class="n">dx</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ini</span><span class="p">[</span><span class="s2">"DX"</span><span class="p">]),</span>
+        <span class="n">dz</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ini</span><span class="p">[</span><span class="s2">"DZ"</span><span class="p">]),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_write_sparse_outputs">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._write_sparse_outputs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_sparse_outputs</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calculate and write the sparse benchmark time series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Loaded simulation context and OPM results."""</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">_initialize_sparse_results</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span>
+
+    <span class="n">_extract_summary_quantities</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="n">_compute_mass_center_metric</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="n">_interpolate_sparse_quantities</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+    <span class="n">_write_time_series_csv</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_get_initial_water_pressure">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._get_initial_water_pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_initial_water_pressure</span><span class="p">(</span>
+    <span class="n">unrst</span><span class="p">:</span> <span class="n">OpmRestart</span><span class="p">,</span>
+    <span class="n">fipnum</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+    <span class="n">region</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Return the initial water pressure for one FIP region.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    unrst : OpmRestart</span>
+<span class="sd">        Open OPM restart result containing pressure and capillary pressure.</span>
+<span class="sd">    fipnum : NDArray</span>
+<span class="sd">        FIPNUM values in global cell order.</span>
+<span class="sd">    region : int</span>
+<span class="sd">        FIPNUM identifying the observation-point region.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Water pressure corrected for capillary pressure, in pascals."""</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">fipnum</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+    <span class="n">pressure</span> <span class="o">=</span> <span class="n">unrst</span><span class="p">[</span><span class="s2">"PRESSURE"</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">pressure</span> <span class="o">-</span> <span class="n">unrst</span><span class="p">[</span><span class="s2">"PCGW"</span><span class="p">,</span> <span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">])</span> <span class="o">*</span> <span class="mf">1e5</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_sum_summary_vectors">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._sum_summary_vectors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_sum_summary_vectors</span><span class="p">(</span>
+    <span class="n">smry</span><span class="p">:</span> <span class="n">OpmSummary</span><span class="p">,</span>
+    <span class="n">expressions</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Sum selected OPM summary vectors and convert CO2 to kilograms.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    smry : OpmSummary</span>
+<span class="sd">        Open OPM summary result containing the requested vectors.</span>
+<span class="sd">    expressions : Iterable[str]</span>
+<span class="sd">        OPM summary-vector names to add.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    NDArray</span>
+<span class="sd">        Total mass time series in kilograms."""</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">smry</span><span class="p">[</span><span class="n">expression</span><span class="p">]</span> <span class="k">for</span> <span class="n">expression</span> <span class="ow">in</span> <span class="n">expressions</span><span class="p">))</span> <span class="o">*</span> <span class="n">KMOL_TO_KG</span></div>
+
+
+
+<div class="viewcode-block" id="_extract_summary_quantities">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._extract_summary_quantities">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_summary_quantities</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">SparseResults</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Extract pressures and regional CO2 masses from OPM summary vectors.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Loaded simulation context and OPM summary data.</span>
+<span class="sd">    res : SparseResults</span>
+<span class="sd">        Sparse result arrays populated in place.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SystemExit</span>
+<span class="sd">        If summary or restart results are unavailable."""</span>
+    <span class="n">smry</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">smspec</span>
+    <span class="n">unrst</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span>
+    <span class="k">if</span> <span class="n">smry</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">unrst</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pofff_error</span><span class="p">(</span><span class="s2">"OPM summary and restart data are required for sparse processing."</span><span class="p">)</span>
+    <span class="n">smry_keys</span> <span class="o">=</span> <span class="n">smry</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+    <span class="n">bwpr</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">smry_keys</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"BWPR"</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">","</span> <span class="ow">in</span> <span class="n">k</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">pop1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+        <span class="n">_get_initial_water_pressure</span><span class="p">(</span><span class="n">unrst</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fipnum</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="n">smry</span><span class="p">[</span><span class="n">bwpr</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">*</span> <span class="mf">1e5</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">pop2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+        <span class="n">_get_initial_water_pressure</span><span class="p">(</span><span class="n">unrst</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">fipnum</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+        <span class="n">smry</span><span class="p">[</span><span class="n">bwpr</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="mf">1e5</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">moba</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RGKDM:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_A</span><span class="p">))</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">imma</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RGKDI:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_A</span><span class="p">))</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">dissa</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RWCD:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_A</span><span class="p">))</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">seala</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span>
+        <span class="n">smry</span><span class="p">,</span>
+        <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">FIP_SEAL_A</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"RWCD"</span><span class="p">,</span> <span class="s2">"RGKDM"</span><span class="p">,</span> <span class="s2">"RGKDI"</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">mobb</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RGKDM:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_B</span><span class="p">))</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">immb</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RGKDI:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_B</span><span class="p">))</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">dissb</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span><span class="n">smry</span><span class="p">,</span> <span class="p">(</span><span class="sa">f</span><span class="s2">"RWCD:</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">FIP_DISS_B</span><span class="p">))</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">sealb</span> <span class="o">=</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span>
+        <span class="n">smry</span><span class="p">,</span>
+        <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">"</span>
+            <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">FIP_SEAL_B</span>
+            <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"RWCD"</span><span class="p">,</span> <span class="s2">"RGKDM"</span><span class="p">,</span> <span class="s2">"RGKDI"</span><span class="p">)</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">sealt</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">seala</span>
+        <span class="o">+</span> <span class="n">res</span><span class="o">.</span><span class="n">sealb</span>
+        <span class="o">+</span> <span class="n">_sum_summary_vectors</span><span class="p">(</span>
+            <span class="n">smry</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">keyword</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">"</span>
+                <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">keyword</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"RWCD"</span><span class="p">,</span> <span class="s2">"RGKDM"</span><span class="p">,</span> <span class="s2">"RGKDI"</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_compute_mass_center_metric">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._compute_mass_center_metric">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_mass_center_metric</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">SparseResults</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calculate the box-C mass-center migration series.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Loaded simulation context and restart metadata.</span>
+<span class="sd">    res : SparseResults</span>
+<span class="sd">        Sparse result state receiving migration values.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SystemExit</span>
+<span class="sd">        If restart results or grid metadata are unavailable."""</span>
+    <span class="n">unrst</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span>
+    <span class="k">if</span> <span class="n">unrst</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ctx</span><span class="o">.</span><span class="n">gxyz</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ctx</span><span class="o">.</span><span class="n">norst</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pofff_error</span><span class="p">(</span><span class="s2">"OPM restart metadata are required for the mass-center metric."</span><span class="p">)</span>
+
+    <span class="n">boxc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fip</span> <span class="ow">in</span> <span class="n">FIP_BOXC</span> <span class="k">for</span> <span class="n">fip</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">fipnum</span><span class="p">])</span>
+    <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">gxyz</span>
+
+    <span class="n">boxc_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">boxc</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">boxc_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">boxc</span><span class="p">,</span> <span class="o">-</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t_n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">norst</span><span class="p">):</span>
+        <span class="n">rss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"RSW"</span><span class="p">,</span> <span class="n">t_n</span><span class="p">])</span>
+        <span class="n">rssat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"RSWSAT"</span><span class="p">,</span> <span class="n">t_n</span><span class="p">])</span>
+
+        <span class="n">xcw</span> <span class="o">=</span> <span class="n">rss</span> <span class="o">/</span> <span class="p">(</span><span class="n">rss</span> <span class="o">+</span> <span class="n">WAT_DEN_REF</span> <span class="o">/</span> <span class="n">GAS_DEN_REF</span><span class="p">)</span>
+        <span class="n">xcw</span> <span class="o">/=</span> <span class="n">rssat</span> <span class="o">/</span> <span class="p">(</span><span class="n">rssat</span> <span class="o">+</span> <span class="n">WAT_DEN_REF</span> <span class="o">/</span> <span class="n">GAS_DEN_REF</span><span class="p">)</span>
+
+        <span class="n">mc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xcw</span><span class="p">[</span><span class="n">boxc_x</span><span class="p">]</span> <span class="o">-</span> <span class="n">xcw</span><span class="p">[</span><span class="n">boxc</span><span class="p">])</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">dz</span><span class="p">[</span><span class="n">boxc</span><span class="p">]</span>
+            <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xcw</span><span class="p">[</span><span class="n">boxc_z</span><span class="p">]</span> <span class="o">-</span> <span class="n">xcw</span><span class="p">[</span><span class="n">boxc</span><span class="p">])</span> <span class="o">*</span> <span class="n">res</span><span class="o">.</span><span class="n">dx</span><span class="p">[</span><span class="n">boxc</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">m_c_series</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mc</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_interpolate_sparse_quantities">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._interpolate_sparse_quantities">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interpolate_sparse_quantities</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span> <span class="n">res</span><span class="p">:</span> <span class="n">SparseResults</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Interpolate sparse quantities to a uniform time grid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Simulation and summary time coordinates.</span>
+<span class="sd">    res : SparseResults</span>
+<span class="sd">        Sparse quantities replaced by their interpolated arrays."""</span>
+    <span class="k">assert</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times_summary</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="n">res</span><span class="o">.</span><span class="n">m_c</span> <span class="o">=</span> <span class="n">interp1d</span><span class="p">(</span>
+        <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="p">,</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">res</span><span class="o">.</span><span class="n">m_c_series</span><span class="p">],</span>
+        <span class="n">fill_value</span><span class="o">=</span><span class="s2">"extrapolate"</span><span class="p">,</span>
+    <span class="p">)(</span><span class="n">res</span><span class="o">.</span><span class="n">times_data</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span>
+        <span class="s2">"pop1"</span><span class="p">,</span>
+        <span class="s2">"pop2"</span><span class="p">,</span>
+        <span class="s2">"moba"</span><span class="p">,</span>
+        <span class="s2">"imma"</span><span class="p">,</span>
+        <span class="s2">"dissa"</span><span class="p">,</span>
+        <span class="s2">"seala"</span><span class="p">,</span>
+        <span class="s2">"mobb"</span><span class="p">,</span>
+        <span class="s2">"immb"</span><span class="p">,</span>
+        <span class="s2">"dissb"</span><span class="p">,</span>
+        <span class="s2">"sealb"</span><span class="p">,</span>
+        <span class="s2">"sealt"</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times_summary</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"pop"</span><span class="p">)</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">interp1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s2">"extrapolate"</span><span class="p">)(</span><span class="n">res</span><span class="o">.</span><span class="n">times_data</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="_write_time_series_csv">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._write_time_series_csv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_time_series_csv</span><span class="p">(</span><span class="n">res</span><span class="p">:</span> <span class="n">SparseResults</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write sparse benchmark quantities to ``time_series.csv``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    res : SparseResults</span>
+<span class="sd">        Interpolated pressure, mass, and migration series."""</span>
+    <span class="k">assert</span> <span class="n">res</span><span class="o">.</span><span class="n">m_c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="n">header</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">"# t [s], p1 [Pa], p2 [Pa], mobA [kg], immA [kg], dissA [kg], "</span>
+        <span class="s2">"sealA [kg], mobB [kg], immB [kg], dissB [kg], sealB [kg], "</span>
+        <span class="s2">"MC [m], sealTot [kg]"</span>
+    <span class="p">)</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">header</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">times_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">pop1</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">pop2</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.5e</span><span class="si">}</span><span class="s2">,"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">moba</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">imma</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">dissa</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">seala</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">mobb</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">immb</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">dissb</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">sealb</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,"</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">m_c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">res</span><span class="o">.</span><span class="n">sealt</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
+    <span class="n">Path</span><span class="p">(</span><span class="s2">"time_series.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_write_dense_outputs">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._write_dense_outputs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_dense_outputs</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write spatial maps at the requested dense-output times.</span>
+
+<span class="sd">    Map active-cell saturation and dissolved-CO2 concentration to the reporting</span>
+<span class="sd">    grid and write one CSV file for every requested restart time that is available.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Loaded restart data, reporting-grid resolution, and cell mapping.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    SystemExit</span>
+<span class="sd">        If restart or initialization data are unavailable."""</span>
+    <span class="n">unrst</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">unrst</span>
+    <span class="n">porv</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">porv</span>
+    <span class="n">actind</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">actind</span>
+    <span class="k">if</span> <span class="n">unrst</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">porv</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">actind</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pofff_error</span><span class="p">(</span>
+            <span class="s2">"OPM restart and initialization data are required for dense output."</span>
+        <span class="p">)</span>
+
+    <span class="n">dx</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">dz</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">dims</span>
+
+    <span class="n">refx</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resolution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resolution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="p">)</span>
+    <span class="n">refz</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resolution</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">dz</span><span class="p">,</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resolution</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="p">)</span>
+
+    <span class="n">cell_cent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">maps</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">dense_t</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">t_n</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="n">sgas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">unrst</span><span class="p">[</span><span class="s2">"SGAS"</span><span class="p">,</span> <span class="n">t_n</span><span class="p">])</span>
+        <span class="n">rhow</span> <span class="o">=</span> <span class="n">unrst</span><span class="p">[</span><span class="s2">"WAT_DEN"</span><span class="p">,</span> <span class="n">t_n</span><span class="p">]</span>
+        <span class="n">rsw</span> <span class="o">=</span> <span class="n">unrst</span><span class="p">[</span><span class="s2">"RSW"</span><span class="p">,</span> <span class="n">t_n</span><span class="p">]</span>
+        <span class="n">xlco2</span> <span class="o">=</span> <span class="n">rsw</span> <span class="o">/</span> <span class="p">(</span><span class="n">rsw</span> <span class="o">+</span> <span class="n">WAT_DEN_REF</span> <span class="o">/</span> <span class="n">GAS_DEN_REF</span><span class="p">)</span>
+
+        <span class="n">s_full</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">porv</span><span class="p">))</span>
+        <span class="n">c_full</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">porv</span><span class="p">))</span>
+        <span class="n">s_full</span><span class="p">[</span><span class="n">actind</span><span class="p">]</span> <span class="o">=</span> <span class="n">sgas</span>
+        <span class="n">c_full</span><span class="p">[</span><span class="n">actind</span><span class="p">]</span> <span class="o">=</span> <span class="n">xlco2</span> <span class="o">*</span> <span class="n">rhow</span>
+
+        <span class="n">hours</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">t</span> <span class="o">/</span> <span class="mf">3600.0</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="o">%</span> <span class="mi">3600</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">t</span> <span class="o">/</span> <span class="mf">3600.0</span>
+        <span class="n">_write_spatial_map_csv</span><span class="p">(</span>
+            <span class="n">ctx</span><span class="p">,</span> <span class="p">[</span><span class="n">refx</span><span class="p">,</span> <span class="n">refz</span><span class="p">],</span> <span class="n">s_full</span><span class="p">[</span><span class="n">cell_cent</span><span class="p">],</span> <span class="n">c_full</span><span class="p">[</span><span class="n">cell_cent</span><span class="p">],</span> <span class="n">hours</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_write_spatial_map_csv">
+<a class="viewcode-back" href="../../../api/pofff.jobs.data.html#pofff.jobs.data._write_spatial_map_csv">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_write_spatial_map_csv</span><span class="p">(</span>
+    <span class="n">ctx</span><span class="p">:</span> <span class="n">SimulationContext</span><span class="p">,</span>
+    <span class="n">refxz</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">NDArray</span><span class="p">],</span>
+    <span class="n">sgas</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+    <span class="n">cco2</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">,</span>
+    <span class="n">hours</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Write one saturation and concentration reporting-grid map.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ctx : SimulationContext</span>
+<span class="sd">        Output location and reporting-grid resolution.</span>
+<span class="sd">    refxz : list[NDArray]</span>
+<span class="sd">        Reporting-cell centre coordinates in x and z order, in metres.</span>
+<span class="sd">    sgas : NDArray</span>
+<span class="sd">        Gas saturation in reporting-cell order.</span>
+<span class="sd">    cco2 : NDArray</span>
+<span class="sd">        Dissolved-CO2 concentration in reporting-cell order.</span>
+<span class="sd">    hours : int | float</span>
+<span class="sd">        Evaluation time in hours used in the output filename."""</span>
+    <span class="n">nx</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">resolution</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"x,z,saturation,concentration"</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">refxz</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">refxz</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="n">nx</span> <span class="o">*</span> <span class="p">(</span><span class="n">nz</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">+</span> <span class="n">i</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">sgas</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">cco2</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">where</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"spatial_map_</span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s2">h.csv"</span><span class="p">)</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">))</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, NORCE Research AS.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

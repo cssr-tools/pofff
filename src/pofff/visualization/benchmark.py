@@ -2,21 +2,31 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Generate benchmark-format figures and comparisons."""
+"""Generate FluidFlower benchmark figures and comparisons.
+
+The module configures plotting and dispatches the maintained comparison scripts
+for time series, sparse values, segmented Wasserstein distances, and mean
+distance summaries."""
 
 import argparse
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import matplotlib
 import matplotlib.pyplot as plt
 
+from pofff.utils.terminal import cli_correct_value, pofff_error, pofff_info
+
 
 def run_benchmark(argv=None):
-    """Main entry point for generating benchmark figures."""
-    cfg = load_parser(argv)
+    """Configure and generate benchmark comparison figures.
+
+    Parameters
+    ----------
+    argv : object, optional
+        Arguments to parse instead of the process command line."""
+    cfg = _parse_arguments(argv)
 
     cfg["s"] = cfg["minimumsaturation"]
     cfg["c"] = cfg["minimumconcentration"]
@@ -39,16 +49,27 @@ def run_benchmark(argv=None):
         }
     )
 
-    benchmark(cfg)
+    _generate_benchmark_comparisons(cfg)
 
 
-def benchmark(cfg):
-    """Run figure generation and benchmark comparisons."""
+def run(cmd):
+    """Execute external command with logging.
 
-    def run(cmd):
-        """Execute external command with logging."""
-        print("Running:", " ".join(map(str, cmd)))
-        subprocess.run(cmd, check=True)
+    Parameters
+    ----------
+    cmd : object
+        Command and arguments to execute without a shell."""
+    pofff_info(f"running {' '.join(map(str, cmd))}")
+    subprocess.run(cmd, check=True)
+
+
+def _generate_benchmark_comparisons(cfg):
+    """Run the maintained benchmark comparison scripts.
+
+    Parameters
+    ----------
+    cfg : object
+        Shared pofff configuration and derived runtime state."""
 
     run(
         [
@@ -79,11 +100,10 @@ def benchmark(cfg):
 
     if cfg["f"] == "all":
         if cfg["times"] != "24,48,72,96,120":
-            print(
-                "ERROR: Wasserstein distance figures require times "
-                "'24,48,72,96,120'."
+            pofff_error(
+                "Wasserstein distance figures require "
+                f"{cli_correct_value('-t 24,48,72,96,120')}."
             )
-            sys.exit(1)
 
         if float(cfg["s"]) == 0.01 and float(cfg["c"]) in (0.05, 0.1) and cfg["u"]:
             run(
@@ -135,11 +155,16 @@ def benchmark(cfg):
         )
 
 
-def load_parser(argv):
-    """Define and parse command-line arguments."""
+def _parse_arguments(argv):
+    """Define and parse command-line arguments.
+
+    Parameters
+    ----------
+    argv : object
+        Arguments to parse instead of the process command line."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description="Manage the generation of benchmark figures.",
+        description="Manage the generation of _generate_benchmark_comparisons figures.",
     )
 
     parser.add_argument("-c", "--minimumconcentration", default=0.1)
@@ -156,7 +181,7 @@ def load_parser(argv):
         help="Use precomputed Wasserstein distances (1=yes, 0=no)",
     )
 
-    return vars(parser.parse_known_args(argv)[0])
+    return vars(parser.parse_args(argv))
 
 
 if __name__ == "__main__":

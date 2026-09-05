@@ -2,7 +2,19 @@
 # SPDX-License-Identifier: GPL-3.0
 # pylint: disable=R0912
 
-"""Main entry script for pofff."""
+"""Command-line entry point and top-level workflow coordination for pofff.
+
+pofff supports connected workflows for FluidFlower history matching:
+
+* File generation creates OPM Flow, ERT, and Everest input.
+* Single execution runs OPM Flow and generates benchmark data.
+* History matching runs ERT ensemble studies or Everest optimization.
+* Postprocessing creates benchmark maps, metrics, and comparison figures.
+
+This module parses and validates CLI arguments, builds the shared configuration,
+prepares output folders, dispatches the selected workflows, and reports results.
+Grid construction, file writing, execution, and visualization are implemented in
+the utility and visualization modules."""
 
 import argparse
 import math
@@ -14,19 +26,35 @@ from pofff.config.config import CliConfig, PofffConfig
 from pofff.utils.inputvalues import build_config, load_toml, postprocess_config
 from pofff.utils.mapproperties import grid_and_properties
 from pofff.utils.runs import benchmark, data, ert, everest, flow, postprocess
+from pofff.utils.terminal import (
+    cli_correct_value,
+    cli_error_value,
+    pofff_error,
+    pofff_info,
+    pofff_success,
+    pofff_tip,
+)
 from pofff.utils.writefile import write_files
 
 
 def main(argv: list[str] | None = None) -> None:
-    """Main pofff execution routine."""
-    args = parse_args(argv)
-    check_cmdargs(args)
+    """Main pofff execution routine.
+
+    The selected file-generation, simulation, data, history-matching, and
+    plotting stages are executed in dependency order.
+
+    Parameters
+    ----------
+    argv : list[str] | None, optional
+        Arguments to parse instead of the process command line."""
+    args = _parse_arguments(argv)
+    _validate_arguments(args)
     pofff_path = Path(__file__).resolve().parents[1]
 
-    cli = cli_config(args, pofff_path=pofff_path)
+    cli = _build_cli_config(args, pofff_path=pofff_path)
 
     if cli.figures == "none" and cli.mode == "none":
-        print("Nothing to do since -m none -f none")
+        pofff_info("nothing to do because -m none and -f none were selected.")
         return
 
     cli.fol.mkdir(parents=True, exist_ok=True)
@@ -40,29 +68,41 @@ def main(argv: list[str] | None = None) -> None:
 
     elif cli.mode == "none":
         cfg = build_config(pofff_path=pofff_path, cli=cli, toml={})
-        prepare_simulation(cfg)
+        _prepare_simulation(cfg)
 
     else:
-        toml = load_toml(args.input)
+        toml = load_toml(args.input, args.mode)
         cfg = build_config(pofff_path=pofff_path, cli=cli, toml=toml.copy())
         postprocess_config(cfg, toml)
-        prepare_simulation(cfg)
+        _prepare_simulation(cfg)
 
-    run_simulation_steps(cfg)
+    _run_simulation_steps(cfg)
 
     if cfg.figures in {"basic", "all"} and cfg.mode != "files":
-        generate_figures(cfg)
+        _generate_figures(cfg)
 
     msg = (
         "The files have been written to"
         if cfg.mode == "files"
         else "The results have been written to"
     )
-    print(f"\n{msg} {cfg.fol}")
+    pofff_success(f"{msg.lower()} ", str(cfg.fol), [])
 
 
-def cli_config(args: argparse.Namespace, *, pofff_path: Path) -> CliConfig:
-    """Build normalized CLI configuration object."""
+def _build_cli_config(args: argparse.Namespace, *, pofff_path: Path) -> CliConfig:
+    """Build normalized CLI configuration object.
+
+    Parameters
+    ----------
+    args : argparse.Namespace
+        Parsed command-line arguments.
+    pofff_path : Path
+        Package root containing templates, geology, jobs, and benchmark data.
+
+    Returns
+    -------
+    CliConfig
+        Normalized command-line configuration."""
     output = Path(args.output).absolute()
 
     location = (
@@ -87,8 +127,13 @@ def cli_config(args: argparse.Namespace, *, pofff_path: Path) -> CliConfig:
     )
 
 
-def prepare_simulation(cfg: PofffConfig) -> None:
-    """Prepare directories and generate all input files."""
+def _prepare_simulation(cfg: PofffConfig) -> None:
+    """Prepare directories and generate all input files.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     if cfg.mode == "none":
         cfg.deck = cfg.deck / "deck"
         cfg.jobs = cfg.jobs / "jobs"
@@ -99,16 +144,21 @@ def prepare_simulation(cfg: PofffConfig) -> None:
             (cfg.fol / sub).mkdir(parents=True, exist_ok=True)
 
     if cfg.mode in ["everest", "ert"] or (cfg.everert and cfg.mode == "files"):
-        prepare_jobs_folder(cfg)
+        _prepare_jobs_folder(cfg)
 
     if cfg.mode not in {"data", "none"}:
-        print("\nGenerating the input files, please wait.")
+        pofff_info("generating the input files, please wait...")
         grid_and_properties(cfg)
         write_files(cfg)
 
 
-def prepare_jobs_folder(cfg: PofffConfig) -> None:
-    """Copy job scripts into output/jobs and make them executable."""
+def _prepare_jobs_folder(cfg: PofffConfig) -> None:
+    """Copy job scripts into output/jobs and make them executable.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     src = cfg.path / "jobs"
     dst = cfg.fol / "jobs"
     shutil.copytree(src, dst, dirs_exist_ok=True)
@@ -119,14 +169,19 @@ def prepare_jobs_folder(cfg: PofffConfig) -> None:
             script_path.chmod(0o755)
 
 
-def run_simulation_steps(cfg: PofffConfig) -> None:
-    """Run the selected execution mode."""
+def _run_simulation_steps(cfg: PofffConfig) -> None:
+    """Run the selected execution mode.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     os.chdir(cfg.fol)
 
     if cfg.mode == "single":
-        print("\nRunning the simulation, please wait.")
+        pofff_info("running the simulation, please wait...")
         flow(cfg)
-        print("\nGenerating the data, please wait.")
+        pofff_info("generating the data, please wait...")
         data(cfg)
     elif cfg.mode == "data":
         data(cfg)
@@ -137,14 +192,19 @@ def run_simulation_steps(cfg: PofffConfig) -> None:
     elif cfg.mode in {"files", "fair", "none"}:
         pass
     else:
-        raise SystemExit(f"Unknown -m {cfg.mode}")
+        pofff_error(f"unknown mode {cli_error_value(f'-m {cfg.mode}')}.")
 
 
-def generate_figures(cfg: PofffConfig) -> None:
-    """Generate benchmark plots and comparison figures."""
+def _generate_figures(cfg: PofffConfig) -> None:
+    """Generate benchmark plots and comparison figures.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     if shutil.which("latex") is None:
-        print(
-            "\nLaTeX is recommended for high-quality figures.\n"
+        pofff_tip(
+            "LaTeX is recommended for high-quality figures. "
             "See the pofff documentation for installation instructions."
         )
     if (cfg.fol / "jobs").exists():
@@ -156,12 +216,22 @@ def generate_figures(cfg: PofffConfig) -> None:
     else:
         os.chdir(cfg.fol)
 
-    print("\nGenerating the benchmark files, please wait.")
+    pofff_info("generating the benchmark files, please wait...")
     benchmark(cfg)
 
 
-def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    """Define and parse command-line arguments."""
+def _parse_arguments(argv: list[str] | None = None) -> argparse.Namespace:
+    """Define and parse command-line arguments.
+
+    Parameters
+    ----------
+    argv : list[str] | None, optional
+        Arguments to parse instead of the process command line.
+
+    Returns
+    -------
+    argparse.Namespace
+        Parsed command-line arguments or the corresponding runtime configuration."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description=(
@@ -241,37 +311,33 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def check_cmdargs(cmdargs: argparse.Namespace) -> None:
+def _validate_arguments(cmdargs: argparse.Namespace) -> None:
     """Validate command-line arguments and incompatible operations.
-
-    The checks cover input and output paths, evaluation times, saturation and
-    concentration thresholds, options ignored by specialized workflows, and
-    combinations that do not result in any operation.
 
     Parameters
     ----------
-    cmdargs
-        Parsed arguments returned by :func:`parse_args`.
+    cmdargs : argparse.Namespace
+        Parsed command-line arguments.
 
     Raises
     ------
     SystemExit
-        If an argument is invalid or an incompatible combination is requested.
-    """
+        If an argument is invalid or incompatible with the selected workflow."""
     if not cmdargs.output:
-        print("\nInvalid value for '-o', the output directory cannot be empty.\n")
-        raise SystemExit(1)
+        pofff_error(
+            f"invalid value {cli_error_value('-o')}, the output directory cannot be empty."
+        )
     mode = cmdargs.mode
     if mode not in {"fair", "none"}:
         if not cmdargs.input:
-            print("\nInvalid value for '-i', the input file cannot be empty.\n")
-            raise SystemExit(1)
-        if not cmdargs.input.lower().endswith(".toml"):
-            print(
-                f"\nInvalid extension for input file '-i {cmdargs.input}', "
-                "the valid extension is .toml.\n"
+            pofff_error(
+                f"invalid value {cli_error_value('-i')}, the input file cannot be empty."
             )
-            raise SystemExit(1)
+        if not cmdargs.input.lower().endswith(".toml"):
+            pofff_error(
+                f"invalid extension {cli_error_value(f'-i {cmdargs.input}')}, "
+                f"expected {cli_correct_value('.toml')}."
+            )
     times = cmdargs.times
     try:
         time_values = [float(value.strip()) for value in times.split(",")]
@@ -280,11 +346,10 @@ def check_cmdargs(cmdargs: argparse.Namespace) -> None:
     if not time_values or any(
         not math.isfinite(value) or value <= 0 for value in time_values
     ):
-        print(
-            f"\nInvalid value '-t {times}', expected positive finite numbers "
-            "separated by commas, e.g., '-t 24,48,72'.\n"
+        pofff_error(
+            f"invalid value {cli_error_value(f'-t {times}')}, expected positive "
+            f"finite numbers separated by commas, {cli_correct_value('e.g., -t 24,48,72')}."
         )
-        raise SystemExit(1)
     minimum_saturation = cmdargs.minimumsaturation
     try:
         minimum_saturation_value = float(minimum_saturation)
@@ -295,11 +360,10 @@ def check_cmdargs(cmdargs: argparse.Namespace) -> None:
         or minimum_saturation_value < 0
         or minimum_saturation_value > 1
     ):
-        print(
-            f"\nInvalid value '-s {minimum_saturation}', expected a finite "
-            "number between 0 and 1.\n"
+        pofff_error(
+            f"invalid value {cli_error_value(f'-s {minimum_saturation}')}, expected a "
+            f"finite number in {cli_correct_value('[0, 1]')}."
         )
-        raise SystemExit(1)
     minimum_concentration = cmdargs.minimumconcentration
     try:
         minimum_concentration_value = float(minimum_concentration)
@@ -310,11 +374,10 @@ def check_cmdargs(cmdargs: argparse.Namespace) -> None:
         not math.isfinite(minimum_concentration_value)
         or minimum_concentration_value not in valid_concentrations
     ):
-        print(
-            f"\nInvalid value '-c {minimum_concentration}', valid values are "
-            "'5e-2' and '1e-1'.\n"
+        pofff_error(
+            f"invalid value {cli_error_value(f'-c {minimum_concentration}')}, expected "
+            f"{cli_correct_value('5e-2')} or {cli_correct_value('1e-1')}."
         )
-        raise SystemExit(1)
     if mode == "fair":
         ignored_options = {
             "-i": ("input", "input.toml"),
@@ -328,16 +391,13 @@ def check_cmdargs(cmdargs: argparse.Namespace) -> None:
             if getattr(cmdargs, name) != default
         ]
         if invalid_options:
-            print(
-                "\nInvalid option for '-m fair'; this workflow uses its own "
-                "input data, figure mode, evaluation times, and experiment. "
-                f"Invalid options: {', '.join(invalid_options)}.\n"
+            pofff_error(
+                f"invalid combination {cli_error_value('-m fair; ' + ', '.join(invalid_options))}; "
+                "the FAIR workflow uses its own input data, figure mode, evaluation "
+                "times, and experiment."
             )
-            raise SystemExit(1)
     if mode == "files" and cmdargs.figures == "all":
-        print(
-            "\nInvalid combination, '-f all' cannot be used with '-m files' "
-            "because this mode only generates input files. Use '-f none' or "
-            "omit the '-f' option.\n"
+        pofff_error(
+            f"invalid combination {cli_error_value('-m files -f all')}; file generation "
+            f"does not create figures, use {cli_correct_value('-f none')} or omit -f."
         )
-        raise SystemExit(1)
