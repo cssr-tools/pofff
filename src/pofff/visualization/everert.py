@@ -2,10 +2,12 @@
 # SPDX-FileCopyrightText: 2025-2026 NORCE Research AS
 # SPDX-License-Identifier: GPL-3.0
 
-"""Postprocess Everest (ERT) ensemble and optimization studies.
-Generates diagnostics, plots, and extracts best simulations."""
+"""Postprocess ERT ensembles and Everest optimization studies.
 
-from __future__ import annotations
+The module reads realizations and optimization batches, computes diagnostics,
+plots simulation and parameter distributions, reports failures and
+monotonicity rejections, and reconstructs the best simulation for benchmark
+postprocessing."""
 
 import argparse
 import csv
@@ -21,24 +23,98 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
 
+from pofff.utils.terminal import pofff_info
 
-@dataclass
+
+@dataclass(slots=True)
 class Config:
-    """Runtime configuration and paths."""
+    """Store options and paths for ERT and Everest postprocessing.
+
+    The object is populated from command-line arguments and shared by ensemble
+    diagnostics, optimization processing, best-simulation extraction, and
+    benchmark-data generation.
+
+    Attributes
+    ----------
+    path
+        Root directory containing the ERT or Everest results and generated
+        figures.
+    times
+        Comma-separated benchmark evaluation times in hours.
+    jobs
+        Generated job scripts to execute when reconstructing the best
+        simulation.
+    external
+        Root directory containing the external FluidFlower benchmark data.
+    run_command
+        Experimental realization identifier, such as ``run2``.
+    maps
+        Path to the NumPy cell map used to generate benchmark spatial data.
+    min_saturation
+        Minimum gas-saturation threshold used to segment simulated CO2.
+    min_concentration
+        Minimum dissolved-CO2 concentration threshold used to segment simulated
+        CO2.
+    """
 
     path: Path
     times: str
     jobs: list[str]
     external: Path
-    run: str
+    run_command: str
     maps: Path
     min_saturation: float
     min_concentration: float
 
 
-@dataclass
+@dataclass(slots=True)
 class EnsembleState:
-    """Holds ensemble simulations and diagnostics."""
+    """Store ERT ensemble results and derived diagnostics.
+
+    The object is initialized from the ERT output structure. Successful
+    realizations then populate its simulation values, misfits, parameter
+    distributions, realization identifiers, and per-observation diagnostics
+    for each iteration.
+
+    Attributes
+    ----------
+    observations
+        Observation values and uncertainties loaded from ``deck/obs.txt``.
+        A one-dimensional array represents one observation; otherwise, rows
+        contain the observed value and its uncertainty.
+    n_e
+        Number of ensemble realizations found in the simulation output.
+    n_i
+        Number of ERT iterations represented in the simulation output.
+    no_obs
+        Number of observations used to calculate the ensemble misfit.
+    no_para
+        Number of history-matching parameters found in ``parameters.txt``.
+    simulations
+        Simulated observable values grouped by iteration and realization.
+    sim_ens
+        Sum of the simulated observable values for each successful realization,
+        grouped by iteration.
+    miss_ens
+        Normalized least-squares misfit for each successful realization,
+        grouped by iteration.
+    par_dis
+        History-matching parameter values grouped by iteration. Values for all
+        parameters and realizations are stored in file order.
+    idrealisation
+        Original realization identifiers for successful simulations, grouped
+        by iteration.
+    num_ens
+        Number of successful realizations in each iteration.
+    cumulative
+        Simulated values grouped by iteration, observation, and successful
+        realization for cumulative-misfit plots.
+    para_file
+        Path to the most recently discovered ``parameters.txt`` file, or
+        ``None`` when parameter values are unavailable.
+    para_names
+        History-matching parameter names read from ``para_file``.
+    """
 
     observations: np.ndarray
     n_e: int
@@ -56,9 +132,34 @@ class EnsembleState:
     para_names: list[str] = field(default_factory=list)
 
 
-@dataclass
+@dataclass(slots=True)
 class OptimizationState:
-    """Tracks optimization progress and outcomes."""
+    """Store Everest optimization progress and the best evaluation.
+
+    The object is populated while processing optimization batches. It tracks
+    the best objective value reached after each batch, counts successful and
+    unsuccessful evaluations, and identifies the evaluation from which the
+    optimal simulation should be reconstructed.
+
+    Attributes
+    ----------
+    optimization
+        Best objective value reached after each optimization batch.
+    optimal_value
+        Best objective value found across all processed batches.
+    ind_batch
+        Zero-based index of the batch containing the best evaluation.
+    ind_sim
+        Zero-based evaluation index of the best solution within ``ind_batch``.
+    tot_eval
+        Total number of processed optimization evaluations.
+    s
+        Evaluation counts grouped by status and batch. Rows contain successful,
+        failed, and nonmonotonic evaluation counts, respectively.
+    x
+        Temporary counters for successful, failed, and nonmonotonic evaluations
+        in the batch currently being processed.
+    """
 
     optimization: list[float] = field(default_factory=list)
     optimal_value: float = -np.inf
@@ -69,25 +170,56 @@ class OptimizationState:
     x: list[int] = field(default_factory=lambda: [0, 0, 0])
 
 
-def run(cmd: list[str]) -> None:
-    """Execute external command and abort on failure."""
+def _run_command(cmd: list[str]) -> None:
+    """Execute external command and abort on failure.
+
+    Parameters
+    ----------
+    cmd : list[str]
+        Command and arguments to execute without a shell.
+
+    Raises
+    ------
+    subprocess.CalledProcessError
+        If the command exits with a nonzero status."""
     subprocess.run(cmd, check=True)
 
 
-def ensure_dir(path: Path):
-    """Create directory if missing."""
+def _ensure_directory(path: Path):
+    """Create directory if missing.
+
+    Parameters
+    ----------
+    path : Path
+        Input, output, or project path."""
     path.mkdir(parents=True, exist_ok=True)
 
 
-def save_figure(fig, path: Path, dpi=300):
-    """Save figure and release memory."""
+def _save_figure(fig, path: Path, dpi=300):
+    """Save figure and release memory.
+
+    Parameters
+    ----------
+    fig : object
+        Matplotlib figure to save and close.
+    path : Path
+        Input, output, or project path.
+    dpi : object, optional
+        Output resolution in dots per inch."""
     fig.savefig(path, bbox_inches="tight", dpi=dpi)
     plt.close(fig)
 
 
-def copy_tree_contents(src: Path, dst: Path):
-    """Copy contents of src into dst (cp -r src/. dst/)."""
-    ensure_dir(dst)
+def _copy_tree_contents(src: Path, dst: Path):
+    """Copy contents of src into dst (cp -r src/. dst/).
+
+    Parameters
+    ----------
+    src : Path
+        Source file or directory.
+    dst : Path
+        Destination file or directory."""
+    _ensure_directory(dst)
     for item in src.iterdir():
         target = dst / item.name
         if item.is_dir():
@@ -96,8 +228,18 @@ def copy_tree_contents(src: Path, dst: Path):
             shutil.copy2(item, target)
 
 
-def parse_args(argv) -> Config:
-    """Parse command-line arguments."""
+def _parse_arguments(argv) -> Config:
+    """Parse command-line arguments.
+
+    Parameters
+    ----------
+    argv : object
+        Arguments to parse instead of the process command line.
+
+    Returns
+    -------
+    Config
+        Parsed command-line arguments or the corresponding runtime configuration."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Visualization of optimization studies using Everest (ERT)",
@@ -106,26 +248,26 @@ def parse_args(argv) -> Config:
     parser.add_argument("-t", "--times", default="24")
     parser.add_argument("-j", "--jobs", default="equalreg,bcprop,satufunc,flow")
     parser.add_argument("-e", "--external", default="/home/ThirdParty")
-    parser.add_argument("-r", "--run", default="run2")
+    parser.add_argument("-r", "--run_command", default="run2")
     parser.add_argument("-s", "--minimumsaturation", default="1e-2")
     parser.add_argument("-c", "--minimumconcentration", default="1e-1")
     parser.add_argument("-m", "--maps", default="cellmap.npy")
 
-    a = vars(parser.parse_known_args(argv)[0])
+    a = vars(parser.parse_args(argv))
 
     return Config(
         path=Path(a["path"]).resolve(),
         times=a["times"],
         jobs=[j.strip() for j in a["jobs"].split(",")],
         external=Path(a["external"]),
-        run=a["run"],
+        run_command=a["run_command"],
         maps=Path(a["maps"]),
         min_saturation=float(a["minimumsaturation"]),
         min_concentration=float(a["minimumconcentration"]),
     )
 
 
-def setup_matplotlib():
+def _configure_matplotlib():
     """Apply consistent matplotlib styling."""
     matplotlib.rc("font", family="monospace", size=14)
     plt.rcParams.update(
@@ -138,8 +280,18 @@ def setup_matplotlib():
     return matplotlib.colormaps["tab20"]
 
 
-def initialize_ensemble(cfg: Config) -> EnsembleState:
-    """Initialize ensemble from simulation folders."""
+def _initialize_ensemble(cfg: Config) -> EnsembleState:
+    """Initialize ensemble from simulation folders.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+
+    Returns
+    -------
+    EnsembleState
+        Initialized ensemble state sized from the result directories."""
     obs = np.genfromtxt(cfg.path / "deck/obs.txt")
     no_obs = 1 if obs.ndim == 1 else len(obs)
 
@@ -163,8 +315,19 @@ def initialize_ensemble(cfg: Config) -> EnsembleState:
     )
 
 
-def read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
-    """Read one realization and update ensemble statistics."""
+def _read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
+    """Read one realization and update ensemble statistics.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing.
+    i : int
+        Iteration or row index.
+    j : int
+        Realization or column index."""
     base = cfg.path / f"output/simulations/realisation-{j}/iter-{i}"
     if not (base / "OK").exists():
         return
@@ -201,8 +364,17 @@ def read_realisation(cfg: Config, state: EnsembleState, i: int, j: int):
             state.par_dis[i].append(row[1])
 
 
-def plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
-    """Plot initial and final ensemble simulations."""
+def _plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
+    """Plot initial and final ensemble simulations.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing.
+    tab20 : object
+        Matplotlib categorical colormap used for consistent series colors."""
     fig, ax = plt.subplots()
 
     x = range(1, state.no_obs + 1)
@@ -254,11 +426,18 @@ def plot_simulation_ensemble(cfg: Config, state: EnsembleState, tab20):
     ax.set_xticks(x)
     ax.legend()
 
-    save_figure(fig, cfg.path / "figures/simulationensemble.png")
+    _save_figure(fig, cfg.path / "figures/simulationensemble.png")
 
 
-def plot_misfit(cfg: Config, state: EnsembleState):
-    """Plot ensemble misfit per iteration."""
+def _plot_misfit(cfg: Config, state: EnsembleState):
+    """Plot ensemble misfit per iteration.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing."""
     fig, ax = plt.subplots()
     ax.boxplot(state.miss_ens)
     ax.set_xlabel(r"Iteration [\#]")
@@ -266,11 +445,18 @@ def plot_misfit(cfg: Config, state: EnsembleState):
     ax.set_title(
         r"$O_{i,j}=\frac{1}{2N_{obs}}\sum_n^{N_{obs}}((d^{n}_{i,j}-d^{n})/\sigma_n)^2$"
     )
-    save_figure(fig, cfg.path / "figures/dist_mismatch.png")
+    _save_figure(fig, cfg.path / "figures/dist_mismatch.png")
 
 
-def plot_parameter_distributions(cfg: Config, state: EnsembleState):
-    """Boxplots of parameter distributions."""
+def _plot_parameter_distributions(cfg: Config, state: EnsembleState):
+    """Boxplots of parameter distributions.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing."""
     if not state.para_file:
         return
 
@@ -295,11 +481,18 @@ def plot_parameter_distributions(cfg: Config, state: EnsembleState):
             ax.boxplot([ini_dist], tick_labels=["Initial"])
             ax.set_title(f"Box plot of initial {state.para_names[k]} parameter")
 
-    save_figure(fig, cfg.path / "figures/parameterdistributions.png")
+    _save_figure(fig, cfg.path / "figures/parameterdistributions.png")
 
 
-def extract_best_simulation(cfg: Config, state: EnsembleState):
-    """Extract best-fitting ensemble realization."""
+def _extract_best_simulation(cfg: Config, state: EnsembleState):
+    """Extract best-fitting ensemble realization.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing."""
     sims = np.array(state.simulations[-1])
     obs = state.observations
 
@@ -313,15 +506,15 @@ def extract_best_simulation(cfg: Config, state: EnsembleState):
 
     src = cfg.path / f"output/simulations/realisation-{best_id}/iter-{state.n_i - 1}"
     dst = cfg.path / "figures/best_simulation"
-    copy_tree_contents(src, dst)
+    _copy_tree_contents(src, dst)
 
     old_cwd = Path.cwd()
     os.chdir(dst)
     try:
-        run(["python3", str(cfg.path / "jobs/copyd.py")])
+        _run_command(["python3", str(cfg.path / "jobs/copyd.py")])
         for job in cfg.jobs:
-            run(["python3", str(cfg.path / f"jobs/{job}.py")])
-        run(
+            _run_command(["python3", str(cfg.path / f"jobs/{job}.py")])
+        _run_command(
             [
                 "python3",
                 str(cfg.path / "jobs/data.py"),
@@ -331,14 +524,14 @@ def extract_best_simulation(cfg: Config, state: EnsembleState):
                 str(cfg.maps),
             ]
         )
-        run(
+        _run_command(
             [
                 "python3",
                 str(cfg.path / "jobs/metric.py"),
                 "-t",
                 cfg.times,
                 "-e",
-                cfg.run,
+                cfg.run_command,
                 "-p",
                 str(cfg.external),
                 "-s",
@@ -350,17 +543,27 @@ def extract_best_simulation(cfg: Config, state: EnsembleState):
     finally:
         os.chdir(old_cwd)
 
-    print(
-        f"Best: {cfg.path}/output/simulations/"
+    pofff_info(
+        f"best: {cfg.path}/output/simulations/"
         f"realisation-{best_id}/iter-{state.n_i - 1}"
     )
 
     best_vals = state.simulations[-1][idx]
-    print(f"Values: {list(best_vals) if state.n_i > 1 else best_vals}")
+    pofff_info(f"values: {list(best_vals) if state.n_i > 1 else best_vals}")
 
 
-def process_optimization(cfg: Config) -> OptimizationState:
-    """Process Everest optimization results."""
+def _process_optimization(cfg: Config) -> OptimizationState:
+    """Process Everest optimization results.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+
+    Returns
+    -------
+    OptimizationState
+        Optimization history and location of the best evaluation."""
     root = cfg.path / "everest_output/sim_output"
     opt = OptimizationState()
 
@@ -408,8 +611,15 @@ def process_optimization(cfg: Config) -> OptimizationState:
     return opt
 
 
-def plot_optimization(cfg: Config, opt: OptimizationState):
-    """Plot optimization progress."""
+def _plot_optimization(cfg: Config, opt: OptimizationState):
+    """Plot optimization progress.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    opt : OptimizationState
+        Processed Everest optimization state."""
     fig, ax = plt.subplots()
 
     scale = 8.5 * 100
@@ -430,13 +640,20 @@ def plot_optimization(cfg: Config, opt: OptimizationState):
     else:
         ax.set_xticks(np.linspace(0, len(values) + 1, 11))
 
-    save_figure(fig, cfg.path / "figures/optimization_results.png")
+    _save_figure(fig, cfg.path / "figures/optimization_results.png")
 
 
-def extract_optimal_solution(cfg: Config, opt: OptimizationState):
-    """Extract and postprocess optimal optimization result."""
+def _extract_optimal_solution(cfg: Config, opt: OptimizationState):
+    """Extract and postprocess optimal optimization result.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    opt : OptimizationState
+        Processed Everest optimization state."""
     dst = cfg.path / "figures/best_simulation"
-    ensure_dir(dst)
+    _ensure_directory(dst)
 
     if (cfg.path / "everest_output/sim_output/batch_0/realization-0").is_dir():
         realization = "realization-0"
@@ -457,10 +674,10 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
     old_cwd = Path.cwd()
     os.chdir(dst)
     try:
-        run(["python3", str(cfg.path / "jobs/copyd.py")])
+        _run_command(["python3", str(cfg.path / "jobs/copyd.py")])
         for job in cfg.jobs:
-            run(["python3", str(cfg.path / f"jobs/{job}.py")])
-        run(
+            _run_command(["python3", str(cfg.path / f"jobs/{job}.py")])
+        _run_command(
             [
                 "python3",
                 str(cfg.path / "jobs/data.py"),
@@ -470,14 +687,14 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
                 str(cfg.maps),
             ]
         )
-        run(
+        _run_command(
             [
                 "python3",
                 str(cfg.path / "jobs/metric.py"),
                 "-t",
                 cfg.times,
                 "-e",
-                cfg.run,
+                cfg.run_command,
                 "-p",
                 str(cfg.external),
                 "-s",
@@ -486,7 +703,7 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
                 str(cfg.min_concentration),
             ]
         )
-        run(["python3", str(cfg.path / "jobs/scale.py")])
+        _run_command(["python3", str(cfg.path / "jobs/scale.py")])
     finally:
         os.chdir(old_cwd)
 
@@ -495,15 +712,22 @@ def extract_optimal_solution(cfg: Config, opt: OptimizationState):
     else:
         realization = "realization_0"
 
-    print(
-        f"Best: {cfg.path}/everest_output/sim_output/"
+    pofff_info(
+        f"best: {cfg.path}/everest_output/sim_output/"
         f"batch_{opt.ind_batch}/{realization}/"
         f"evaluation_{opt.ind_sim}"
     )
 
 
-def plot_observable_distribution(cfg: Config, state: EnsembleState):
-    """Plot observable sum distributions."""
+def _plot_observable_distribution(cfg: Config, state: EnsembleState):
+    """Plot observable sum distributions.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing."""
     fig, ax = plt.subplots()
     ax.boxplot(
         [state.sim_ens[i] for i in range(state.n_i)],
@@ -514,11 +738,18 @@ def plot_observable_distribution(cfg: Config, state: EnsembleState):
     ax.set_title(r"$\sum_n^{N_{obs}} d^n_{i,j}$")
     ax.set_xticks(range(state.n_i))
 
-    save_figure(fig, cfg.path / "figures/dist_observable.png")
+    _save_figure(fig, cfg.path / "figures/dist_observable.png")
 
 
-def plot_hm_mismatch(cfg: Config, state: EnsembleState):
-    """Plot ensemble-mean misfit per iteration."""
+def _plot_history_matching_mismatch(cfg: Config, state: EnsembleState):
+    """Plot ensemble-mean misfit per iteration.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing."""
     fig, ax = plt.subplots()
 
     for i in range(state.n_i):
@@ -536,11 +767,20 @@ def plot_hm_mismatch(cfg: Config, state: EnsembleState):
     ax.set_xticks(range(state.n_i))
     ax.legend()
 
-    save_figure(fig, cfg.path / "figures/hm_mismatch.png")
+    _save_figure(fig, cfg.path / "figures/hm_mismatch.png")
 
 
-def plot_cumulative_misfit(cfg: Config, state: EnsembleState, tab20):
-    """Plot cumulative misfit contributions per observation."""
+def _plot_cumulative_misfit(cfg: Config, state: EnsembleState, tab20):
+    """Plot cumulative misfit contributions per observation.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    state : EnsembleState
+        Mutable ensemble state populated during postprocessing.
+    tab20 : object
+        Matplotlib categorical colormap used for consistent series colors."""
     for i in range(state.n_i):
         if not state.cumulative[i] or not state.cumulative[i][0]:
             continue
@@ -580,11 +820,18 @@ def plot_cumulative_misfit(cfg: Config, state: EnsembleState, tab20):
         ax.set_ylabel("Cumulative misfit [-]")
         ax.legend()
 
-        save_figure(fig, cfg.path / f"figures/cumulative_misfit_ite-{i}.png")
+        _save_figure(fig, cfg.path / f"figures/cumulative_misfit_ite-{i}.png")
 
 
-def plot_optimization_details(cfg: Config, opt: OptimizationState):
-    """Plot optimization success statistics."""
+def _plot_optimization_details(cfg: Config, opt: OptimizationState):
+    """Plot optimization success statistics.
+
+    Parameters
+    ----------
+    cfg : Config
+        Shared pofff configuration and derived runtime state.
+    opt : OptimizationState
+        Processed Everest optimization state."""
     colors = ["g", "r", "k"]
     names = [
         f"Succeeded (no={sum(opt.s[0])})",
@@ -618,34 +865,39 @@ def plot_optimization_details(cfg: Config, opt: OptimizationState):
     ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
     ax.legend()
-    save_figure(fig, cfg.path / "figures/details.png", dpi=900)
+    _save_figure(fig, cfg.path / "figures/details.png", dpi=900)
 
 
 def run_everert(argv=None):
-    """Entry point."""
-    cfg = parse_args(argv)
-    tab20 = setup_matplotlib()
+    """Generate diagnostics for an ERT ensemble or Everest optimization.
 
-    ensure_dir(cfg.path / "figures")
+    Parameters
+    ----------
+    argv : object, optional
+        Arguments to parse instead of the process command line."""
+    cfg = _parse_arguments(argv)
+    tab20 = _configure_matplotlib()
+
+    _ensure_directory(cfg.path / "figures")
 
     if (cfg.path / "everest_output").exists():
-        opt = process_optimization(cfg)
-        plot_optimization(cfg, opt)
-        plot_optimization_details(cfg, opt)
-        extract_optimal_solution(cfg, opt)
+        opt = _process_optimization(cfg)
+        _plot_optimization(cfg, opt)
+        _plot_optimization_details(cfg, opt)
+        _extract_optimal_solution(cfg, opt)
     else:
-        state = initialize_ensemble(cfg)
+        state = _initialize_ensemble(cfg)
         for j in range(state.n_e):
             for i in range(state.n_i):
-                read_realisation(cfg, state, i, j)
+                _read_realisation(cfg, state, i, j)
 
-        plot_simulation_ensemble(cfg, state, tab20)
-        plot_hm_mismatch(cfg, state)
-        plot_misfit(cfg, state)
-        plot_observable_distribution(cfg, state)
-        plot_parameter_distributions(cfg, state)
-        plot_cumulative_misfit(cfg, state, tab20)
-        extract_best_simulation(cfg, state)
+        _plot_simulation_ensemble(cfg, state, tab20)
+        _plot_history_matching_mismatch(cfg, state)
+        _plot_misfit(cfg, state)
+        _plot_observable_distribution(cfg, state)
+        _plot_parameter_distributions(cfg, state)
+        _plot_cumulative_misfit(cfg, state, tab20)
+        _extract_best_simulation(cfg, state)
 
 
 if __name__ == "__main__":

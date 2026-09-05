@@ -1,0 +1,1555 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pofff.visualization.everert &#8212; pofff  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=530fd138" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pofff/visualization/everert';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-09-05"/>
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="pofff  documentation - Home"/>
+    <img src="../../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="pofff  documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../publication.html">
+    Reproducing the publication
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../related.html">
+    Related projects
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../publication.html">
+    Reproducing the publication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../related.html">
+    Related projects
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pofff.visualization.everert</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pofff.visualization.everert</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># SPDX-FileCopyrightText: 2025-2026 NORCE Research AS</span>
+<span class="c1"># SPDX-License-Identifier: GPL-3.0</span>
+
+<span class="sd">"""Postprocess ERT ensembles and Everest optimization studies.</span>
+
+<span class="sd">The module reads realizations and optimization batches, computes diagnostics,</span>
+<span class="sd">plots simulation and parameter distributions, reports failures and</span>
+<span class="sd">monotonicity rejections, and reconstructs the best simulation for benchmark</span>
+<span class="sd">postprocessing."""</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">MaxNLocator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pofff.utils.terminal</span><span class="w"> </span><span class="kn">import</span> <span class="n">pofff_info</span>
+
+
+<div class="viewcode-block" id="Config">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert.Config">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Store options and paths for ERT and Everest postprocessing.</span>
+
+<span class="sd">    The object is populated from command-line arguments and shared by ensemble</span>
+<span class="sd">    diagnostics, optimization processing, best-simulation extraction, and</span>
+<span class="sd">    benchmark-data generation.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path</span>
+<span class="sd">        Root directory containing the ERT or Everest results and generated</span>
+<span class="sd">        figures.</span>
+<span class="sd">    times</span>
+<span class="sd">        Comma-separated benchmark evaluation times in hours.</span>
+<span class="sd">    jobs</span>
+<span class="sd">        Generated job scripts to execute when reconstructing the best</span>
+<span class="sd">        simulation.</span>
+<span class="sd">    external</span>
+<span class="sd">        Root directory containing the external FluidFlower benchmark data.</span>
+<span class="sd">    run_command</span>
+<span class="sd">        Experimental realization identifier, such as ``run2``.</span>
+<span class="sd">    maps</span>
+<span class="sd">        Path to the NumPy cell map used to generate benchmark spatial data.</span>
+<span class="sd">    min_saturation</span>
+<span class="sd">        Minimum gas-saturation threshold used to segment simulated CO2.</span>
+<span class="sd">    min_concentration</span>
+<span class="sd">        Minimum dissolved-CO2 concentration threshold used to segment simulated</span>
+<span class="sd">        CO2.</span>
+<span class="sd">    """</span>
+
+    <span class="n">path</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">times</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">jobs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">external</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">run_command</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">maps</span><span class="p">:</span> <span class="n">Path</span>
+    <span class="n">min_saturation</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">min_concentration</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<div class="viewcode-block" id="EnsembleState">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert.EnsembleState">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">EnsembleState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Store ERT ensemble results and derived diagnostics.</span>
+
+<span class="sd">    The object is initialized from the ERT output structure. Successful</span>
+<span class="sd">    realizations then populate its simulation values, misfits, parameter</span>
+<span class="sd">    distributions, realization identifiers, and per-observation diagnostics</span>
+<span class="sd">    for each iteration.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    observations</span>
+<span class="sd">        Observation values and uncertainties loaded from ``deck/obs.txt``.</span>
+<span class="sd">        A one-dimensional array represents one observation; otherwise, rows</span>
+<span class="sd">        contain the observed value and its uncertainty.</span>
+<span class="sd">    n_e</span>
+<span class="sd">        Number of ensemble realizations found in the simulation output.</span>
+<span class="sd">    n_i</span>
+<span class="sd">        Number of ERT iterations represented in the simulation output.</span>
+<span class="sd">    no_obs</span>
+<span class="sd">        Number of observations used to calculate the ensemble misfit.</span>
+<span class="sd">    no_para</span>
+<span class="sd">        Number of history-matching parameters found in ``parameters.txt``.</span>
+<span class="sd">    simulations</span>
+<span class="sd">        Simulated observable values grouped by iteration and realization.</span>
+<span class="sd">    sim_ens</span>
+<span class="sd">        Sum of the simulated observable values for each successful realization,</span>
+<span class="sd">        grouped by iteration.</span>
+<span class="sd">    miss_ens</span>
+<span class="sd">        Normalized least-squares misfit for each successful realization,</span>
+<span class="sd">        grouped by iteration.</span>
+<span class="sd">    par_dis</span>
+<span class="sd">        History-matching parameter values grouped by iteration. Values for all</span>
+<span class="sd">        parameters and realizations are stored in file order.</span>
+<span class="sd">    idrealisation</span>
+<span class="sd">        Original realization identifiers for successful simulations, grouped</span>
+<span class="sd">        by iteration.</span>
+<span class="sd">    num_ens</span>
+<span class="sd">        Number of successful realizations in each iteration.</span>
+<span class="sd">    cumulative</span>
+<span class="sd">        Simulated values grouped by iteration, observation, and successful</span>
+<span class="sd">        realization for cumulative-misfit plots.</span>
+<span class="sd">    para_file</span>
+<span class="sd">        Path to the most recently discovered ``parameters.txt`` file, or</span>
+<span class="sd">        ``None`` when parameter values are unavailable.</span>
+<span class="sd">    para_names</span>
+<span class="sd">        History-matching parameter names read from ``para_file``.</span>
+<span class="sd">    """</span>
+
+    <span class="n">observations</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">n_e</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">n_i</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">no_obs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">no_para</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">simulations</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">sim_ens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">miss_ens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">par_dis</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">idrealisation</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">num_ens</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">cumulative</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">para_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">para_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="OptimizationState">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert.OptimizationState">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">slots</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizationState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Store Everest optimization progress and the best evaluation.</span>
+
+<span class="sd">    The object is populated while processing optimization batches. It tracks</span>
+<span class="sd">    the best objective value reached after each batch, counts successful and</span>
+<span class="sd">    unsuccessful evaluations, and identifies the evaluation from which the</span>
+<span class="sd">    optimal simulation should be reconstructed.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    optimization</span>
+<span class="sd">        Best objective value reached after each optimization batch.</span>
+<span class="sd">    optimal_value</span>
+<span class="sd">        Best objective value found across all processed batches.</span>
+<span class="sd">    ind_batch</span>
+<span class="sd">        Zero-based index of the batch containing the best evaluation.</span>
+<span class="sd">    ind_sim</span>
+<span class="sd">        Zero-based evaluation index of the best solution within ``ind_batch``.</span>
+<span class="sd">    tot_eval</span>
+<span class="sd">        Total number of processed optimization evaluations.</span>
+<span class="sd">    s</span>
+<span class="sd">        Evaluation counts grouped by status and batch. Rows contain successful,</span>
+<span class="sd">        failed, and nonmonotonic evaluation counts, respectively.</span>
+<span class="sd">    x</span>
+<span class="sd">        Temporary counters for successful, failed, and nonmonotonic evaluations</span>
+<span class="sd">        in the batch currently being processed.</span>
+<span class="sd">    """</span>
+
+    <span class="n">optimization</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">optimal_value</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">ind_batch</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ind_sim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">tot_eval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">s</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[[],</span> <span class="p">[],</span> <span class="p">[]])</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="_run_command">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._run_command">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_command</span><span class="p">(</span><span class="n">cmd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Execute external command and abort on failure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cmd : list[str]</span>
+<span class="sd">        Command and arguments to execute without a shell.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    subprocess.CalledProcessError</span>
+<span class="sd">        If the command exits with a nonzero status."""</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_ensure_directory">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._ensure_directory">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_directory</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Create directory if missing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    path : Path</span>
+<span class="sd">        Input, output, or project path."""</span>
+    <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_save_figure">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._save_figure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Save figure and release memory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fig : object</span>
+<span class="sd">        Matplotlib figure to save and close.</span>
+<span class="sd">    path : Path</span>
+<span class="sd">        Input, output, or project path.</span>
+<span class="sd">    dpi : object, optional</span>
+<span class="sd">        Output resolution in dots per inch."""</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">"tight"</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_copy_tree_contents">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._copy_tree_contents">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_tree_contents</span><span class="p">(</span><span class="n">src</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">dst</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Copy contents of src into dst (cp -r src/. dst/).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    src : Path</span>
+<span class="sd">        Source file or directory.</span>
+<span class="sd">    dst : Path</span>
+<span class="sd">        Destination file or directory."""</span>
+    <span class="n">_ensure_directory</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">src</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">dst</span> <span class="o">/</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copytree</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">dirs_exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_parse_arguments">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._parse_arguments">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_arguments</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Config</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Parse command-line arguments.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    argv : object</span>
+<span class="sd">        Arguments to parse instead of the process command line.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Config</span>
+<span class="sd">        Parsed command-line arguments or the corresponding runtime configuration."""</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentDefaultsHelpFormatter</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">"Visualization of optimization studies using Everest (ERT)"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p"</span><span class="p">,</span> <span class="s2">"--path"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"."</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-t"</span><span class="p">,</span> <span class="s2">"--times"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"24"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-j"</span><span class="p">,</span> <span class="s2">"--jobs"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"equalreg,bcprop,satufunc,flow"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-e"</span><span class="p">,</span> <span class="s2">"--external"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"/home/ThirdParty"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-r"</span><span class="p">,</span> <span class="s2">"--run_command"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"run2"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s"</span><span class="p">,</span> <span class="s2">"--minimumsaturation"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"1e-2"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--minimumconcentration"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"1e-1"</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-m"</span><span class="p">,</span> <span class="s2">"--maps"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"cellmap.npy"</span><span class="p">)</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">Config</span><span class="p">(</span>
+        <span class="n">path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"path"</span><span class="p">])</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span>
+        <span class="n">times</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s2">"times"</span><span class="p">],</span>
+        <span class="n">jobs</span><span class="o">=</span><span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">a</span><span class="p">[</span><span class="s2">"jobs"</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)],</span>
+        <span class="n">external</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"external"</span><span class="p">]),</span>
+        <span class="n">run_command</span><span class="o">=</span><span class="n">a</span><span class="p">[</span><span class="s2">"run_command"</span><span class="p">],</span>
+        <span class="n">maps</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"maps"</span><span class="p">]),</span>
+        <span class="n">min_saturation</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"minimumsaturation"</span><span class="p">]),</span>
+        <span class="n">min_concentration</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"minimumconcentration"</span><span class="p">]),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_configure_matplotlib">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._configure_matplotlib">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_configure_matplotlib</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Apply consistent matplotlib styling."""</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">"font"</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">"monospace"</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"text.usetex"</span><span class="p">:</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">"latex"</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">"axes.grid"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">"figure.figsize"</span><span class="p">:</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s2">"tab20"</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_initialize_ensemble">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._initialize_ensemble">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_initialize_ensemble</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnsembleState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Initialize ensemble from simulation folders.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    EnsembleState</span>
+<span class="sd">        Initialized ensemble state sized from the result directories."""</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"deck/obs.txt"</span><span class="p">)</span>
+    <span class="n">no_obs</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">obs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span>
+
+    <span class="n">sim_root</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"output/simulations"</span>
+    <span class="n">n_e</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">sim_root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()))</span>
+    <span class="n">n_i</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">((</span><span class="n">sim_root</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"realisation-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_e</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">EnsembleState</span><span class="p">(</span>
+        <span class="n">observations</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span>
+        <span class="n">n_e</span><span class="o">=</span><span class="n">n_e</span><span class="p">,</span>
+        <span class="n">n_i</span><span class="o">=</span><span class="n">n_i</span><span class="p">,</span>
+        <span class="n">no_obs</span><span class="o">=</span><span class="n">no_obs</span><span class="p">,</span>
+        <span class="n">no_para</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">simulations</span><span class="o">=</span><span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">sim_ens</span><span class="o">=</span><span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">miss_ens</span><span class="o">=</span><span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">par_dis</span><span class="o">=</span><span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">idrealisation</span><span class="o">=</span><span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">num_ens</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">cumulative</span><span class="o">=</span><span class="p">[[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">no_obs</span><span class="p">)]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_i</span><span class="p">)],</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_read_realisation">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._read_realisation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_read_realisation</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Read one realization and update ensemble statistics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing.</span>
+<span class="sd">    i : int</span>
+<span class="sd">        Iteration or row index.</span>
+<span class="sd">    j : int</span>
+<span class="sd">        Realization or column index."""</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"output/simulations/realisation-</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">/iter-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">base</span> <span class="o">/</span> <span class="s2">"OK"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span>
+
+    <span class="n">state</span><span class="o">.</span><span class="n">num_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">idrealisation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+
+    <span class="n">sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_1d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">base</span> <span class="o">/</span> <span class="s2">"sim_metrics_0.txt"</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">observations</span>
+
+    <span class="k">if</span> <span class="n">obs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">miss</span> <span class="o">=</span> <span class="p">((</span><span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">sim_sum</span> <span class="o">=</span> <span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">miss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(((</span><span class="n">sim</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">obs</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sim</span><span class="p">):</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">sim_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+
+    <span class="n">state</span><span class="o">.</span><span class="n">miss_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">miss</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">state</span><span class="o">.</span><span class="n">sim_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sim_sum</span><span class="p">)</span>
+
+    <span class="n">para</span> <span class="o">=</span> <span class="n">base</span> <span class="o">/</span> <span class="s2">"parameters.txt"</span>
+    <span class="k">if</span> <span class="n">para</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">para_file</span> <span class="o">=</span> <span class="n">para</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">para</span><span class="p">))</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">no_para</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">par_dis</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_simulation_ensemble">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_simulation_ensemble">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_simulation_ensemble</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">,</span> <span class="n">tab20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot initial and final ensemble simulations.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing.</span>
+<span class="sd">    tab20 : object</span>
+<span class="sd">        Matplotlib categorical colormap used for consistent series colors."""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">.</span><span class="n">no_obs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">marker</span> <span class="o">=</span> <span class="s2">"o"</span> <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">observations</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">""</span>
+
+    <span class="k">for</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+        <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"Initial ensemble"</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">n_i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">vals</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">vals</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Final ensemble"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">observations</span>
+    <span class="k">if</span> <span class="n">obs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">yerr</span><span class="o">=</span><span class="n">obs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Observation"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">obs</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">no_obs</span><span class="p">,</span>
+            <span class="n">obs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">yerr</span><span class="o">=</span><span class="n">obs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">fmt</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Observation"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Observable [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Wasserstein distance [gr cm]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/simulationensemble.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_misfit">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_misfit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_misfit</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot ensemble misfit per iteration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing."""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">miss_ens</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Iteration [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Misfit [-]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">"$O_{i,j}=\frac</span><span class="si">{1}</span><span class="s2">{2N_</span><span class="si">{obs}</span><span class="s2">}\sum_n^{N_</span><span class="si">{obs}</span><span class="s2">}((d^</span><span class="si">{n}</span><span class="s2">_{i,j}-d^</span><span class="si">{n}</span><span class="s2">)/\sigma_n)^2$"</span>
+    <span class="p">)</span>
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/dist_mismatch.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_parameter_distributions">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_parameter_distributions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_parameter_distributions</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Boxplots of parameter distributions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing."""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">para_file</span><span class="p">:</span>
+        <span class="k">return</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">para_file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">para_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">" "</span><span class="p">)]</span>
+
+    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">para_names</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">n_params</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="n">n_params</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_params</span><span class="p">):</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">ini_dist</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">par_dis</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">::</span><span class="n">n_params</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">state</span><span class="o">.</span><span class="n">n_i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">fin_dist</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">par_dis</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">::</span><span class="n">n_params</span><span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">([</span><span class="n">ini_dist</span><span class="p">,</span> <span class="n">fin_dist</span><span class="p">],</span> <span class="n">tick_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"Initial"</span><span class="p">,</span> <span class="s2">"Final"</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Box plot of initial and final </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">para_names</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2"> parameter"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">([</span><span class="n">ini_dist</span><span class="p">],</span> <span class="n">tick_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">"Initial"</span><span class="p">])</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Box plot of initial </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">para_names</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">}</span><span class="s2"> parameter"</span><span class="p">)</span>
+
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/parameterdistributions.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_extract_best_simulation">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._extract_best_simulation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_best_simulation</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract best-fitting ensemble realization.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing."""</span>
+    <span class="n">sims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">observations</span>
+
+    <span class="k">if</span> <span class="n">obs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sims</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">sims</span> <span class="o">-</span> <span class="n">obs</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">diff</span><span class="p">))</span>
+    <span class="n">best_id</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">idrealisation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="n">src</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"output/simulations/realisation-</span><span class="si">{</span><span class="n">best_id</span><span class="si">}</span><span class="s2">/iter-</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/best_simulation"</span>
+    <span class="n">_copy_tree_contents</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+
+    <span class="n">old_cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_run_command</span><span class="p">([</span><span class="s2">"python3"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/copyd.py"</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+            <span class="n">_run_command</span><span class="p">([</span><span class="s2">"python3"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"jobs/</span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">.py"</span><span class="p">)])</span>
+        <span class="n">_run_command</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">"python3"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/data.py"</span><span class="p">),</span>
+                <span class="s2">"-t"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">times</span><span class="p">,</span>
+                <span class="s2">"-m"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">maps</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">_run_command</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">"python3"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/metric.py"</span><span class="p">),</span>
+                <span class="s2">"-t"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">times</span><span class="p">,</span>
+                <span class="s2">"-e"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">run_command</span><span class="p">,</span>
+                <span class="s2">"-p"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">external</span><span class="p">),</span>
+                <span class="s2">"-s"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">min_saturation</span><span class="p">),</span>
+                <span class="s2">"-c"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">min_concentration</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">old_cwd</span><span class="p">)</span>
+
+    <span class="n">pofff_info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"best: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">/output/simulations/"</span>
+        <span class="sa">f</span><span class="s2">"realisation-</span><span class="si">{</span><span class="n">best_id</span><span class="si">}</span><span class="s2">/iter-</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+
+    <span class="n">best_vals</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">simulations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">pofff_info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"values: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">best_vals</span><span class="p">)</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">best_vals</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_process_optimization">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._process_optimization">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_optimization</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OptimizationState</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Process Everest optimization results.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    OptimizationState</span>
+<span class="sd">        Optimization history and location of the best evaluation."""</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"everest_output/sim_output"</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">OptimizationState</span><span class="p">()</span>
+
+    <span class="n">improved</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">where</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">batches</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">root</span> <span class="o">/</span> <span class="s2">"batch_0/realization-0"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization-0"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization_0"</span>
+
+    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">batches</span><span class="p">:</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">evals</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">batch</span> <span class="o">/</span> <span class="n">realization</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">(),</span>
+            <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">]),</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ev</span> <span class="ow">in</span> <span class="n">evals</span><span class="p">:</span>
+            <span class="n">fval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">genfromtxt</span><span class="p">(</span><span class="n">ev</span> <span class="o">/</span> <span class="s2">"func"</span><span class="p">)</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">tot_eval</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">fval</span><span class="p">):</span>
+                <span class="n">opt</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">fval</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">opt</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">opt</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">fval</span> <span class="o">&gt;</span> <span class="n">improved</span><span class="p">:</span>
+                    <span class="n">improved</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fval</span><span class="p">)</span>
+                    <span class="n">where</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">batch_index</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)[</span><span class="mi">1</span><span class="p">])))</span>
+
+        <span class="n">opt</span><span class="o">.</span><span class="n">optimization</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">improved</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">opt</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmax</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">optimization</span><span class="p">))</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">optimal_value</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">optimization</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">ind_batch</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">ind_sim</span> <span class="o">=</span> <span class="n">where</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">opt</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_optimization">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_optimization">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_optimization</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">opt</span><span class="p">:</span> <span class="n">OptimizationState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot optimization progress.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    opt : OptimizationState</span>
+<span class="sd">        Processed Everest optimization state."""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">8.5</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="o">*</span> <span class="n">scale</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">opt</span><span class="o">.</span><span class="n">optimization</span><span class="p">]</span>
+    <span class="n">steps</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Optimization results"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Iteration [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Wasserstein distance [gr cm]"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">integer</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/optimization_results.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_extract_optimal_solution">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._extract_optimal_solution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_optimal_solution</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">opt</span><span class="p">:</span> <span class="n">OptimizationState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Extract and postprocess optimal optimization result.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    opt : OptimizationState</span>
+<span class="sd">        Processed Everest optimization state."""</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/best_simulation"</span>
+    <span class="n">_ensure_directory</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"everest_output/sim_output/batch_0/realization-0"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization-0"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization_0"</span>
+
+    <span class="n">src</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">path</span>
+        <span class="o">/</span> <span class="s2">"everest_output/sim_output"</span>
+        <span class="o">/</span> <span class="sa">f</span><span class="s2">"batch_</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">ind_batch</span><span class="si">}</span><span class="s2">"</span>
+        <span class="o">/</span> <span class="n">realization</span>
+        <span class="o">/</span> <span class="sa">f</span><span class="s2">"evaluation_</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">ind_sim</span><span class="si">}</span><span class="s2">"</span>
+        <span class="o">/</span> <span class="s2">"para.json"</span>
+    <span class="p">)</span>
+
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy2</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span> <span class="o">/</span> <span class="s2">"para.json"</span><span class="p">)</span>
+
+    <span class="n">old_cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">_run_command</span><span class="p">([</span><span class="s2">"python3"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/copyd.py"</span><span class="p">)])</span>
+        <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
+            <span class="n">_run_command</span><span class="p">([</span><span class="s2">"python3"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"jobs/</span><span class="si">{</span><span class="n">job</span><span class="si">}</span><span class="s2">.py"</span><span class="p">)])</span>
+        <span class="n">_run_command</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">"python3"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/data.py"</span><span class="p">),</span>
+                <span class="s2">"-t"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">times</span><span class="p">,</span>
+                <span class="s2">"-m"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">maps</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">_run_command</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="s2">"python3"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/metric.py"</span><span class="p">),</span>
+                <span class="s2">"-t"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">times</span><span class="p">,</span>
+                <span class="s2">"-e"</span><span class="p">,</span>
+                <span class="n">cfg</span><span class="o">.</span><span class="n">run_command</span><span class="p">,</span>
+                <span class="s2">"-p"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">external</span><span class="p">),</span>
+                <span class="s2">"-s"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">min_saturation</span><span class="p">),</span>
+                <span class="s2">"-c"</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">min_concentration</span><span class="p">),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">_run_command</span><span class="p">([</span><span class="s2">"python3"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"jobs/scale.py"</span><span class="p">)])</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">old_cwd</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"everest_output/sim_output/batch_0/realization-0"</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization-0"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">realization</span> <span class="o">=</span> <span class="s2">"realization_0"</span>
+
+    <span class="n">pofff_info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"best: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span><span class="si">}</span><span class="s2">/everest_output/sim_output/"</span>
+        <span class="sa">f</span><span class="s2">"batch_</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">ind_batch</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">realization</span><span class="si">}</span><span class="s2">/"</span>
+        <span class="sa">f</span><span class="s2">"evaluation_</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">ind_sim</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_observable_distribution">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_observable_distribution">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_observable_distribution</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot observable sum distributions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing."""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="n">sim_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">)],</span>
+        <span class="n">positions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">)),</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Iteration [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Wasserstein distance [gr cm]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\sum_n^{N_</span><span class="si">{obs}</span><span class="s2">} d^n_{i,j}$"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">))</span>
+
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/dist_observable.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_history_matching_mismatch">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_history_matching_mismatch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_history_matching_mismatch</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot ensemble-mean misfit per iteration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing."""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">miss_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="n">mean_misfit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">miss_ens</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">miss_ens</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">mean_misfit</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">rf</span><span class="s2">"$N_</span><span class="se">{{</span><span class="s2">ens</span><span class="se">}}</span><span class="s2">=</span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">num_ens</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">$"</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span>
+        <span class="sa">r</span><span class="s2">"$O_i=\frac</span><span class="si">{1}</span><span class="s2">{N_</span><span class="si">{ens}</span><span class="s2">}\sum_{j=1}^{N_</span><span class="si">{ens}</span><span class="s2">} O_{i,j}$, \#"</span>
+        <span class="o">+</span> <span class="sa">f</span><span class="s2">"HM parameters: </span><span class="si">{</span><span class="n">state</span><span class="o">.</span><span class="n">no_para</span><span class="si">}</span><span class="s2">"</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Iteration [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Misfit [-]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/hm_mismatch.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_cumulative_misfit">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_cumulative_misfit">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_cumulative_misfit</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">EnsembleState</span><span class="p">,</span> <span class="n">tab20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot cumulative misfit contributions per observation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    state : EnsembleState</span>
+<span class="sd">        Mutable ensemble state populated during postprocessing.</span>
+<span class="sd">    tab20 : object</span>
+<span class="sd">        Matplotlib categorical colormap used for consistent series colors."""</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">continue</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+        <span class="n">allw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">no_obs</span><span class="p">):</span>
+            <span class="n">allw</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+
+        <span class="n">indc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">allw</span><span class="p">)</span>
+        <span class="n">allw_sorted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">allw</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">allw_sorted</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">state</span><span class="o">.</span><span class="n">no_obs</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+            <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Total average </span><span class="si">{</span><span class="n">allw_sorted</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">state</span><span class="o">.</span><span class="n">no_obs</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">allw_sorted</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">allw_sorted</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="n">remainder</span> <span class="o">=</span> <span class="n">allw_sorted</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">no_obs</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">state</span><span class="o">.</span><span class="n">cumulative</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">r</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">indc</span><span class="p">])</span>
+            <span class="n">remainder</span> <span class="o">-=</span> <span class="n">vals</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="n">remainder</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">tab20</span><span class="o">.</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"obs-</span><span class="si">{</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Realization (iter-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Realisation [\#]"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cumulative misfit [-]"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+        <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"figures/cumulative_misfit_ite-</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.png"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_plot_optimization_details">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert._plot_optimization_details">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_plot_optimization_details</span><span class="p">(</span><span class="n">cfg</span><span class="p">:</span> <span class="n">Config</span><span class="p">,</span> <span class="n">opt</span><span class="p">:</span> <span class="n">OptimizationState</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Plot optimization success statistics.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cfg : Config</span>
+<span class="sd">        Shared pofff configuration and derived runtime state.</span>
+<span class="sd">    opt : OptimizationState</span>
+<span class="sd">        Processed Everest optimization state."""</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"g"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"k"</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="sa">f</span><span class="s2">"Succeeded (no=</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"Failed (no=</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"Nonmonotonic (no=</span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+    <span class="n">n_steps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">total</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">names</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">remainder</span> <span class="o">=</span> <span class="n">total</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">remainder</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">sum</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">remainder</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">names</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Details on failed and succeeded simulations (Total=</span><span class="si">{</span><span class="n">opt</span><span class="o">.</span><span class="n">tot_eval</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Iteration [\#]"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Occurrence [\#]"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">n_steps</span> <span class="o">&lt;</span> <span class="mi">20</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">integer</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">MaxNLocator</span><span class="p">(</span><span class="n">integer</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">_save_figure</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures/details.png"</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="run_everert">
+<a class="viewcode-back" href="../../../api/pofff.visualization.everert.html#pofff.visualization.everert.run_everert">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_everert</span><span class="p">(</span><span class="n">argv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Generate diagnostics for an ERT ensemble or Everest optimization.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    argv : object, optional</span>
+<span class="sd">        Arguments to parse instead of the process command line."""</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">_parse_arguments</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">tab20</span> <span class="o">=</span> <span class="n">_configure_matplotlib</span><span class="p">()</span>
+
+    <span class="n">_ensure_directory</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"figures"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">path</span> <span class="o">/</span> <span class="s2">"everest_output"</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">_process_optimization</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="n">_plot_optimization</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="n">_plot_optimization_details</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+        <span class="n">_extract_optimal_solution</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">opt</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">_initialize_ensemble</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_e</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">n_i</span><span class="p">):</span>
+                <span class="n">_read_realisation</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+
+        <span class="n">_plot_simulation_ensemble</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">tab20</span><span class="p">)</span>
+        <span class="n">_plot_history_matching_mismatch</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">_plot_misfit</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">_plot_observable_distribution</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">_plot_parameter_distributions</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">_plot_cumulative_misfit</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">tab20</span><span class="p">)</span>
+        <span class="n">_extract_best_simulation</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
+    <span class="n">run_everert</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, NORCE Research AS.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

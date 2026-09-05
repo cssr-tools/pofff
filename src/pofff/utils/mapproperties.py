@@ -2,14 +2,19 @@
 # SPDX-License-Identifier: GPL-3.0
 # pylint: disable=R0913, R0914, R0917, E1102
 
-"""Utility functions for grid generation and spatial indexing
-in geological FluidFlower-style models."""
+"""Generate FluidFlower grids and assign spatial model properties.
+
+The module builds Cartesian, tensor, and corner-point grids; reads geological
+points, horizons, and facies polygons; applies thickness maps; locates sensors
+and injection sources; classifies reporting boxes; and writes mappings from the
+simulation grid to the benchmark reporting grid."""
 
 import csv
 import shutil
 import sys
 from contextlib import nullcontext
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 from alive_progress import alive_bar
@@ -21,42 +26,33 @@ from pofff.utils.writefile import create_corner_point_grid
 
 
 def grid_and_properties(cfg: PofffConfig) -> None:
-    """Dispatch grid generation and spatial property assignment
-    based on the selected grid type."""
-    polygons, points = getpolygons(cfg)
+    """Generate the selected grid and assign spatial model properties.
+
+    The function updates grid dimensions, generated OPM arrays, sensor and source
+    indices, and the benchmark cell map on ``cfg``.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
+    polygons, points = _read_geological_polygons(cfg)
     if cfg.grid == "corner-point":
-        xyz, xcoord, zcoord = corner(cfg, points)
-        positions(cfg, polygons, xyz=xyz, xcoord=xcoord, zcoord=zcoord)
+        xyz, xcoord, zcoord = _build_corner_point_coordinates(cfg, points)
+        _assign_spatial_properties(cfg, polygons, xyz=xyz, xcoord=xcoord, zcoord=zcoord)
         return
     dims = np.asarray(cfg.dims, float)
     if cfg.grid == "cartesian":
         xvert = np.linspace(0, dims[0], cfg.nxz[0] + 1)
         zvert = np.linspace(0, dims[2], cfg.nxz[1] + 1)
     else:
-
-        def tensor(parts, dim):
-            """Construct non-uniform grid edges from part sizes."""
-            return np.concatenate(
-                [
-                    np.linspace(
-                        i * dim / len(parts),
-                        (i + 1) * dim / len(parts),
-                        n + 1,
-                        endpoint=True,
-                    )[:-1]
-                    for i, n in enumerate(parts)
-                ]
-                + [np.array([dim])]
-            )
-
-        xvert = tensor(cfg.x, dims[0])
-        zvert = tensor(cfg.z, dims[2])
+        xvert = _tensor(cfg.x, dims[0])
+        zvert = _tensor(cfg.z, dims[2])
         cfg.nxz = [len(xvert) - 1, len(zvert) - 1]
     xcent = 0.5 * (xvert[:-1] + xvert[1:])
     zcent = 0.5 * (zvert[:-1] + zvert[1:])
     cfg.dx = list(xvert[1:] - xvert[:-1])
     cfg.dz = list(zvert[1:] - zvert[:-1])
-    positions(cfg, polygons, xcent=xcent, zcent=zcent)
+    _assign_spatial_properties(cfg, polygons, xcent=xcent, zcent=zcent)
     if cfg.grid == "tensor":
         cfg.dx = list(map(str, xvert[1:] - xvert[:-1]))
         dz = list(map(str, zvert[1:] - zvert[:-1]))
@@ -66,12 +62,57 @@ def grid_and_properties(cfg: PofffConfig) -> None:
             cfg.dz.extend([dz[i + 1]] * cfg.nxz[0])
 
 
-def corner(
+def _tensor(parts: list[int], dimension: float) -> NDArray[np.float64]:
+    """Construct tensor-grid edges from per-region refinement counts.
+
+    Divide the physical dimension into equally sized regions, then subdivide
+    each region according to its corresponding refinement count.
+
+    Parameters
+    ----------
+    parts : list[int]
+        Positive numbers of cells assigned to consecutive equal-sized regions.
+    dimension : float
+        Total physical length of the grid axis, in metres.
+
+    Returns
+    -------
+    NDArray[np.float64]
+        Ordered grid-edge coordinates from zero through ``dimension``, in
+        metres.
+    """
+    return np.concatenate(
+        [
+            np.linspace(
+                index * dimension / len(parts),
+                (index + 1) * dimension / len(parts),
+                cells + 1,
+                endpoint=True,
+            )[:-1]
+            for index, cells in enumerate(parts)
+        ]
+        + [np.array([dimension], dtype=np.float64)]
+    )
+
+
+def _build_corner_point_coordinates(
     cfg: PofffConfig,
     points: list[list[float]],
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-    """Build corner-point grid coordinates and compute cell centroids."""
-    horizonts = get_lines(cfg, points)
+    """Build refined corner-point coordinates and cell centroids.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    points : list[list[float]]
+        Geological points represented by x and z coordinates in metres.
+
+    Returns
+    -------
+    tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]
+        Cell centroids followed by refined corner x and z coordinates."""
+    horizonts = _read_horizon_lines(cfg, points)
     xvert = np.concatenate(
         [
             np.linspace(
@@ -110,7 +151,7 @@ def corner(
     cfg.nxz[0] = len(xcoord) // stride - 1
     cfg.nxz[1] = stride - 1
 
-    xcoord, zcoord, cfg.nxz[0], cfg.nxz[1] = refinement_z(
+    xcoord, zcoord, cfg.nxz[0], cfg.nxz[1] = _refine_vertical_coordinates(
         xcoord, zcoord, cfg.nxz[1], np.array(cfg.z)
     )
 
@@ -141,8 +182,18 @@ def corner(
     return xyz, xcoord, zcoord
 
 
-def handle_thickness_map(cfg: PofffConfig) -> tuple[float, NDArray, NDArray, NDArray]:
-    """Load and normalize thickness map and corresponding multipliers."""
+def _load_thickness_map(cfg: PofffConfig) -> tuple[float, NDArray, NDArray, NDArray]:
+    """Load the selected FluidFlower thickness map and multipliers.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+
+    Returns
+    -------
+    tuple[float, NDArray, NDArray, NDArray]
+        Minimum thickness, map x and z coordinates, and normalized multipliers."""
     geology = cfg.path / "geology"
 
     if cfg.thickness == "final":
@@ -167,13 +218,24 @@ def handle_thickness_map(cfg: PofffConfig) -> tuple[float, NDArray, NDArray, NDA
     )
 
 
-def structured_handling_fluidflower(
+def _assign_structured_grid_properties(
     cfg: PofffConfig,
     xcent: NDArray[np.float64],
     zcent: NDArray[np.float64],
     polygons: list[Polygon],
 ) -> None:
-    """Assign facies, boxes, sensors, and wells on structured grids."""
+    """Assign properties and feature indices on a structured grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    xcent : NDArray[np.float64]
+        Cell-centre x coordinates in metres.
+    zcent : NDArray[np.float64]
+        Cell-centre z coordinates in metres.
+    polygons : list[Polygon]
+        FluidFlower facies polygons in model coordinates."""
     nx, nz = cfg.nxz
     x = np.tile(xcent, nz)
     z = np.repeat(zcent, nx)
@@ -182,7 +244,7 @@ def structured_handling_fluidflower(
     flux = np.full(len(x), -1)
 
     if cfg.thickness in {"initial", "final"}:
-        cfg.dims[1], xth, zth, mult = handle_thickness_map(cfg)
+        cfg.dims[1], xth, zth, mult = _load_thickness_map(cfg)
     else:
         cfg.dims[1] = float(cfg.thickness)
     show_progress = sys.stdout.isatty()
@@ -205,32 +267,45 @@ def structured_handling_fluidflower(
                 cfg.multpv.append(str(mult[idx]))
 
     cfg.fluxnum = flux.astype(str).tolist()
-    cfg.fipnum = classify_boxes(cfg, x, ztop, cfg.fluxnum)
+    cfg.fipnum = _classify_reporting_boxes(cfg, x, ztop, cfg.fluxnum)
 
-    s1, s2 = sensors_structured(cfg, xcent, zcent)
+    s1, s2 = _locate_structured_sensors(cfg, xcent, zcent)
     cfg.fipnum[s1], cfg.fipnum[s2] = "8", "9"
 
-    wells_structured(cfg, xcent, zcent)
+    _locate_structured_sources(cfg, xcent, zcent)
 
     if cfg.hascellmaps:
-        get_cellmaps(cfg, x.tolist(), ztop.tolist())
+        _write_cell_map(cfg, x.tolist(), ztop.tolist())
     else:
         shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
 
-def corner_point_handling_fluidflower(
+def _assign_corner_point_properties(
     cfg: PofffConfig,
     xyz: NDArray[np.float64],
     polygons: list[Polygon],
     xcoord: NDArray[np.float64],
     zcoord: NDArray[np.float64],
 ) -> None:
-    """Assign facies, boxes, sensors, and wells for corner-point grids."""
+    """Assign properties and feature indices on a corner-point grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    xyz : NDArray[np.float64]
+        Cell-centroid coordinates with columns x, y, and z.
+    polygons : list[Polygon]
+        FluidFlower facies polygons in model coordinates.
+    xcoord : NDArray[np.float64]
+        Corner-point x coordinates arranged by pillar and vertical interface.
+    zcoord : NDArray[np.float64]
+        Corner-point z coordinates arranged by pillar and vertical interface."""
     x = xyz[:, 0]
     ztop = cfg.dims[2] - xyz[:, 2]
 
     if cfg.thickness in {"initial", "final"}:
-        cfg.dims[1], xth, zth, mult = handle_thickness_map(cfg)
+        cfg.dims[1], xth, zth, mult = _load_thickness_map(cfg)
     else:
         cfg.dims[1] = float(cfg.thickness)
 
@@ -255,22 +330,22 @@ def corner_point_handling_fluidflower(
                 cfg.multpv.append(str(mult[idx]))
 
     cfg.fluxnum = flux.astype(str).tolist()
-    cfg.fipnum = classify_boxes(cfg, x, ztop, cfg.fluxnum)
+    cfg.fipnum = _classify_reporting_boxes(cfg, x, ztop, cfg.fluxnum)
 
-    s1, s2 = sensors_corner_point(cfg, x, ztop)
+    s1, s2 = _locate_corner_point_sensors(cfg, x, ztop)
     cfg.fipnum[s1], cfg.fipnum[s2] = "8", "9"
 
-    wells_corner_point(cfg, x, ztop)
+    _locate_corner_point_sources(cfg, x, ztop)
 
     if cfg.hascellmaps:
-        get_cellmaps(cfg, x.tolist(), ztop.tolist())
+        _write_cell_map(cfg, x.tolist(), ztop.tolist())
     else:
         shutil.copy(cfg.path / "geology/cellmap.npy", cfg.deck)
 
     create_corner_point_grid(cfg, xcoord, zcoord)
 
 
-def positions(
+def _assign_spatial_properties(
     cfg: PofffConfig,
     polygons: list[Polygon],
     xcent: NDArray[np.float64] | None = None,
@@ -279,22 +354,53 @@ def positions(
     xcoord: NDArray[np.float64] | None = None,
     zcoord: NDArray[np.float64] | None = None,
 ) -> None:
-    """Dispatch spatial indexing for either grid type."""
+    """Dispatch property assignment for the selected grid representation.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    polygons : list[Polygon]
+        FluidFlower facies polygons in model coordinates.
+    xcent : NDArray[np.float64] | None, optional
+        Cell-centre x coordinates in metres.
+    zcent : NDArray[np.float64] | None, optional
+        Cell-centre z coordinates in metres.
+    xyz : NDArray[np.float64] | None, optional
+        Cell-centroid coordinates with columns x, y, and z.
+    xcoord : NDArray[np.float64] | None, optional
+        Corner-point x coordinates arranged by pillar and vertical interface.
+    zcoord : NDArray[np.float64] | None, optional
+        Corner-point z coordinates arranged by pillar and vertical interface."""
     if cfg.grid == "corner-point":
         assert xyz is not None
         assert xcoord is not None
         assert zcoord is not None
-        corner_point_handling_fluidflower(cfg, xyz, polygons, xcoord, zcoord)
+        _assign_corner_point_properties(cfg, xyz, polygons, xcoord, zcoord)
     else:
         assert xcent is not None
         assert zcent is not None
-        structured_handling_fluidflower(cfg, xcent, zcent, polygons)
+        _assign_structured_grid_properties(cfg, xcent, zcent, polygons)
 
 
-def sensors_structured(
+def _locate_structured_sensors(
     cfg: PofffConfig, xcent: NDArray[np.float64], zcent: NDArray[np.float64]
 ) -> tuple[int, int]:
-    """Determine structured-grid sensor indices."""
+    """Locate both observation sensors on a structured grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    xcent : NDArray[np.float64]
+        Cell-centre x coordinates in metres.
+    zcent : NDArray[np.float64]
+        Cell-centre z coordinates in metres.
+
+    Returns
+    -------
+    tuple[int, int]
+        Global zero-based indices of the two sensor cells."""
     sx1, sz1 = cfg.sensors[0]
     sx2, sz2 = cfg.sensors[1]
     dimz = cfg.dims[2]
@@ -317,10 +423,19 @@ def sensors_structured(
     return i1, i2
 
 
-def wells_structured(
+def _locate_structured_sources(
     cfg: PofffConfig, xcent: NDArray[np.float64], zcent: NDArray[np.float64]
 ) -> None:
-    """Determine structured-grid well indices."""
+    """Locate both injection sources on a structured grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    xcent : NDArray[np.float64]
+        Cell-centre x coordinates in metres.
+    zcent : NDArray[np.float64]
+        Cell-centre z coordinates in metres."""
     for i, w in enumerate(cfg.sources):
         cfg.source_ik[i] = [
             int(np.argmin(np.abs(xcent - w[0]))) + 1,
@@ -328,10 +443,24 @@ def wells_structured(
         ]
 
 
-def sensors_corner_point(
+def _locate_corner_point_sensors(
     cfg: PofffConfig, x: NDArray[np.float64], ztop: NDArray[np.float64]
 ) -> tuple[int, int]:
-    """Determine corner-point sensor indices."""
+    """Locate both observation sensors on a corner-point grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    x : NDArray[np.float64]
+        Cell or plotting x coordinates in metres.
+    ztop : NDArray[np.float64]
+        Cell-centre depth coordinates measured from the model top.
+
+    Returns
+    -------
+    tuple[int, int]
+        Global zero-based indices of the two sensor cells."""
     coords = np.column_stack((x, ztop))
     sensors = np.array(cfg.sensors)
     d = ((coords[:, None] - sensors) ** 2).sum(axis=2)
@@ -345,10 +474,19 @@ def sensors_corner_point(
     return s1, s2
 
 
-def wells_corner_point(
+def _locate_corner_point_sources(
     cfg: PofffConfig, x: NDArray[np.float64], ztop: NDArray[np.float64]
 ) -> None:
-    """Determine corner-point well indices."""
+    """Locate both injection sources on a corner-point grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    x : NDArray[np.float64]
+        Cell or plotting x coordinates in metres.
+    ztop : NDArray[np.float64]
+        Cell-centre depth coordinates measured from the model top."""
     coords = np.column_stack((x, ztop))
     wells = np.array(cfg.sources)
     d = ((coords[:, None] - wells) ** 2).sum(axis=2)
@@ -361,34 +499,99 @@ def wells_corner_point(
         ]
 
 
-def classify_boxes(
+def _assign_box_region(
+    bounds: list[list[float]],
+    sand_region: str,
+    other_region: str,
+    x: NDArray[np.float64],
+    z: NDArray[np.float64],
+    fluxnum: NDArray[Any],
+    fipnum: NDArray[Any],
+) -> None:
+    """Assign FIPNUM values inside one benchmark reporting box.
+
+    Cells belonging to facies 1 receive ``sand_region``. All other cells
+    inside the box receive ``other_region``. The ``fipnum`` array is modified
+    in place.
+
+    Parameters
+    ----------
+    bounds : list[list[float]]
+        Lower-left and upper-right box corners as
+        ``[[xmin, zmin], [xmax, zmax]]`` in metres.
+    sand_region : str
+        FIPNUM assigned to cells in facies 1.
+    other_region : str
+        FIPNUM assigned to all other facies inside the box.
+    x : NDArray[np.float64]
+        Cell-centre x coordinates in global cell order, in metres.
+    z : NDArray[np.float64]
+        Cell-centre z coordinates in global cell order, in metres.
+    fluxnum : list[str]
+        Facies identifiers in global cell order.
+    fipnum : list[str]
+        FIPNUM values in global cell order, modified in place.
+    """
+    inside = (
+        (x >= bounds[0][0])
+        & (x <= bounds[1][0])
+        & (z >= bounds[0][1])
+        & (z <= bounds[1][1])
+    )
+    unassigned = inside & (fipnum == "1")
+    fipnum[unassigned & (fluxnum == "1")] = sand_region
+    fipnum[unassigned & (fluxnum != "1")] = other_region
+
+
+def _classify_reporting_boxes(
     cfg: PofffConfig,
     x: NDArray[np.float64],
     z: NDArray[np.float64],
     flux: list[str],
 ) -> list[str]:
-    """Assign box-specific FIP numbers based on spatial regions."""
+    """Assign benchmark reporting-region FIPNUM values.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    x : NDArray[np.float64]
+        Cell or plotting x coordinates in metres.
+    z : NDArray[np.float64]
+        Cell or plotting z coordinates in metres.
+    flux : list[str]
+        Facies identifiers in global cell order.
+
+    Returns
+    -------
+    list[str]
+        FIPNUM values in global cell order."""
     x, z, flux0 = map(np.asarray, (x, z, flux))
     fip = np.full(len(x), "1", dtype=object)
 
-    def box(b, a, b2):
-        m = (x >= b[0][0]) & (x <= b[1][0]) & (z >= b[0][1]) & (z <= b[1][1])
-        sel = m & (fip == "1")
-        fip[sel & (flux0 == "1")] = a
-        fip[sel & (flux0 != "1")] = b2
-
-    box(cfg.boxb, "6", "3")
-    box(cfg.boxc, "12", "4")
-    box(cfg.boxa, "5", "2")
+    _assign_box_region(cfg.boxb, "6", "3", x, z, flux0, fip)
+    _assign_box_region(cfg.boxc, "12", "4", x, z, flux0, fip)
+    _assign_box_region(cfg.boxa, "5", "2", x, z, flux0, fip)
 
     fip[(flux0 == "1") & (fip == "1")] = "7"
     return fip.tolist()
 
 
-def get_cellmaps(
+def _write_cell_map(
     cfg: PofffConfig, simxcent: NDArray[np.float64], simzcent: NDArray[np.float64]
 ) -> None:
-    """Construct mapping from structured grid to reference grid."""
+    """Map benchmark reporting cells to their nearest simulation cells.
+
+    The mapping is written as ``cellmap.npy`` below ``cfg.deck``.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    simxcent : NDArray[np.float64]
+        Simulation-cell x coordinates in global cell order.
+    simzcent : NDArray[np.float64]
+        Simulation-cell z coordinates in global cell order."""
     refx = np.arange(0, 2.8 + 5.0e-3, 1.0e-2)
     refz = np.arange(0, 1.2 + 5.0e-3, 1.0e-2)
     refx = 0.5 * (refx[1:] + refx[:-1])
@@ -402,8 +605,22 @@ def get_cellmaps(
     np.save(Path(cfg.deck) / "cellmap.npy", np.argmin(d, axis=0))
 
 
-def get_lines(cfg: PofffConfig, points: list[list[float]]) -> list[list[list[float]]]:
-    """Read geological horizon lines."""
+def _read_horizon_lines(
+    cfg: PofffConfig, points: list[list[float]]
+) -> list[list[list[float]]]:
+    """Read and order geological horizon polylines.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    points : list[list[float]]
+        Geological points represented by x and z coordinates in metres.
+
+    Returns
+    -------
+    list[list[list[float]]]
+        Geological horizons ordered from bottom to top."""
     horizonts: list[list[list[float]]] = []
     with open(cfg.path / "geology/horizonts.geo", encoding="utf8") as file:
         for r in csv.reader(file, delimiter=" "):
@@ -416,8 +633,20 @@ def get_lines(cfg: PofffConfig, points: list[list[float]]) -> list[list[list[flo
     return horizonts[::-1]
 
 
-def getpolygons(cfg: PofffConfig) -> tuple[list[Polygon], list[list[float]]]:
-    """Read geological polygons and facies definitions."""
+def _read_geological_polygons(
+    cfg: PofffConfig,
+) -> tuple[list[Polygon], list[list[float]]]:
+    """Read geological points, line connectivity, and facies polygons.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+
+    Returns
+    -------
+    tuple[list[Polygon], list[list[float]]]
+        Facies polygons and the geological point coordinates."""
     polygons, points, lines, curves, facie = [], [], [], [], 0
     h_ref, l_ref = 1.5 / 1490, 2.8 / 2594
 
@@ -457,13 +686,29 @@ def getpolygons(cfg: PofffConfig) -> tuple[list[Polygon], list[list[float]]]:
     return polygons, points
 
 
-def refinement_z(
+def _refine_vertical_coordinates(
     xci: NDArray[np.float64],
     zci: NDArray[np.float64],
     ncz: int,
     znr: NDArray[np.float64],
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], int, int]:
-    """Refine grid vertically according to znr refinement factors."""
+    """Subdivide geological layers by their vertical refinement factors.
+
+    Parameters
+    ----------
+    xci : NDArray[np.float64]
+        Unrefined corner-point x coordinates.
+    zci : NDArray[np.float64]
+        Unrefined corner-point z coordinates.
+    ncz : int
+        Number of unrefined vertical cells.
+    znr : NDArray[np.float64]
+        Vertical refinement factor for each geological layer.
+
+    Returns
+    -------
+    tuple[NDArray[np.float64], NDArray[np.float64], int, int]
+        Refined x and z coordinates and the new x and z cell counts."""
     stride = ncz + 1
     ncols = len(xci) // stride
 

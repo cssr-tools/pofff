@@ -2,7 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0
 # pylint: disable=R0912, R0914
 
-"""Utility functions to write OPM/pofff files and variables."""
+"""Write OPM Flow, ERT, Everest, and generated job files.
+
+The module serializes grid and region keywords, renders the main OPM deck, and
+creates helper scripts for boundary properties, saturation functions, regional
+properties, Flow execution, copying, scaling, and monotonicity checks. It also
+renders the ERT and Everest workflow configurations."""
 
 import os
 import subprocess
@@ -20,9 +25,18 @@ HEADER = (
 )
 
 
-def compact_format(values: list) -> list:
-    """Encode values using Eclipse-style n*value compaction.
-    Uses NumPy for efficient run-length encoding."""
+def _compact_eclipse_values(values: list) -> list:
+    """Encode repeated numeric values with Eclipse run-length syntax.
+
+    Parameters
+    ----------
+    values : list
+        Values to encode in their existing global order.
+
+    Returns
+    -------
+    list
+        Eclipse-formatted strings using ``n*value`` compaction."""
     if len(values) == 0:
         return []
     v = np.asarray(values, dtype=np.float64)
@@ -52,8 +66,16 @@ def compact_format(values: list) -> list:
 def create_corner_point_grid(
     cfg: PofffConfig, xcoord: NDArray, zcoord: NDArray
 ) -> None:
-    """Write COORD and ZCORN sections for a corner-point grid.
-    Output is bit-identical to the original implementation."""
+    """Write OPM COORD and ZCORN data for the corner-point grid.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state.
+    xcoord : NDArray
+        Corner-point x coordinates arranged by pillar and vertical interface.
+    zcoord : NDArray
+        Corner-point z coordinates arranged by pillar and vertical interface."""
 
     nx, nz = cfg.nxz
     nk = nz + 1
@@ -64,7 +86,7 @@ def create_corner_point_grid(
         for i in range(nx + 1):
             base = i * nk
             tmp.append(f"{xcoord[base]:E} {y} 0 " f"{xcoord[base + nz]:E} {y:E} 0 ")
-    grid.extend(compact_format("".join(tmp).split()))
+    grid.extend(_compact_eclipse_values("".join(tmp).split()))
     grid.append("/\n")
     grid.append("ZCORN\n")
     tmp = []
@@ -80,7 +102,7 @@ def create_corner_point_grid(
     for i in range(nx):
         tmp.append(f"{zcoord[(i+1)*nk - 1]:E} {zcoord[(i+2)*nk - 1]:E} ")
     tmp.extend(tmp[-nx:])
-    grid.extend(compact_format("".join(tmp).split()))
+    grid.extend(_compact_eclipse_values("".join(tmp).split()))
     grid.append("/")
     with open(f"{cfg.deck}/GRID.INC", "w", encoding="utf8") as f:
         f.write(HEADER)
@@ -88,8 +110,13 @@ def create_corner_point_grid(
         f.write("\n")
 
 
-def write_keywords(cfg: PofffConfig) -> None:
-    """Write OPM keyword include files (FIPNUM, FLUXNUM, DX, DZ, etc.)."""
+def _write_keyword_files(cfg: PofffConfig) -> None:
+    """Write generated OPM property and geometry include files.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     keywords = ["fluxnum", "fipnum"]
     if cfg.grid == "tensor":
         keywords += ["dx", "dz"]
@@ -97,7 +124,7 @@ def write_keywords(cfg: PofffConfig) -> None:
         keywords += ["multpv", "multx", "multx-", "multz", "multz-"]
     for name in keywords:
         values = getattr(cfg, "multpv" if name.startswith("mult") else name)
-        body = compact_format(values)
+        body = _compact_eclipse_values(values)
         with open(f"{cfg.deck}/{name.upper()}.INC", "w", encoding="utf8") as f:
             f.write(HEADER)
             f.write(f"{name.upper()}\n")
@@ -106,8 +133,16 @@ def write_keywords(cfg: PofffConfig) -> None:
 
 
 def write_files(cfg: PofffConfig) -> None:
-    """Generate all OPM, ERT, and Everest files using mako templates."""
-    write_keywords(cfg)
+    """Generate the OPM deck and optional ERT or Everest files.
+
+    Generated files are written below ``cfg.deck``, ``cfg.jobs``, and ``cfg.fol``
+    according to the selected workflow.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
+    _write_keyword_files(cfg)
     tmpl = Template(filename=f"{cfg.path}/templates/deck.mako")
     mytemplate = tmpl.render(
         nxz=cfg.nxz,
@@ -127,22 +162,22 @@ def write_files(cfg: PofffConfig) -> None:
     with open(f"{cfg.deck}/{cfg.data}.DATA", "w", encoding="utf8") as f:
         f.write(mytemplate)
     job_names = ["bcprop", "equalreg", "satufunc"]
-    render_bcprop(cfg)
-    render_equalreg(cfg)
-    render_satufunc(cfg)
+    _render_boundary_properties_script(cfg)
+    _render_region_properties_script(cfg)
+    _render_saturation_functions_script(cfg)
     if cfg.everert:
-        render_flow(cfg)
-        render_copyd(cfg)
+        _render_flow_script(cfg)
+        _render_copy_script(cfg)
         job_names += ["flow", "copyd"]
         if cfg.popsize:
             job_names += ["scale"]
-            render_scale(cfg)
+            _render_scale_script(cfg)
             with open(f"{cfg.jobs}/METRIC", "w", encoding="utf8") as f:
                 f.write("EXECUTABLE metric.py")
 
             with open(f"{cfg.jobs}/DATA", "w", encoding="utf8") as f:
                 f.write("EXECUTABLE data.py")
-            render_everest(cfg)
+            _render_everest_configuration(cfg)
         else:
             with open(f"{cfg.jobs}/METRIC", "w", encoding="utf8") as f:
                 f.write("EXECUTABLE metric.py\n")
@@ -153,9 +188,9 @@ def write_files(cfg: PofffConfig) -> None:
             with open(f"{cfg.jobs}/DATA", "w", encoding="utf8") as f:
                 f.write("EXECUTABLE data.py\n")
                 f.write(f"ARGLIST -t {cfg.times} -m {cfg.deck}/cellmap.npy")
-            render_ert(cfg)
+            _render_ert_configuration(cfg)
         if cfg.monotonic:
-            render_monotonic(cfg)
+            _render_monotonic_script(cfg)
             job_names += ["monotonic"]
     for name in job_names:
         script_path = f"{cfg.jobs}/{name}.py"
@@ -180,8 +215,13 @@ def write_files(cfg: PofffConfig) -> None:
             f.write(content)
 
 
-def render_monotonic(cfg: PofffConfig) -> None:
-    """Generate monotonic.py"""
+def _render_monotonic_script(cfg: PofffConfig) -> None:
+    """Render the generated monotonicity-check job script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     inc_names = ["swi", "sni", "pen", "nkrw", "nkrn", "npe"]
     dec_names = ["perm", "permx", "permz", "disperc"]
 
@@ -214,8 +254,13 @@ def render_monotonic(cfg: PofffConfig) -> None:
         )
 
 
-def render_scale(cfg: PofffConfig) -> None:
-    """Generate scale.py"""
+def _render_scale_script(cfg: PofffConfig) -> None:
+    """Render the generated Everest parameter-scaling script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     parts = []
 
     keys = list(cfg.hm.keys())
@@ -240,8 +285,13 @@ def render_scale(cfg: PofffConfig) -> None:
         )
 
 
-def render_bcprop(cfg: PofffConfig) -> None:
-    """Generate bcprop.py"""
+def _render_boundary_properties_script(cfg: PofffConfig) -> None:
+    """Render the generated boundary-property job script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     imports_block = ""
 
     if cfg.monotonic:
@@ -318,8 +368,13 @@ def render_bcprop(cfg: PofffConfig) -> None:
         )
 
 
-def render_copyd(cfg: PofffConfig) -> None:
-    """Generate copyd.py"""
+def _render_copy_script(cfg: PofffConfig) -> None:
+    """Render the generated deck-copy job script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     monotonic_block = (
         'if os.path.exists("NOMONOTONIC"):\n' "    sys.exit()\n"
         if cfg.monotonic
@@ -336,8 +391,13 @@ def render_copyd(cfg: PofffConfig) -> None:
         )
 
 
-def render_flow(cfg: PofffConfig) -> None:
-    """Generate flow.py"""
+def _render_flow_script(cfg: PofffConfig) -> None:
+    """Render the generated OPM Flow execution script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     monotonic_block = (
         'if os.path.exists("NOMONOTONIC"):\n' "    sys.exit()\n"
         if cfg.monotonic
@@ -373,8 +433,13 @@ def render_flow(cfg: PofffConfig) -> None:
         )
 
 
-def render_equalreg(cfg: PofffConfig) -> None:
-    """Generate equalreg.py"""
+def _render_region_properties_script(cfg: PofffConfig) -> None:
+    """Render the generated regional rock-property script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     imports_block = ""
 
     if cfg.monotonic:
@@ -462,8 +527,13 @@ def render_equalreg(cfg: PofffConfig) -> None:
         )
 
 
-def render_satufunc(cfg: PofffConfig) -> None:
-    """Generate satufunc.py"""
+def _render_saturation_functions_script(cfg: PofffConfig) -> None:
+    """Render the generated saturation-function script.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     imports_block = ""
     if cfg.monotonic:
         imports_block += "import os\nimport sys\n"
@@ -530,8 +600,13 @@ def render_satufunc(cfg: PofffConfig) -> None:
         )
 
 
-def render_ert(cfg: PofffConfig) -> None:
-    """Generate ert.txt"""
+def _render_ert_configuration(cfg: PofffConfig) -> None:
+    """Render the ERT configuration and forward-model sequence.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     names = ["copyd", "equalreg", "satufunc", "bcprop", "flow"]
     lines = []
     for name in names:
@@ -560,8 +635,13 @@ def render_ert(cfg: PofffConfig) -> None:
         f.write(rendered)
 
 
-def render_everest(cfg: PofffConfig) -> None:
-    """Generate everest.yml"""
+def _render_everest_configuration(cfg: PofffConfig) -> None:
+    """Render the Everest optimization configuration.
+
+    Parameters
+    ----------
+    cfg : PofffConfig
+        Shared pofff configuration and derived runtime state."""
     variables_block = "\n".join(
         [
             f"      - name: {p}\n"

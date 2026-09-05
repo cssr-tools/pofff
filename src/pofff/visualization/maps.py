@@ -3,7 +3,11 @@
 # https://github.com/fluidflower/general/blob/main/visualization/generate_segmented_images.py
 # pylint: disable=R0913, R0914, R0917
 
-"""Overlay simulated spatial maps with experimental contour boundaries."""
+"""Create spatial benchmark overlays from simulation and experiment data.
+
+Simulation saturation and dissolved-CO2 fields are segmented on the FluidFlower
+reporting grid, combined with experimental contour boundaries and geological
+lines, and written as maps for the requested evaluation times."""
 
 import argparse
 import csv
@@ -21,8 +25,27 @@ NX_TARGET = 280  # Target grid size in x
 NZ_TARGET = 120  # Target grid size in z
 
 
-def pngs(simulations, experiment, x, z, points, lines, t):
-    """Plot segmented simulation map with experimental contours and geology."""
+def _write_overlay_map(simulations, experiment, x, z, points, lines, t):
+    """Write one simulation and experiment overlay map.
+
+    The figure is written as ``map_<time>h.png`` in the current directory.
+
+    Parameters
+    ----------
+    simulations : object
+        Segmented simulation classes on the benchmark reporting grid.
+    experiment : object
+        Segmented experimental classes on the benchmark reporting grid.
+    x : object
+        Cell or plotting x coordinates in metres.
+    z : object
+        Cell or plotting z coordinates in metres.
+    points : object
+        Geological points represented by x and z coordinates in metres.
+    lines : object
+        Pairs of point indices defining geological line segments.
+    t : object
+        Evaluation time label in hours."""
     cmap = colors.ListedColormap(
         ["#ffffff", "#f8a98c", "#faf7a1", "#df3a0c", "#B1B106"]
     )
@@ -59,8 +82,17 @@ def pngs(simulations, experiment, x, z, points, lines, t):
     plt.clf()
 
 
-def segment(filename, satmin, conmin):
-    """Segment saturation and concentration fields into discrete classes."""
+def _segment_simulation_fields(filename, satmin, conmin):
+    """Segment saturation and concentration on the reporting grid.
+
+    Parameters
+    ----------
+    filename : object
+        Path to the input file.
+    satmin : object
+        Minimum gas-saturation threshold.
+    conmin : object
+        Minimum dissolved-CO2 concentration threshold."""
     xspace = np.arange(0, DOMAIN_X + 0.5 * DX, DX)
     zspace = np.arange(0, DOMAIN_Z + 0.5 * DX, DX)
     x, z = np.meshgrid(xspace, zspace)
@@ -97,8 +129,13 @@ def segment(filename, satmin, conmin):
     return segmented, x, z
 
 
-def load_points(path):
-    """Load geological points and line connectivity from .geo files."""
+def _load_geological_lines(path):
+    """Load geological points and line connectivity for plotting.
+
+    Parameters
+    ----------
+    path : object
+        Input, output, or project path."""
     points = []
     lines = []
 
@@ -126,7 +163,12 @@ def load_points(path):
 
 
 def run_maps(argv=None):
-    """Generate spatial overlay maps for selected times."""
+    """Generate spatial overlay maps for the requested times.
+
+    Parameters
+    ----------
+    argv : object, optional
+        Arguments to parse instead of the process command line."""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description="Generate spatial overlay maps for selected times.",
@@ -137,7 +179,7 @@ def run_maps(argv=None):
     parser.add_argument("-t", "--times", default="24,48,72,96,120")
     parser.add_argument("-l", "--location", default=".")
     parser.add_argument("-p", "--path", default=".")
-    args = vars(parser.parse_known_args(argv)[0])
+    args = vars(parser.parse_args(argv))
 
     matplotlib.rc("font", family="normal", weight="normal", size=12)
     plt.rcParams.update(
@@ -148,10 +190,10 @@ def run_maps(argv=None):
         }
     )
 
-    points, lines = load_points(args["path"])
+    points, lines = _load_geological_lines(args["path"])
 
     for t in args["times"].split(","):
-        simulations, x, z = segment(
+        simulations, x, z = _segment_simulation_fields(
             f"{args["location"]}/spatial_map_{t}h.csv",
             args["minimumsaturation"],
             args["minimumconcentration"],
@@ -166,7 +208,7 @@ def run_maps(argv=None):
             delimiter=",",
         )[30:, :]
 
-        pngs(simulations, experiment, x, z, points, lines, t)
+        _write_overlay_map(simulations, experiment, x, z, points, lines, t)
 
 
 if __name__ == "__main__":

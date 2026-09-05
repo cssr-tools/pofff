@@ -27,15 +27,13 @@ To install the _pofff_ executable from the development version:
 pip install git+https://github.com/cssr-tools/pofff.git
 ```
 
-If you are interested in a specific version (e.g., v2026.04) or in modifying the source code, then you can clone the repository and install the Python requirements in a virtual environment with the following commands:
+If you are interested in modifying the source code, then you can clone the repository and install the Python requirements in a virtual environment with the following commands:
 
 ```bash
 # Clone the repo
 git clone https://github.com/cssr-tools/pofff.git
 # Get inside the folder
 cd pofff
-# For a specific version (e.g., v2026.04), or skip this step (i.e., edge version)
-git checkout v2026.04
 # Create virtual environment (to specific Python, python3.13 -m venv vpofff)
 python3 -m venv vpofff
 # Activate virtual environment

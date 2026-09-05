@@ -1,91 +1,543 @@
 
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Publication &mdash; pofff  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reproducing the publication &#8212; pofff  documentation</title>
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="about.html" />
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=530fd138" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'publication';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="pofff Python API" href="api.html" />
-    <link rel="prev" title="Examples" href="examples.html" /> 
-</head>
+    <link rel="next" title="Command-line reference" href="command-line.html" />
+    <link rel="prev" title="Visualization with plopm" href="examples/visualization.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+    <meta name="docbuild:last-update" content="2026-09-05"/>
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: #aaaaaa" >
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-          
-          
-          <a href="index.html">
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="pofff  documentation - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="pofff  documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Reproducing the publication
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="related.html">
+    Related projects
+  </a>
+</li>
+
+                </ul>
+            </li>
             
-              <img src="_static/logo.png" class="logo" alt="Logo"/>
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">Configuration file</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Publication</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">pofff Python API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output_folder.html">Output folder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="related.html">Related</a></li>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About pofff</a></li>
-</ul>
-
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #aaaaaa" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pofff</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Publication</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="_sources/publication.rst.txt" rel="nofollow"> View page source</a>
-      </li>
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <section id="publication">
-<h1>Publication<a class="headerlink" href="#publication" title="Link to this heading"></a></h1>
-<p>This section adds details in the steps to reproduce the figures in the <a class="reference external" href="https://link.springer.com/article/10.1007/s11242-025-02275-0">pofff paper</a>.</p>
-<p>To this end, we use our friend <a class="reference external" href="https://github.com/cssr-tools/plopm">plopm</a>. All commands are executed from the pofff main directory,
-and the figures are saved in new folders corresponding to the figure number.</p>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="introduction.html">
+    Introduction
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="configuration_file.html">
+    Configuration reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="tutorial.html">
+    Tutorial
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Reproducing the publication
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="command-line.html">
+    Command-line reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    pofff Python API
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="output_folder.html">
+    Output folder
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="contributing.html">
+    Contributing
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="related.html">
+    Related projects
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/cssr-tools/pofff/issues" title="Report an issue" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-bug fa-lg" aria-hidden="true"></i><span class="visually-hidden">Report an issue</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Reproducing the publication</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="reproducing-the-publication">
+<h1>Reproducing the publication<a class="headerlink" href="#reproducing-the-publication" title="Link to this heading">#</a></h1>
+<p>This section describes how to reproduce the figures, tables, sensitivity studies, and computational results in the <a class="reference external" href="https://link.springer.com/article/10.1007/s11242-025-02275-0">pofff paper</a>.</p>
+<p>The workflows use <a class="reference external" href="https://github.com/cssr-tools/plopm">plopm</a> for visualization. Unless stated otherwise, run all commands from the pofff repository root. Each workflow writes to a directory named after the corresponding figure or group of figures.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>You can install <a class="reference external" href="https://github.com/cssr-tools/plopm">plopm</a> by executing in the terminal:</p>
@@ -93,14 +545,19 @@ and the figures are saved in new folders corresponding to the figure number.</p>
 </pre></div>
 </div>
 </div>
-<p>Figure 3:</p>
+</section>
+<section id="figure-3-geology-and-thickness">
+<h2>Figure 3: geology and thickness<a class="headerlink" href="#figure-3-geology-and-thickness" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>examples/input.toml<span class="w"> </span>-o<span class="w"> </span>figure3<span class="w"> </span>-f<span class="w"> </span>none
-plopm<span class="w"> </span>-i<span class="w"> </span>figure3/FIGURe3<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;101;64;147 81;124;66 181;73;57 193;127;97 127;148;191 193;147;56&#39;</span><span class="w"> </span>-cticks<span class="w"> </span><span class="s1">&#39;[G, F, E, D, C, ESF]&#39;</span><span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;pvtnum - 1 - satnum&#39;</span><span class="w"> </span>-grid<span class="w"> </span><span class="s1">&#39;black,1e-2&#39;</span><span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,0,1<span class="w"> </span>-d<span class="w"> </span><span class="m">20</span>,15<span class="w"> </span>-o<span class="w"> </span>figure3<span class="w"> </span>-save<span class="w"> </span>figure3a<span class="w"> </span>-f<span class="w"> </span><span class="m">20</span><span class="w"> </span>-clabel<span class="w"> </span><span class="s1">&#39;Sand&#39;</span>
-plopm<span class="w"> </span>-i<span class="w"> </span>figure3/FIGURe3<span class="w"> </span>-v<span class="w"> </span><span class="s1">&#39;multx * 1.75&#39;</span><span class="w"> </span>-grid<span class="w"> </span><span class="s1">&#39;black,1e-2&#39;</span><span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,0,1<span class="w"> </span>-d<span class="w"> </span><span class="m">20</span>,15<span class="w"> </span>-clabel<span class="w"> </span><span class="s1">&#39;Thickness map [cm]&#39;</span><span class="w"> </span>-cformat<span class="w"> </span>.2f<span class="w"> </span>-cnum<span class="w"> </span><span class="m">5</span><span class="w"> </span>-f<span class="w"> </span><span class="m">20</span><span class="w"> </span>-o<span class="w"> </span>figure3<span class="w"> </span>-save<span class="w"> </span>figure3b
+plopm<span class="w"> </span>-i<span class="w"> </span>figure3/FIGURe3<span class="w"> </span>-c<span class="w"> </span><span class="s1">'101;64;147 81;124;66 181;73;57 193;127;97 127;148;191 193;147;56'</span><span class="w">  </span>-cbt<span class="w"> </span><span class="s1">'[G, F, E, D, C, ESF]'</span><span class="w"> </span>-v<span class="w"> </span><span class="s1">'pvtnum - 1 - satnum'</span><span class="w"> </span>-ge<span class="w"> </span><span class="s1">'black,1e-2'</span><span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,0,1<span class="w"> </span>-fs<span class="w"> </span><span class="m">20</span>,15<span class="w"> </span>-o<span class="w"> </span>figure3<span class="w"> </span>-fn<span class="w"> </span>figure3a<span class="w"> </span>-fz<span class="w"> </span><span class="m">20</span><span class="w"> </span>-cbl<span class="w"> </span><span class="s1">'Sand'</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figure3/FIGURe3<span class="w"> </span>-v<span class="w"> </span><span class="s1">'multx * 1.75'</span><span class="w"> </span>-ge<span class="w"> </span><span class="s1">'black,1e-2'</span><span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,0,1<span class="w"> </span>-fs<span class="w"> </span><span class="m">20</span>,15<span class="w"> </span>-cbl<span class="w"> </span><span class="s1">'Thickness map [cm]'</span><span class="w"> </span>-cbf<span class="w"> </span>.2f<span class="w"> </span>-cbn<span class="w"> </span><span class="m">5</span><span class="w"> </span>-fz<span class="w"> </span><span class="m">20</span><span class="w"> </span>-o<span class="w"> </span>figure3<span class="w"> </span>-fn<span class="w"> </span>figure3b
 </pre></div>
 </div>
+</section>
+<section id="figure-4-spe11a-grid-comparison">
+<h2>Figure 4: SPE11A grid comparison<a class="headerlink" href="#figure-4-spe11a-grid-comparison" title="Link to this heading">#</a></h2>
 <p>Figure 4 requires running the SPE11A cases using <a class="reference external" href="https://github.com/OPM/pyopmspe11">pyopmspe11</a>, which uses the simulation grid. You might need to edit the configuration files to
-adjust the computational resources to your machine (e.g., <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml">r3_cp_1cmish_capmax2500Pa.toml</a> is run with 32 cpus).</p>
+adjust the computational resources to your machine (e.g., <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml">r3_cp_1cmish_capmax2500Pa.toml</a> is run with 32 CPUs).</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>You can install <a class="reference external" href="https://github.com/OPM/pyopmspe11">pyopmspe11</a> by executing in the terminal:</p>
@@ -109,7 +566,7 @@ adjust the computational resources to your machine (e.g., <a class="reference ex
 </div>
 </div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>figure4<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>figure4
-curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml
+curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r2_Cart_1cm_capmax2500Pa.toml
 curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r3_cp_1cmish_capmax2500Pa.toml
 curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r4_Cart_1mm_capmax2500Pa.toml
 curl<span class="w"> </span>-O<span class="w"> </span>https://raw.githubusercontent.com/OPM/pyopmspe11/refs/heads/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.toml
@@ -117,9 +574,11 @@ pyopmspe11<span class="w"> </span>-i<span class="w"> </span>r2_Cart_1cm_capmax25
 pyopmspe11<span class="w"> </span>-i<span class="w"> </span>r3_cp_1cmish_capmax2500Pa.toml<span class="w"> </span>-o<span class="w"> </span>r3_cp_1cmish_capmax2500Pa<span class="w"> </span>-t<span class="w"> </span><span class="m">1</span><span class="w"> </span>-r<span class="w"> </span><span class="m">280</span>,1,120<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span>.16666666666666666
 pyopmspe11<span class="w"> </span>-i<span class="w"> </span>r4_Cart_1mm_capmax2500Pa.toml<span class="w"> </span>-o<span class="w"> </span>r4_Cart_1mm_capmax2500Pa<span class="w"> </span>-t<span class="w"> </span><span class="m">1</span><span class="w"> </span>-r<span class="w"> </span><span class="m">280</span>,1,120<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span>.16666666666666666
 pyopmspe11<span class="w"> </span>-i<span class="w"> </span>r5_Cart_1mm_capmax2500Pa_strictol.toml<span class="w"> </span>-o<span class="w"> </span>r5_Cart_1mm_capmax2500Pa_strictol<span class="w"> </span>-t<span class="w"> </span><span class="m">1</span><span class="w"> </span>-r<span class="w"> </span><span class="m">280</span>,1,120<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span>.16666666666666666
-plopm<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-r<span class="w"> </span><span class="m">53</span><span class="w"> </span>-mask<span class="w"> </span>satnum<span class="w"> </span>-maskthr<span class="w"> </span>7e-5<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;r2_Cart_1cm_capmax2500Pa/flow/R2_CART_1CM_CAPMAX2500PA r3_cp_1cmish_capmax2500Pa/flow/R3_CP_1CMISH_CAPMAX2500PA r4_Cart_1mm_capmax2500Pa/flow/R4_CART_1MM_CAPMAX2500PA r5_Cart_1mm_capmax2500Pa_strictol/flow/R5_CART_1MM_CAPMAX2500PA_STRICTOL&#39;</span><span class="w"> </span>-cnum<span class="w"> </span><span class="m">3</span><span class="w"> </span>-xlnum<span class="w"> </span><span class="m">8</span><span class="w"> </span>-clabel<span class="w"> </span><span class="s1">&#39;OPM results for SPE11A: CO$_2$ mass fraction (liquid phase) after 2 days&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="m">16</span>,6.5<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;(a) Cartesian grid 1cm  (b) Corner-point grid 1cmish  (c) Cartesian grid 1mm  (d) Cartesian grid 1mm stricter tolerances&quot;</span><span class="w"> </span>-yunits<span class="w"> </span>cm<span class="w"> </span>-xunits<span class="w"> </span>cm<span class="w"> </span>-yformat<span class="w"> </span>.0f<span class="w"> </span>-xformat<span class="w"> </span>.0f<span class="w"> </span>-f<span class="w"> </span><span class="m">16</span><span class="w"> </span>-save<span class="w"> </span>figure4<span class="w"> </span>-cformat<span class="w"> </span>.2e<span class="w"> </span>-suptitle<span class="w"> </span><span class="m">0</span><span class="w"> </span>-subfigs<span class="w"> </span><span class="m">2</span>,2<span class="w"> </span>-cbsfax<span class="w"> </span><span class="m">0</span>.35,0.97,0.3,0.02<span class="w"> </span>-delax<span class="w"> </span><span class="m">1</span><span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#9ca245 #9da347 #9fa44a #a0a64d #a2a750 #a3a953 #a5aa56 #a6ac59 #a8ad5c #a9af5f #abb062 #adb164 #aeb367 #b0b46a #b1b66d #b3b770 #b4b973 #b6ba76 #b7bc79 #b9bd7c #babf7f #bcc082 #bec184 #bfc387 #c1c48a #c2c68d #c4c790 #c5c993 #c7ca96 #c8cc99 #cacd9c #cbcf9f #cdd0a2 #cfd1a4 #d0d3a7 #d2d4aa #d3d6ad #d5d7b0 #d6d9b3 #d8dab6 #d9dcb9 #dbddbc #dcdfbf #dee0c1 #e0e1c4 #e1e3c7 #e3e4ca #e4e6cd #e6e7d0 #e7e9d3 #e9ead6 #eaecd9 #eceddc #edefdf #eff0e1 #f1f1e4 #f2f3e7 #f4f4ea #f5f6ed #f7f7f0 #f8f9f3 #fafaf6 #fbfcf9 #fdfdfc #ffffff #fefbfb #fdf7f7 #fcf3f3 #fbefef #faebeb #f9e7e7 #f8e3e3 #f7e0e0 #f6dcdc #f5d8d8 #f4d4d4 #f3d0d0 #f2cccc #f1c8c8 #f0c5c5 #efc1c1 #eebdbd #edb9b9 #ecb5b5 #ebb1b1 #eaadad #e9aaaa #e8a6a6 #e7a2a2 #e69e9e #e59a9a #e49696 #e39292 #e28f8f #e18b8b #e08787 #df8383 #de7f7f #dd7b7b #dc7777 #db7474 #da7070 #d96c6c #d86868 #d76464 #d66060 #d55c5c #d45959 #d35555 #d25151 #d14d4d #d04949 #cf4545 #ce4141 #cd3e3e #cc3a3a #cb3636 #ca3232 #c92e2e #c82a2a #c72626 #c62323 #c51f1f #c41b1b #c31717 #c21313 #c10f0f #c00b0b&#39;</span>
+plopm<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-r<span class="w"> </span><span class="m">53</span><span class="w"> </span>-mv<span class="w"> </span>satnum<span class="w"> </span>-mt<span class="w"> </span>7e-5<span class="w"> </span>-i<span class="w"> </span><span class="s1">'r2_Cart_1cm_capmax2500Pa/flow/R2_CART_1CM_CAPMAX2500PA r3_cp_1cmish_capmax2500Pa/flow/R3_CP_1CMISH_CAPMAX2500PA r4_Cart_1mm_capmax2500Pa/flow/R4_CART_1MM_CAPMAX2500PA r5_Cart_1mm_capmax2500Pa_strictol/flow/R5_CART_1MM_CAPMAX2500PA_STRICTOL'</span><span class="w"> </span>-cbn<span class="w"> </span><span class="m">3</span><span class="w"> </span>-xnt<span class="w"> </span><span class="m">8</span><span class="w"> </span>-cbl<span class="w"> </span><span class="s1">'OPM results for SPE11A: CO$_2$ mass fraction (liquid phase) after 2 days'</span><span class="w"> </span>-fs<span class="w"> </span><span class="m">16</span>,6.5<span class="w"> </span>-t<span class="w"> </span><span class="s2">"(a) Cartesian grid 1cm  (b) Corner-point grid 1cmish  (c) Cartesian grid 1mm  (d) Cartesian grid 1mm stricter tolerances"</span><span class="w"> </span>-yu<span class="w"> </span>cm<span class="w"> </span>-xu<span class="w"> </span>cm<span class="w"> </span>-yf<span class="w"> </span>.0f<span class="w"> </span>-xf<span class="w"> </span>.0f<span class="w"> </span>-fz<span class="w"> </span><span class="m">16</span><span class="w"> </span>-fn<span class="w"> </span>figure4<span class="w"> </span>-cbf<span class="w"> </span>.2e<span class="w"> </span>-st<span class="w"> </span><span class="m">0</span><span class="w"> </span>-sg<span class="w"> </span><span class="m">2</span>,2<span class="w"> </span>-cbp<span class="w"> </span><span class="m">0</span>.35,0.97,0.3,0.02<span class="w"> </span>-rdl<span class="w"> </span><span class="m">1</span><span class="w"> </span>-c<span class="w"> </span><span class="s1">'#9ca245 #9da347 #9fa44a #a0a64d #a2a750 #a3a953 #a5aa56 #a6ac59 #a8ad5c #a9af5f #abb062 #adb164 #aeb367 #b0b46a #b1b66d #b3b770 #b4b973 #b6ba76 #b7bc79 #b9bd7c #babf7f #bcc082 #bec184 #bfc387 #c1c48a #c2c68d #c4c790 #c5c993 #c7ca96 #c8cc99 #cacd9c #cbcf9f #cdd0a2 #cfd1a4 #d0d3a7 #d2d4aa #d3d6ad #d5d7b0 #d6d9b3 #d8dab6 #d9dcb9 #dbddbc #dcdfbf #dee0c1 #e0e1c4 #e1e3c7 #e3e4ca #e4e6cd #e6e7d0 #e7e9d3 #e9ead6 #eaecd9 #eceddc #edefdf #eff0e1 #f1f1e4 #f2f3e7 #f4f4ea #f5f6ed #f7f7f0 #f8f9f3 #fafaf6 #fbfcf9 #fdfdfc #ffffff #fefbfb #fdf7f7 #fcf3f3 #fbefef #faebeb #f9e7e7 #f8e3e3 #f7e0e0 #f6dcdc #f5d8d8 #f4d4d4 #f3d0d0 #f2cccc #f1c8c8 #f0c5c5 #efc1c1 #eebdbd #edb9b9 #ecb5b5 #ebb1b1 #eaadad #e9aaaa #e8a6a6 #e7a2a2 #e69e9e #e59a9a #e49696 #e39292 #e28f8f #e18b8b #e08787 #df8383 #de7f7f #dd7b7b #dc7777 #db7474 #da7070 #d96c6c #d86868 #d76464 #d66060 #d55c5c #d45959 #d35555 #d25151 #d14d4d #d04949 #cf4545 #ce4141 #cd3e3e #cc3a3a #cb3636 #ca3232 #c92e2e #c82a2a #c72626 #c62323 #c51f1f #c41b1b #c31717 #c21313 #c10f0f #c00b0b'</span>
 </pre></div>
 </div>
+<section id="using-submitted-spe11a-csv-data">
+<h3>Using submitted SPE11A CSV data<a class="headerlink" href="#using-submitted-spe11a-csv-data" title="Link to this heading">#</a></h3>
 <p>A similar figure without the need of running the simulations (not showing the sands in the background and using the reporting grid) can be obtained by downloading the SPE11A benchmark data in csv format available at
 <a class="reference external" href="https://darus.uni-stuttgart.de/dataset.xhtml?persistentId=doi:10.18419/DARUS-4750">this website</a> (the submitted benchmark data does not include the <a class="reference external" href="https://github.com/OPM/pyopmspe11/blob/main/benchmark/spe11a/r5_Cart_1mm_capmax2500Pa_strictol.toml">r5_Cart_1mm_capmax2500Pa_strictol.toml</a> results):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>figure4<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>figure4
@@ -129,104 +588,256 @@ curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>
 unzip<span class="w"> </span><span class="m">375716</span>
 curl<span class="w"> </span>-L<span class="w"> </span>-O<span class="w"> </span>https://darus.uni-stuttgart.de/api/access/datafile/375707
 unzip<span class="w"> </span><span class="m">375707</span>
-plopm<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;spe11a/opm2/spe11a_spatial_map_48h spe11a/opm3/spe11a_spatial_map_48h spe11a/opm4/spe11a_spatial_map_48h&#39;</span><span class="w"> </span>-csv<span class="w"> </span><span class="s2">&quot;1,2,5;1,2,5;1,2,5&quot;</span><span class="w"> </span>-c<span class="w"> </span>cet_diverging_gwr_55_95_c38<span class="w"> </span>-cnum<span class="w"> </span><span class="m">3</span><span class="w"> </span>-xlnum<span class="w"> </span><span class="m">8</span><span class="w"> </span>-clabel<span class="w"> </span><span class="s1">&#39;OPM results for SPE11A: CO$_2$ mass fraction (liquid phase) after 2 days&#39;</span><span class="w"> </span>-d<span class="w"> </span><span class="m">16</span>,6.5<span class="w"> </span>-t<span class="w"> </span><span class="s2">&quot;(a) Cartesian grid 1cm  (b) Corner-point grid 1cmish  (c) Cartesian grid 1mm&quot;</span><span class="w"> </span>-yunits<span class="w"> </span>cm<span class="w"> </span>-xunits<span class="w"> </span>cm<span class="w"> </span>-yformat<span class="w"> </span>.0f<span class="w"> </span>-xformat<span class="w"> </span>.0f<span class="w"> </span>-f<span class="w"> </span><span class="m">16</span><span class="w"> </span>-save<span class="w"> </span>figure4ish<span class="w"> </span>-cformat<span class="w"> </span>.2e<span class="w"> </span>-suptitle<span class="w"> </span><span class="m">0</span><span class="w"> </span>-subfigs<span class="w"> </span><span class="m">2</span>,2<span class="w"> </span>-cbsfax<span class="w"> </span><span class="m">0</span>.35,0.97,0.3,0.02<span class="w"> </span>-delax<span class="w"> </span><span class="m">1</span>
+plopm<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-i<span class="w"> </span><span class="s1">'spe11a/opm2/spe11a_spatial_map_48h spe11a/opm3/spe11a_spatial_map_48h spe11a/opm4/spe11a_spatial_map_48h'</span><span class="w"> </span>-cc<span class="w"> </span><span class="s2">"1,2,5;1,2,5;1,2,5"</span><span class="w"> </span>-c<span class="w"> </span>cet_diverging_gwr_55_95_c38<span class="w"> </span>-cbn<span class="w"> </span><span class="m">3</span><span class="w"> </span>-xnt<span class="w"> </span><span class="m">8</span><span class="w"> </span>-cbl<span class="w"> </span><span class="s1">'OPM results for SPE11A: CO$_2$ mass fraction (liquid phase) after 2 days'</span><span class="w"> </span>-fs<span class="w"> </span><span class="m">16</span>,6.5<span class="w"> </span>-t<span class="w"> </span><span class="s2">"(a) Cartesian grid 1cm  (b) Corner-point grid 1cmish  (c) Cartesian grid 1mm"</span><span class="w"> </span>-yu<span class="w"> </span>cm<span class="w"> </span>-xu<span class="w"> </span>cm<span class="w"> </span>-yf<span class="w"> </span>.0f<span class="w"> </span>-xf<span class="w"> </span>.0f<span class="w"> </span>-fz<span class="w"> </span><span class="m">16</span><span class="w"> </span>-fn<span class="w"> </span>figure4ish<span class="w"> </span>-cbf<span class="w"> </span>.2e<span class="w"> </span>-st<span class="w"> </span><span class="m">0</span><span class="w"> </span>-sg<span class="w"> </span><span class="m">2</span>,2<span class="w"> </span>-cbp<span class="w"> </span><span class="m">0</span>.35,0.97,0.3,0.02<span class="w"> </span>-rdl<span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
-<p>Figures 5 (g, h, i), 6, 7, and 8 (in addition, the values on Table 4 are obtained from the generated error_table_satmin-0.01_conmin-0.1.csv):</p>
+</section>
+</section>
+<section id="figures-5-to-8-and-table-4">
+<h2>Figures 5 to 8 and Table 4<a class="headerlink" href="#figures-5-to-8-and-table-4" title="Link to this heading">#</a></h2>
+<p>Figures 5 (g, h, i), 6, 7, and 8 (in addition, the values on Table 4 are obtained from the generated <code class="docutils literal notranslate"><span class="pre">error_table_satmin-0.01_conmin-0.1.csv</span></code>):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>figures5-8<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>figures5-8
 pofff<span class="w"> </span>-m<span class="w"> </span>fair
 </pre></div>
 </div>
 <p>where fair attempts to aling with <a class="reference external" href="https://www.nature.com/articles/sdata201618">these principles</a>.</p>
-<p>Similarly, Figures 10 (g, h, i) and 11 (in addition, the values on Table 5 are obtained from the generated error_table_satmin-0.01_conmin-0.05.csv)</p>
+</section>
+<section id="figures-10-and-11-and-table-5">
+<h2>Figures 10 and 11 and Table 5<a class="headerlink" href="#figures-10-and-11-and-table-5" title="Link to this heading">#</a></h2>
+<p>Similarly, Figures 10 (g, h, i) and 11 (in addition, the values on Table 5 are obtained from the generated <code class="docutils literal notranslate"><span class="pre">error_table_satmin-0.01_conmin-0.05.csv</span></code>)</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>figures10-11<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>figures10-11
 pofff<span class="w"> </span>-m<span class="w"> </span>fair<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span>.05
 </pre></div>
 </div>
-<p>See the <strong>Adding your results</strong> subsection in the <a class="reference internal" href="examples.html"><span class="doc">examples</span></a> to compare your customized simulation results to the paper results.</p>
+<p>See <a class="reference internal" href="tutorial.html"><span class="doc">Tutorial</span></a> to add a customized simulation to the paper comparisons.</p>
+</section>
+<section id="figures-5d-to-5f-dissolved-co2-maps">
+<h2>Figures 5d to 5f: dissolved CO2 maps<a class="headerlink" href="#figures-5d-to-5f-dissolved-co2-maps" title="Link to this heading">#</a></h2>
 <p>For the spatial maps of CO2 concentration in Figures 5d to 5f:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>publication/results.toml<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-m<span class="w"> </span>single<span class="w"> </span>-t<span class="w"> </span><span class="m">24</span>,48,72,96,120
-plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">3</span><span class="w"> </span>-save<span class="w"> </span>figure5d<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
-plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-save<span class="w"> </span>figure5e<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
-plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">7</span><span class="w"> </span>-save<span class="w"> </span>figure5f<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">3</span><span class="w"> </span>-fn<span class="w"> </span>figure5d<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-fn<span class="w"> </span>figure5e<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figures5d-f/FIGURES5D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures5d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">7</span><span class="w"> </span>-fn<span class="w"> </span>figure5f<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
 </pre></div>
 </div>
+</section>
+<section id="figures-10d-to-10f-dissolved-co2-maps">
+<h2>Figures 10d to 10f: dissolved CO2 maps<a class="headerlink" href="#figures-10d-to-10f-dissolved-co2-maps" title="Link to this heading">#</a></h2>
 <p>Similarly, for the spatial maps of CO2 concentration in Figures 10d to 10f:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>publication/appendixb.toml<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;5e-2&#39;</span><span class="w"> </span>-m<span class="w"> </span>single<span class="w"> </span>-t<span class="w"> </span><span class="m">24</span>,48,72,96,120
-plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">3</span><span class="w"> </span>-save<span class="w"> </span>figure10d<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
-plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-save<span class="w"> </span>figure10e<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
-plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-remove<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">7</span><span class="w"> </span>-save<span class="w"> </span>figure10f<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pofff<span class="w"> </span>-i<span class="w"> </span>publication/appendixb.toml<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-c<span class="w"> </span><span class="s1">'5e-2'</span><span class="w"> </span>-m<span class="w"> </span>single<span class="w"> </span>-t<span class="w"> </span><span class="m">24</span>,48,72,96,120
+plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">3</span><span class="w"> </span>-fn<span class="w"> </span>figure10d<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">5</span><span class="w"> </span>-fn<span class="w"> </span>figure10e<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
+plopm<span class="w"> </span>-i<span class="w"> </span>figures10d-f/FIGURES10D-F<span class="w"> </span>-v<span class="w"> </span>xco2l<span class="w"> </span>-o<span class="w"> </span>figures10d-f<span class="w"> </span>-hide<span class="w"> </span><span class="m">1</span>,1,1,1<span class="w"> </span>-r<span class="w"> </span><span class="m">7</span><span class="w"> </span>-fn<span class="w"> </span>figure10f<span class="w"> </span>-c<span class="w"> </span><span class="s1">'#636b45 #636b45 #fffd00 #fffc00 #fffb00 #fffa00 #fff900 #fff800 #fff700 #fff600 #fff500 #fff400 #fff300 #fff200 #fff100 #fff000 #ffef00 #ffee00 #ffed00 #ffec00 #ffeb00 #ffea00 #ffe900 #ffe800 #ffe700 #ffe600 #ffe500 #ffe400 #ffe300 #ffe200 #ffe100 #ffe000 #ffdf00 #ffde00 #ffdd00 #ffdc00 #ffdb00 #ffda00 #ffd900 #ffd800 #ffd700 #ffd600 #ffd500 #ffd400 #ffd300 #ffd200 #ffd100 #ffd000 #ffcf00 #ffce00 #ffcd00 #ffcc00 #ffcb00 #ffca00 #ffc900 #ffc800 #ffc700 #ffc600 #ffc500 #ffc400 #ffc300 #ffc200 #ffc100 #ffc000 #ffbf00 #ffbe00 #ffbd00 #ffbc00 #ffbb00 #ffba00 #ffb900 #ffb800 #ffb700 #ffb600 #ffb500 #ffb400 #ffb300 #ffb200 #ffb100 #ffb000 #ffaf00 #ffae00 #ffad00 #ffac00 #ffab00 #ffaa00 #ffa900 #ffa800 #ffa700 #ffa600 #ffa500 #ffa400 #ffa300 #ffa200 #ffa100 #ffa000 #ff9f00 #ff9e00 #ff9d00 #ff9c00 #ff9b00 #ff9a00 #ff9900 #ff9800 #ff9700 #ff9600 #ff9500 #ff9400 #ff9300 #ff9200 #ff9100 #ff9000 #ff8f00 #ff8e00 #ff8d00 #ff8c00 #ff8b00 #ff8a00 #ff8900 #ff8800 #ff8700 #ff8600 #ff8500 #ff8400 #ff8300 #ff8200 #ff8100 #ff8000 #ff7f00 #ff7e00 #ff7d00 #ff7c00 #ff7b00 #ff7a00 #ff7900 #ff7800 #ff7700 #ff7600 #ff7500 #ff7400 #ff7300 #ff7200 #ff7100 #ff7000 #ff6f00 #ff6e00 #ff6d00 #ff6c00 #ff6b00 #ff6a00 #ff6900 #ff6800 #ff6700 #ff6600 #ff6500 #ff6400 #ff6300 #ff6200 #ff6100 #ff6000 #ff5f00 #ff5e00 #ff5d00 #ff5c00 #ff5b00 #ff5a00 #ff5900 #ff5800 #ff5700 #ff5600 #ff5500 #ff5400 #ff5300 #ff5200 #ff5100 #ff5000 #ff4f00 #ff4e00 #ff4d00 #ff4c00 #ff4b00 #ff4a00 #ff4900 #ff4800 #ff4700 #ff4600 #ff4500 #ff4400 #ff4300 #ff4200 #ff4100 #ff4000 #ff3f00 #ff3e00 #ff3d00 #ff3c00 #ff3b00 #ff3a00 #ff3900 #ff3800 #ff3700 #ff3600 #ff3500 #ff3400 #ff3300 #ff3200 #ff3100 #ff3000 #ff2f00 #ff2e00 #ff2d00 #ff2c00 #ff2b00 #ff2a00 #ff2900 #ff2800 #ff2700 #ff2600 #ff2500 #ff2400 #ff2300 #ff2200 #ff2100 #ff2000 #ff1f00 #ff1e00 #ff1d00 #ff1c00 #ff1b00 #ff1a00 #ff1900 #ff1800 #ff1700 #ff1600 #ff1500 #ff1400 #ff1300 #ff1200 #ff1100 #ff1000 #ff0f00 #ff0e00 #ff0d00 #ff0c00 #ff0b00 #ff0a00 #ff0900 #ff0800 #ff0700 #ff0600 #ff0500 #ff0400 #ff0300 #ff0200 #ff0100 #ff0000'</span>
 </pre></div>
 </div>
+</section>
+<section id="mpi-acceleration">
+<h2>MPI acceleration<a class="headerlink" href="#mpi-acceleration" title="Link to this heading">#</a></h2>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>If your OPM flow supports MPI, then to speed up the simulations you could change Line 3 in <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/results.toml">results.toml</a>
+<p>If your OPM Flow supports MPI, then to speed up the simulations you could change Line 3 in <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/results.toml">results.toml</a>
 and <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/appendixb.toml">appendixb.toml</a> to:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">flow</span><span class="o">=</span><span class="s2">&quot;mpirun -np 8 flow --newton-min-iterations=1 --solver-max-restarts=20 --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">flow</span><span class="o">=</span><span class="s2">"mpirun -np 8 flow --newton-min-iterations=1 --solver-max-restarts=20 --time-step-control=newtoniterationcount --solver-growth-factor=1.6 --linear-solver=cpr_trueimpes --time-step-control-growth-rate=1.1 --solver-restart-factor=0.5 --time-step-control-decay-rate=0.65 --enable-opm-rst-file=true"</span>
 </pre></div>
 </div>
 <p>The values in the flags were manually set trying to speed up the simulations. Then, you could also try to run the cases with different flags.</p>
 </div>
-<p>For the Computational details results in the Appendix C, we use the templated configuration file <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/appendixc.mako">appendixc.mako</a>,
-in combination to Python commands, which gives flexibility to generate the different cases.</p>
-<p>The Wasserstein distance (obtained from the generated error_table_satmin-0.01_conmin-0.1.csv) for the
+</section>
+<section id="appendix-c-computational-details">
+<h2>Appendix C: computational details<a class="headerlink" href="#appendix-c-computational-details" title="Link to this heading">#</a></h2>
+<p>For the computational-details results in Appendix C, we use the templated configuration file <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/appendixc.mako">appendixc.mako</a>,
+together with Python commands, which gives flexibility to generate the different cases.</p>
+<section id="sensitivity-to-setup-choices">
+<h3>Sensitivity to setup choices<a class="headerlink" href="#sensitivity-to-setup-choices" title="Link to this heading">#</a></h3>
+<p>The Wasserstein distance (obtained from the generated <code class="docutils literal notranslate"><span class="pre">error_table_satmin-0.01_conmin-0.1.csv</span></code>) for the
 base case and random seed for the sensitivity study regarding setup choices in Table 8 can be generated by executing the
 <a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/publication/sensitivity.py">sensitivity.py</a> script (if you have a Mac as well, then execute the script in
-there to see the sensitivity to the operative system).</p>
+there to see the sensitivity to the operating system).</p>
+</section>
+<section id="table-7-and-figure-12-profiling">
+<h3>Table 7 and Figure 12: profiling<a class="headerlink" href="#table-7-and-figure-12-profiling" title="Link to this heading">#</a></h3>
 <p>The values in Table 7 and Figure 12 can be generated by (increase or decrease the number of cores to adapt to your interest and computer limitations):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>publication<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python3<span class="w"> </span>profiling.py
 </pre></div>
 </div>
-<p>Finally, for accuracy-time trade-off Table 9 you can run:</p>
+</section>
+<section id="table-9-accuracy-time-trade-off">
+<h3>Table 9: accuracy-time trade-off<a class="headerlink" href="#table-9-accuracy-time-trade-off" title="Link to this heading">#</a></h3>
+<p>For the accuracy-time trade-off in Table 9, run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>publication<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>python3<span class="w"> </span>accuracy.py
 </pre></div>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>These scripts are set to run with 64 cores, then you should edit them if your machine has less available cpus.</p>
+<p>These scripts are set to run with 64 cores, then you should edit them if your machine has fewer available CPUs.</p>
 </div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>All previous commands can be executed as (<a class="reference external" href="https://github.com/cssr-tools/pofff/blob/main/tests/scripts/publication.sh">publication.sh</a>):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./tests/scripts/publication.sh
+</section>
+</section>
+<section id="reproduce-all-publication-results">
+<h2>Reproduce all publication results<a class="headerlink" href="#reproduce-all-publication-results" title="Link to this heading">#</a></h2>
+<p>The maintained <code class="docutils literal notranslate"><span class="pre">publication.sh</span></code> script reproduces the publication workflows
+described on this page.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">. ./tests/scripts/publication.sh</span>
 </pre></div>
 </div>
-<p>This will run the cases with 64 cores. To run the case with 16 cores instead (in a coarser grid as well), run it as:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>./tests/scripts/publication.sh<span class="w"> </span><span class="m">16</span>
+<p>By default, the script runs the cases with 64 cores. To run the cases with 16
+cores and a coarser grid, use:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">. ./tests/scripts/publication.sh 16</span>
 </pre></div>
+</div>
+<div class="sd-container-fluid sd-sphinx-override sd-mb-4 docutils">
+<div class="sd-row sd-row-cols-1 sd-row-cols-xs-1 sd-row-cols-sm-1 sd-row-cols-md-2 sd-row-cols-lg-2 sd-g-2 sd-g-xs-2 sd-g-sm-2 sd-g-md-2 sd-g-lg-2 docutils">
+<div class="sd-col sd-d-flex-column docutils">
+<p><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary reference external" href="https://github.com/cssr-tools/pofff/blob/main/tests/scripts/publication.sh"><span>View script</span></a></span></p>
+</div>
+<div class="sd-col sd-d-flex-column docutils">
+<p><span class="sd-d-grid"><a class="sd-sphinx-override sd-btn sd-text-wrap sd-btn-outline-primary reference external" href="https://raw.githubusercontent.com/cssr-tools/pofff/main/tests/scripts/publication.sh"><span>View raw script</span></a></span></p>
+</div>
 </div>
 </div>
 </section>
+</section>
 
 
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="examples.html" class="btn btn-neutral float-left" title="Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="pofff Python API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2025-2026, NORCE Research AS.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="examples/visualization.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Visualization with plopm</p>
       </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+    </a>
+    <a class="right-next"
+       href="command-line.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Command-line reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-</body>
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-3-geology-and-thickness">Figure 3: geology and thickness</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figure-4-spe11a-grid-comparison">Figure 4: SPE11A grid comparison</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#using-submitted-spe11a-csv-data">Using submitted SPE11A CSV data</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures-5-to-8-and-table-4">Figures 5 to 8 and Table 4</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures-10-and-11-and-table-5">Figures 10 and 11 and Table 5</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures-5d-to-5f-dissolved-co2-maps">Figures 5d to 5f: dissolved CO2 maps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures-10d-to-10f-dissolved-co2-maps">Figures 10d to 10f: dissolved CO2 maps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mpi-acceleration">MPI acceleration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-c-computational-details">Appendix C: computational details</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-to-setup-choices">Sensitivity to setup choices</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-7-and-figure-12-profiling">Table 7 and Figure 12: profiling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#table-9-accuracy-time-trade-off">Table 9: accuracy-time trade-off</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproduce-all-publication-results">Reproduce all publication results</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  
+  <div class="tocsection editthispage">
+    <a href="https://github.com/cssr-tools/pofff/edit/main/docs/text/publication.rst">
+      <i class="fa-solid fa-pencil"></i>
+      
+      
+        
+          Edit on GitHub
+        
+      
+    </a>
+  </div>
+</div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/publication.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2026, NORCE Research AS.
+      <br/>
+    
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
 </html>

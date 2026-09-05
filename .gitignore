@@ -173,21 +173,22 @@ dune-*
 opm-*
 
 # Examples outputs
-debugging
-developing
-playground
-project
+/debugging
+/developing
+/playground
+/project
+/lab
 
 # Tests
-test_outputs
+/test_outputs
 
 # Paper figures
-figure3
-figure4
-figures5-8
-figuresb2-3
-figures5d-f
-figuresb2d-f
+/figure3
+/figure4
+/figures5-8
+/figuresb2-3
+/figures5d-f
+/figuresb2d-f
 **/publication/*/
-publication/random_seed.toml
-publication/base.toml
+/publication/random_seed.toml
+/publication/base.toml
